@@ -1,0 +1,61 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.airmdr.com/changelog/changelog
+scheme: milestone releases (M<major>[.<minor>]) dated to the day; product build shown on the API docs index as 28.1.1
+current_version: M28.1
+current_version_date: '2026-09-16'
+subscribe: https://app.airmdr.com/subscribe
+cadence: roughly every 3-6 weeks (19 milestones between 2025-05-15 and 2026-09-16)
+entries:
+- version: M28.1
+  date: '2026-09-16'
+  breaking: false
+  highlights:
+  - Webhook alert ingestion without custom authentication headers (secret embedded in the webhook URL; rate limiting and duplicate-alert handling on ingest)
+  - L0 alert skip and alert-triage cost control
+  - Case versioning (named versions pinned to history entries)
+  - Integrations and skills additions
+- version: M28
+  date: '2026-08-27'
+  breaking: false
+  highlights:
+  - DetectGen multi-tenant detection engineering
+  - Case actions
+  - Customer support ticket portal
+  - Agentic investigation enhancements
+  - Security review mail and PDF enhancements
+  - Out-of-the-box executive dashboards
+- version: M27
+  date: '2026-07-29'
+  breaking: false
+  highlights:
+  - Facts dashboards with advanced security analytics
+  - Agentic investigation
+  - Custom reports; user-centric outage detection
+  - AI investigation depth and usage limits
+  - Case search using natural language; MSSP full-access RBAC; case view customizations
+- version: M26
+  date: '2026-06-16'
+  breaking: false
+  highlights:
+  - Custom dashboard builder
+  - Out-of-the-box dashboard widgets and organization-level dashboard customization
+  - Facts management and review workflow enhancements
+- version: M25
+  date: '2026-05-11'
+  breaking: false
+  highlights:
+  - MTTI improvements (deferred AI summary processing)
+  - UI updates for the MDR buyer experience
+  - Integrations and skills additions
+- version: M24
+  date: '2026-04-06'
+  breaking: false
+  highlights:
+  - MTTI (mean time to investigate) improvements and monitoring
+  - Question-driven investigation framework for out-of-the-box case quality
+  - Playbook editor experience improvements
+note: >-
+  Release notes are product-level; API changes are not called out separately and no breaking-change or deprecation
+  section exists. The only deprecation on record is the M18 note that the beta Darryl replaced (deprecated) the
+  previous version. Older milestones back to M18 (2025-05-15) remain on the page.

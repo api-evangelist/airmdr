@@ -1,0 +1,20 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.airmdr.com/essentials/AI-Investigation-Depth-and-Usage-Limits, https://docs.airmdr.com/changelog/changelog (M28.1), openapi/airmdr-case-manager-openapi.yml
+limit_count: 0
+limits: []
+headers: []
+exhaustion_status: null
+usage_allowances:
+- scope: per-organization
+  window: weekly (calendar week)
+  limit: base weekly usage limit (value not published; set per organization)
+  adaptive_threshold: 150% of the weekly limit — beyond it Darryl applies a configured investigation depth per alert type for the rest of the week; alerts are never skipped
+  accumulation: unused credit carries forward up to 5x the base weekly limit
+  effect: investigation depth (Level 1 Triage / Level 2 Investigation / Level 3 Deep Dive), not request rejection
+  docs: https://docs.airmdr.com/essentials/AI-Investigation-Depth-and-Usage-Limits
+note: >-
+  No HTTP request rate limits are documented: neither spec declares a 429 response or X-RateLimit-*/RateLimit-*/
+  Retry-After headers, and the docs publish no requests-per-window figure. The M28.1 release notes state that
+  webhook alert ingestion applies "authentication verification, duplicate-alert handling, and rate limiting" without
+  numbers (duplicates answer 409). The published limits are AI-investigation usage allowances, recorded above.

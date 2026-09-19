@@ -1,0 +1,41 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/airmdr-case-manager-openapi.yml, openapi/airmdr-user-management-service-openapi.yml, https://docs.airmdr.com/essentials/SSO-Overview, https://docs.airmdr.com/api-reference/apitoken
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: both published specs declare openapi 3.0.0 (openapi/_original/*.json harvested from app.airmdr.com/docs/api/)
+- id: oauth2
+  conforms: false
+  evidence: no oauth2 securityScheme; the only scheme is apiKey in cookie (Session)
+- id: oidc
+  conforms: false
+  evidence: no openIdConnect scheme and no /.well-known/openid-configuration on any host (well-known/airmdr-well-known.yml); SSO for console users is documented (Azure AD, Google, Okta per docs.airmdr.com/essentials/SSO-Overview) but is not an API auth surface
+- id: rfc9457
+  conforms: false
+  evidence: errors are a custom {message} envelope (errors/airmdr-problem-types.yml), not application/problem+json
+- id: pagination
+  conforms: true
+  evidence: page + size query params (required) on list operations, e.g. getCasesForOrgAPIV2 POST /v2/case/list, with total in CaseListResponse
+- id: idempotency
+  conforms: false
+  evidence: no Idempotency-Key header on any operation; webhook ingest dedupes by content (409 Duplicate alert on createAlertFromWebhookAPI)
+- id: json:api
+  conforms: false
+  evidence: plain JSON bodies, no jsonapi member
+- id: mitre-attack
+  conforms: true
+  evidence: MitreTactics tag — GET /mitre_tactics (listMitreTacticsAPI) returns MITRE ATT&CK tactic references used to classify cases; a taxonomy reference, not a wire-format standard
+- id: mcp
+  conforms: true
+  evidence: Streamable-HTTP MCP server at https://docs.airmdr.com/mcp answered tools/list (mcp/airmdr-mcp-tools-list.json) — documentation scope only
+- id: a2a
+  conforms: true
+  evidence: A2A agent card (protocolVersion 0.3) at https://docs.airmdr.com/.well-known/agent-card.json, graded conformant with deviations in a2a/airmdr-a2a.yml
+domain_standard: null
+domain_standard_note: >-
+  No domain-standard contract signature (no STIX/TAXII, OCSF, CEF/LEEF, SCIM URN or OpenC2 shape) is declared in either
+  spec; alert content is free-form AlertContent JSON. The Query DSL (POST /query) is proprietary. Reward-only: absence is
+  not penalised and nothing is asserted.
+compliance_programs: []
+compliance_note: no trust center, security page, or certification claims (SOC 2/ISO 27001) found on airmdr.com or docs.airmdr.com (probe-security-programs.py vdp=none trust=none; /security, /trust, trust.airmdr.com all miss)

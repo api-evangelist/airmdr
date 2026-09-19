@@ -1,23 +1,187 @@
 aid: airmdr
 name: AirMDR
-description: 'AirMDR is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  AirMDR is an AI-native managed detection and response (MDR) provider whose virtual security analyst, Darryl,
+  automates alert triage, investigation and response across endpoint, cloud, SaaS, identity, email and network
+  tools. The platform ingests alerts from 200+ integrations, runs automated or AI-generated investigation playbooks,
+  and produces documented cases; it is sold as a full-service MDR for small security teams, an AI SOC platform for
+  MSSPs and enterprise SOCs, and a free plan with 100 alert investigations. Programmatic access is a REST API on
+  app.airmdr.com (Case Manager and User Management services, documented in Redoc), authenticated with an API token
+  sent as a Session cookie, plus a webhook endpoint for pushing alerts into the platform.
+image: https://airmdr.com/hubfs/Favicon.png
 url: https://raw.githubusercontent.com/api-evangelist/airmdr/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
+x-tier: profiled
 x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
-- Company
-apis: []
+- Security
+- Managed Detection and Response
+- Security Operations
+- Alert Triage
+- Incident Response
+- AI Agents
+- SOC Automation
+- Threat Detection
+- MCP
+apis:
+- name: AirMDR Case Manager API
+  description: >-
+    REST API for the AirMDR case management surface: create, read, update, list, link, clone and archive cases (v1
+    and v2), case findings, evidence, attachments, comments, history and watchers, alert ingestion (the webhook
+    entry point), alert catalog and alert types, MITRE tactics, dashboards and SOC/executive metrics, security
+    reviews and a Query DSL. 175 operations across 139 paths, authenticated with an API token in the Session cookie.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Security
+  - Case Management
+  - Alert Triage
+  - Incident Response
+  - Security Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-case-manager-openapi.yml
+  - type: OpenAPI
+    url: https://app.airmdr.com/docs/api/case_manager.html
+    name: Published Redoc reference (spec embedded in the page)
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+- name: AirMDR User Management Service API
+  description: >-
+    REST API for organizations, users, user groups, sessions, API tokens, passwords, permissions and RBAC templates
+    on the AirMDR platform, including organization configuration for investigation depth, credits and features. 60
+    operations across 47 paths, authenticated with an API token in the Session cookie.
+  humanURL: https://app.airmdr.com/docs/api/user_management_service.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Security
+  - User Management
+  - Identity
+  - Access Control
+  - Security Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-user-management-service-openapi.yml
+  - type: OpenAPI
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+    name: Published Redoc reference (spec embedded in the page)
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- name: AirMDR Documentation MCP Server
+  description: >-
+    Hosted, unauthenticated Streamable-HTTP MCP server on the AirMDR documentation host (Mintlify-operated) exposing
+    three tools: search the AirMDR documentation, run read-only queries against a virtual filesystem of the docs
+    pages, and submit documentation feedback. It documents the platform; it does not call the Case Manager or User
+    Management APIs.
+  humanURL: https://docs.airmdr.com/
+  baseURL: https://docs.airmdr.com/mcp
+  tags:
+  - MCP
+  - Documentation
+  - Security
+  properties:
+  - type: MCPServer
+    url: mcp/airmdr-mcp.yml
+  - type: MCPServer
+    url: https://docs.airmdr.com/mcp
+  - type: Documentation
+    url: https://docs.airmdr.com/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/airmdr-domain-security.yml
+- type: Authentication
+  url: authentication/airmdr-authentication.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://airmdr.com/
+- type: DeveloperPortal
+  url: https://docs.airmdr.com/
+- type: Documentation
+  url: https://docs.airmdr.com/essentials/Landingpage
+- type: APIReference
+  url: https://docs.airmdr.com/api-reference/apilandingpage
+- type: GettingStarted
+  url: https://docs.airmdr.com/api-reference/apitoken
+- type: Blog
+  url: https://airmdr.com/blog
+- type: BlogRSS
+  url: https://airmdr.com/blog/rss.xml
+- type: Newsroom
+  url: https://airmdr.com/newsroom
+- type: Leadership
+  url: https://airmdr.com/about-us
+- type: GitHubOrganization
+  url: https://github.com/AirMDR
+- type: Pricing
+  url: https://airmdr.com/pricing
+- type: Login
+  url: https://app.airmdr.com/auth/login
+- type: PrivacyPolicy
+  url: https://airmdr.com/privacy
+- type: Support
+  url: https://airmdr.com/contact-us
+- type: ChangeLog
+  url: https://docs.airmdr.com/changelog/changelog
+- type: LinkedIn
+  url: https://www.linkedin.com/company/airmdr/
+- type: Twitter
+  url: https://twitter.com/AirMDR_Company
+- type: YouTube
+  url: https://www.youtube.com/channel/UC_qHwQAACG8K20-X3JaB-yA
+- type: Packages
+  url: packages/airmdr-packages.yml
+- type: WellKnown
+  url: well-known/airmdr-well-known.yml
+- type: AgentCard
+  url: a2a/airmdr-a2a.yml
+- type: MCPServer
+  url: mcp/airmdr-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/airmdr-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/airmdr-llms.txt
+- type: LLMsTxt
+  url: https://docs.airmdr.com/llms.txt
+- type: Overlay
+  url: overlays/airmdr-case-manager-overlay.yaml
+- type: Overlay
+  url: overlays/airmdr-user-management-service-overlay.yaml
+- type: Conformance
+  url: conformance/airmdr-conformance.yml
+- type: ErrorCatalog
+  url: errors/airmdr-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/airmdr-lifecycle.yml
+- type: Conventions
+  url: conventions/airmdr-conventions.yml
+- type: DataModel
+  url: data-model/airmdr-data-model.yml
+- type: ChangeLog
+  url: changelog/airmdr-changelog.yml
+- type: Plans
+  url: plans/airmdr-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/airmdr-rate-limits.yml
+- type: Webhooks
+  url: asyncapi/airmdr-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: RegulatoryPosture
+  url: regulatory/airmdr-regulatory-posture.yml
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v3

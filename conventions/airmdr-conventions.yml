@@ -1,0 +1,103 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/airmdr-case-manager-openapi.yml, openapi/airmdr-user-management-service-openapi.yml; docs https://docs.airmdr.com/api-reference/apitoken, https://docs.airmdr.com/api-reference/WebHook
+base_url: https://app.airmdr.com/airmdrapi
+authentication:
+  style: api-token-in-cookie
+  scheme: SessionCookie (apiKey, in cookie, name Session)
+  how: 'Cookie: Session="<API token>"'
+  token_source: Admin dashboard → API Tokens (Admin/Super Admin only); shown once; revoke by deleting (deleteTokenAPI)
+  see: authentication/airmdr-authentication.yml
+  webhook_ingest_exception: createAlertFromWebhookAPI (POST /webhooks/{webhook_id}/{secret}/alerts) is authenticated purely by the webhook_id + secret in the URL path
+request_context_headers:
+  User-ID: required on most operations (the requesting user's UUID)
+  Organization-ID: required on most operations (the organization the request acts on)
+  Organization-Hosturl: optional, organization host URL
+  Execution-ID: optional, set when the call is made from a Darryl playbook action
+  note: the docs say these headers are "preloaded" into the generated request examples when a token is created
+request_id:
+  header: X-Request-ID
+  direction: request (client-supplied, declared on 232 of 235 operations)
+  response_echo: not documented
+idempotency:
+  coverage: none
+  scope: []
+  mechanism: none — no Idempotency-Key or equivalent header on any of the 160 write operations
+  dedupe: webhook alert ingest rejects a duplicate alert with 409 (createAlertFromWebhookAPI); this is content dedupe, not client-keyed replay protection
+  retention: null
+pagination:
+  style: page-number
+  params:
+    page: 1-based page number (required, integer)
+    size: results per page (required, integer)
+  response_fields:
+    data: array of items
+    total: total count
+    message: status text
+  example_operations: [getCasesForOrgAPIV2, getCaseCommentsListAPI, listAlertsAPI, getCaseHistoryAPI]
+  filtering: POST list bodies carry filter (CaseFilter) + sort[] (CaseSort field/sort_order) + requested_view; Query DSL at POST /query (executeQueryAPI) with GET /query/schema (getQuerySchemaAPI) and POST /query/validate (validateQueryAPI)
+field_expansion:
+  supported: partial
+  mechanism: 'minimal: boolean on list requests returns minimal case objects; requested_view selects a CaseView'
+sparse_fields: not supported
+versioning:
+  style: path generation — /v2/case… coexists with /case…; no version header, no Deprecation/Sunset headers
+  see: lifecycle/airmdr-lifecycle.yml
+timestamps: Unix epoch seconds (integer int64) — created_at, modified_at, created_at_source, from/to_modified_date
+identifiers:
+  case: case_uuid (UUID) or human case_id ORG-<n> (e.g. ASO-13812); many v2 paths accept either as case_identifier
+  alert: alert_uuid + alert_id ORG-PROVIDER-<seq> (e.g. ASO-AWS-129)
+  organization: organization_uuid, organization_code (e.g. ASO), organization_identifier
+error_envelope:
+  shape: '{ "message": string }'
+  variants: QueryErrorResponse adds errors[] {field, message}; 403Error message is a fixed permission string
+  content_type: application/json
+  see: errors/airmdr-problem-types.yml
+rate_limit_signaling:
+  headers: none documented
+  status: no 429 declared
+  see: rate-limits/airmdr-rate-limits.yml
+bulk:
+  operations: [archiveCasesAPIV2, bulkDeleteCasesAPIV2, bulkHardDeleteAlertsAPI, bulkDeleteUsersAPI, generateBulkCaseScoresAPI, createAlertsAPI]
+async:
+  status_polling: alert investigation runs asynchronously — investigation_status 0 Created / 5 Submitted / 10 InProgress / 15 Completed / 20 Failed on the alert object (docs WebHook page); 202 on two operations; 409 "Report not yet ready" on getSecurityReportAPI
+dry_run_mode:
+  coverage: partial
+  scope: [validateQueryAPI, investigateAlertAgenticPreviewAPI]
+  note: POST /query/validate validates a Query DSL body without executing; the agentic-preview investigation is a preview run. No dry-run flag on create/update writes.
+reversibility:
+  coverage: documented
+  read_only: false
+  write_surface: 160 mutating operations (POST/PUT/PATCH/DELETE)
+  reversals:
+  - action: archive a case
+    operation: archiveCaseAPI (DELETE /v2/case/{case_uuid}) / archiveCasesAPIV2 (DELETE /v2/case/bulk)
+    reversal: none documented — archive is distinct from hard delete (deleteCaseAPI, bulkDeleteCasesAPIV2 at /hard_delete), but no unarchive/restore operation exists in the spec
+    window: null
+  - action: link a chat session / secondary case to a case (alerts are linked at creation, not via a link op)
+    operation: linkChatSessionToCaseAPIV2, linkCasesAPIV2
+    reversal: unlinkChatSessionToCaseAPIV2, unlinkCaseAPIV2, unlinkAlertToCaseAPIV2 (unlink an alert from a case)
+    window: null
+  - action: case field changes
+    operation: updateCaseAPIV2 (PATCH /v2/case/{case_uuid})
+    reversal: history is retained — getCaseHistoryAPI, getCaseAtHistoryEntryAPI reconstructs a prior state read-only, createCaseNamedVersionAPI pins a version; no documented restore-to-version write
+    window: null
+  - action: create a webhook
+    operation: createWebhookAPI
+    reversal: deleteWebhookAPI
+    window: null
+  - action: create an API token
+    operation: createAPITokenForUserAPI
+    reversal: deleteTokenAPI (docs "revoke the token access by deleting the token")
+    window: null
+  - action: hard delete a case / alert / user / organization
+    operation: deleteCaseAPI, bulkDeleteCasesAPIV2, hardDeleteAlertAPI, bulkHardDeleteAlertsAPI, deleteUserAPI, deleteOrganizationAPI
+    reversal: none — irreversible; no window stated
+    window: null
+  note: reversal paths exist for links, webhooks and tokens; no operation carries a documented time window, so the grade stays at documented rather than verified. Hard deletes are terminal.
+cross_links:
+  authentication: authentication/airmdr-authentication.yml
+  errors: errors/airmdr-problem-types.yml
+  lifecycle: lifecycle/airmdr-lifecycle.yml
+  rate_limits: rate-limits/airmdr-rate-limits.yml
+  data_model: data-model/airmdr-data-model.yml

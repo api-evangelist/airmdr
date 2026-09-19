@@ -1,0 +1,98 @@
+generated: '2026-09-19'
+method: probed
+status: published
+source: https://docs.airmdr.com/.well-known/mcp.json (discovery) + POST https://docs.airmdr.com/mcp tools/list (live, HTTP
+  200, text/event-stream)
+tools_list: mcp/airmdr-mcp-tools-list.json
+server:
+  name: AirMDR documentation MCP
+  transport: streamable-http
+  url: https://docs.airmdr.com/mcp
+  origin_url: https://airmdr.main-kill-isr.mintlify.me/mcp
+  operator: Mintlify (docs platform) on behalf of AirMDR
+  scope: documentation search and retrieval only — it does not call the Case Manager or User Management APIs
+deployment:
+  mode: remote
+  endpoint: https://docs.airmdr.com/mcp
+  auth: none
+  verified: probed
+auth:
+  methods:
+  - none
+  note: 'tools/list answered 200 with no credentials; /.well-known/mcp.json declares authentication: none'
+tools:
+- name: search_air_mdr
+  title: Search documentation
+  description: Search across the AirMDR knowledge base to find relevant information, code examples, API references, and guides.
+    Use this tool when you need to answer questions about AirMDR, find specific documentation, understand how features work,
+    or locate implementation details. The search returns contextual content with titles and direct links to the documentation
+    pages. If you need the full content of a spe…
+  inputSchema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Search query
+    required:
+    - query
+    additionalProperties: false
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: false
+- name: query_docs_filesystem_air_mdr
+  title: null
+  description: 'Run a read-only shell-like query against a virtualized, in-memory filesystem rooted at `/` that contains ONLY
+    the AirMDR documentation pages and OpenAPI specs. This is NOT a shell on any real machine — nothing runs on the user''s
+    computer, the server host, or any network. The filesystem is a sandbox backed by documentation chunks.
+
+
+    This is how you read documentation pages: there is no separate "get…'
+  inputSchema:
+    type: object
+    properties:
+      command:
+        type: string
+        description: A shell command to run against the virtualized documentation filesystem (e.g., `rg -il "keyword" /`,
+          `tree / -L 2`, `head -80 /path/file.mdx`).
+    required:
+    - command
+    additionalProperties: false
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: false
+- name: submit_feedback
+  title: Submit documentation feedback
+  description: Report a problem with this documentation site so the docs team can fix it. Use when a documentation page is
+    incorrect, outdated, confusing, incomplete, or has a broken example. This is for feedback about the documentation content
+    itself — not for product support requests or feedback about this tool or assistant.
+  inputSchema:
+    type: object
+    properties:
+      path:
+        type: string
+        minLength: 1
+        description: The URL path of the documentation page the feedback is about (the page you were reading, without the
+          `.mdx` extension).
+      feedback:
+        type: string
+        minLength: 1
+        description: A clear description of the documentation issue or suggestion — what is incorrect, outdated, missing,
+          or confusing.
+    required:
+    - path
+    - feedback
+    additionalProperties: false
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+tool_count: 3
+note: 'Platform-authored docs MCP: a search tool, a read-only virtual-filesystem query over the docs pages, and a feedback
+  tool. The OpenAPI mounted inside the virtual filesystem (/openapi/api-reference/openapi.json) is the Mintlify starter "OpenAPI
+  Plant Store" sample (servers sandbox.mintlify.com) and NOT an AirMDR contract — it was checked and deliberately not saved.
+  The real AirMDR contracts live on app.airmdr.com/docs/api/ (see openapi/).'

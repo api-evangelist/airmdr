@@ -1,0 +1,32 @@
+generated: '2026-09-19'
+method: probed
+source: well-known/airmdr-well-known.yml, security/ (probe-security-programs.py vdp=none trust=none), lifecycle/airmdr-lifecycle.yml, https://airmdr.com/privacy, live probes of conventional paths
+signals: {}
+probes:
+- url: https://airmdr.com/accessibility
+  status: 404
+- url: https://airmdr.com/subprocessors
+  status: 404
+- url: https://airmdr.com/dpa
+  status: 404
+- url: https://airmdr.com/legal
+  status: 404
+- url: https://airmdr.com/security
+  status: 404
+- url: https://airmdr.com/trust
+  status: 404
+- url: https://trust.airmdr.com
+  status: 0
+  note: no DNS
+- url: https://airmdr.com/terms
+  status: 404
+- url: https://airmdr.com/privacy
+  status: 200
+  note: privacy policy page exists; no data-subject-request form, subprocessor table, GPC statement or residency statement found in it
+- url: https://airmdr.com/.well-known/security.txt
+  status: 404
+note: >-
+  Harvest only. No accessibility conformance report, SBOM, subprocessor list, DPA, data-residency statement, incident
+  notification commitment, transparency report, support-lifetime statement, GPC statement or AI-transparency page was
+  found on airmdr.com or docs.airmdr.com. An empty signals map is the measurement; whether any regime applies is decided
+  by the Kin Score regime map, not here.

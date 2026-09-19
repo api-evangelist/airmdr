@@ -1,0 +1,37 @@
+generated: '2026-09-19'
+method: searched
+source: https://airmdr.com/pricing
+currency: null
+plan_count: 3
+plans:
+- name: Full Service AI MDR
+  audience: Small security teams that want AI-powered, human-managed MDR
+  price: null
+  billing: annual contract (per pricing FAQ); quote-based ("Request Quote")
+  included:
+  - 24/7 monitoring
+  - production-grade results with no setup or scripting
+  - integrates with existing detection tools
+  limits: {}
+- name: AI SOC Platform
+  audience: MSSP and enterprise SOC teams that need AI analysts
+  price: null
+  billing: annual contract; quote-based ("Request Quote")
+  included:
+  - automate 90%+ of alert triage
+  - high-fidelity, transparent cases in under 5 minutes
+  limits: {}
+- name: Free Plan
+  audience: Anyone who wants to experience AI in their SOC
+  price: 0
+  billing: free; no credit card or sales call
+  url: https://airmdr.com/fast
+  included:
+  - agentic triage hands-on
+  - up and running in 60 minutes
+  - 40+ popular integrations
+  limits:
+    alert_investigations: 100
+notes:
+- Prices are not published for the two paid tiers; both route to a request-a-quote form. The FAQ states there are no onboarding fees and the service is an annual contract.
+- Weekly investigation usage allowances (with a 150% adaptive-depth threshold and credit accumulation up to 5x the weekly base) are documented at https://docs.airmdr.com/essentials/AI-Investigation-Depth-and-Usage-Limits but the base weekly limit per tier is not published.

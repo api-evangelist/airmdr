@@ -1,0 +1,124 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/airmdr-case-manager-openapi.yml, openapi/airmdr-user-management-service-openapi.yml 4xx/5xx/default responses;
+  enriched from https://docs.airmdr.com/api-reference/apitoken
+format: custom
+envelope:
+  schema: Error
+  fields:
+    message: user friendly error message (required)
+  variants:
+    QueryErrorResponse: message + errors[] of {field, message} on POST /query (executeQueryAPI) 400
+    403Error: message constant "User does not have permission to perform this action"
+rfc9457: false
+problem_types:
+- status: '400'
+  code: '400'
+  title: Bad Request
+  occurrences: 13
+  descriptions:
+  - Invalid request.
+  - Invalid request (e.g. no schedules provided, or too many).
+  - Missing required fields
+  - Bad request
+  - Invalid request (e.g. no schedule_ids provided, or too many).
+  - Invalid query
+  example_operations:
+  - createDashboardAPI
+  - emailCustomDashboardAPI
+  - createWidgetAPI
+  - createWidgetsAPI
+  - updateWidgetAPI
+  - createDashboardScheduleAPI
+  remediation: Validate the body against the operation schema; executeQueryAPI returns a QueryErrorResponse with per-field
+    errors[]
+- status: '401'
+  code: '401'
+  title: Unauthorized
+  occurrences: 2
+  descriptions:
+  - Unauthorized
+  example_operations:
+  - listCaseActionsV1API
+  - listRecentlyCompletedActionsAPI
+  remediation: 'Token missing/expired — regenerate an API token in Admin dashboard → API Tokens and resend Cookie: Session="<token>"
+    (docs: handle 401 by checking token expiration)'
+- status: '403'
+  code: '403'
+  title: Forbidden
+  occurrences: 35
+  descriptions:
+  - forbidden
+  - Sync is disabled
+  example_operations:
+  - createOrganizationAPI
+  - getOrganizationListAPI
+  - filterOrganizationAPI
+  - getOrganizationAPI
+  - updateOrganizationAPI
+  - deleteOrganizationAPI
+  remediation: Caller lacks the role (Admin/Super Admin for most write ops, per operation description) — body message is the
+    constant "User does not have permission to perform this action"
+- status: '404'
+  code: '404'
+  title: Not Found
+  occurrences: 12
+  descriptions:
+  - Dashboard not found.
+  - Widget or dashboard not found.
+  - Unknown webhook_id or invalid secret
+  - Execution or PDF not found.
+  - Alert not found
+  example_operations:
+  - createAlertFromWebhookAPI
+  - getDashboardSnapshotAPI
+  - deleteDashboardAPI
+  - updateDashboardAPI
+  - emailCustomDashboardAPI
+  - createWidgetAPI
+  remediation: Resource (case, alert, dashboard, widget, report, webhook_id/secret) not found for this organization
+- status: '409'
+  code: '409'
+  title: Conflict
+  occurrences: 7
+  descriptions:
+  - conflict
+  - Report not yet ready
+  - Duplicate alert
+  example_operations:
+  - createAlertFromWebhookAPI
+  - getSecurityReportAPI
+  - emailSecurityReportAPI
+  - createOrganizationAPI
+  - createUserGroupAPI
+  - updateUserGroupAPI
+  remediation: State conflict — duplicate alert on webhook ingest, report not yet ready, or organization already exists; do
+    not blindly retry a duplicate
+- status: '500'
+  code: '500'
+  title: Internal Server Error
+  occurrences: 2
+  descriptions:
+  - Internal server error
+  example_operations:
+  - listCaseActionsV1API
+  - listRecentlyCompletedActionsAPI
+  remediation: Retry with backoff and the same X-Request-ID for tracing
+- status: null
+  code: default
+  title: Unexpected error (catch-all)
+  occurrences: 232
+  descriptions:
+  - unexpected error
+  - Unexpected error.
+  - Unexpected error
+  example_operations:
+  - createCaseAPI
+  - getCaseAPI
+  - updateCaseAPI
+  - emailCaseDetailsAPI
+  - getCaseFromIdAPI
+  - getCasesForOrgAPI
+  remediation: Every operation declares a default Error {message} response; treat any unlisted status as an Error envelope
+note: No 429 is declared in either spec and no rate-limit headers are documented; the M28.1 release notes say webhook ingest
+  applies rate limiting but publish no numbers.

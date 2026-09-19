@@ -1,0 +1,32 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for AirMDR User Management Service
+  version: 1.0.0
+  x-generated: '2026-09-19'
+  x-method: generated
+  x-source: openapi/airmdr-user-management-service-openapi.yml
+extends: openapi/airmdr-user-management-service-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-provider: AirMDR
+    x-api-evangelist:
+      profile: https://github.com/api-evangelist/airmdr
+      harvested_from: https://app.airmdr.com/docs/api/user_management_service.html
+- target: $.servers
+  description: Resolve the relative /airmdrapi server against the host the docs use in every example
+  update:
+  - url: https://app.airmdr.com/airmdrapi
+- target: $.components.securitySchemes.SessionCookie
+  update:
+    description: 'API token generated in Admin dashboard → API Tokens, sent as Cookie: Session="<token>" (https://docs.airmdr.com/api-reference/apitoken).
+      Shown once at creation; revoke by deleting the token.'
+- target: $.externalDocs
+  update:
+    description: AirMDR API overview
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+- target: $.paths['/users/tokens'].post
+  update:
+    externalDocs:
+      url: https://docs.airmdr.com/api-reference/apitoken
+      description: API authentication with token

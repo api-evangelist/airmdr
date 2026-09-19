@@ -1,0 +1,107 @@
+generated: '2026-09-19'
+method: probed
+source: live GET of /.well-known/* on every host the record knows (airmdr.com, www.airmdr.com, docs.airmdr.com, app.airmdr.com); MCP host is docs.airmdr.com (the documentation MCP is served from the docs host itself)
+note: >-
+  Two real documents, both on the documentation host docs.airmdr.com (Mintlify-operated): an A2A agent card at
+  /.well-known/agent-card.json and an MCP discovery document at /.well-known/mcp.json. The registrable domain
+  (HubSpot-hosted marketing site) answers a 404 HTML page for every path, and app.airmdr.com 307-redirects every
+  /.well-known/* path to its login page, so nothing is served there. No security.txt, openid-configuration,
+  oauth-authorization-server, oauth-protected-resource or api-catalog on any host.
+hosts:
+- host: airmdr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+- host: www.airmdr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+- host: docs.airmdr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    file: well-known/airmdr-agent-card.json
+    note: A2A agent card (protocolVersion 0.3) pointing at the docs site and the agent-skills SKILL.md; platform-authored by Mintlify for the AirMDR docs project
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 200
+    content_type: application/json
+    file: well-known/airmdr-mcp.json
+    note: MCP discovery document naming the public HTTP MCP server (authentication none); canonical URL is https://docs.airmdr.com/mcp
+- host: app.airmdr.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/openid-configuration
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/oauth-authorization-server
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/oauth-protected-resource
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/api-catalog
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/ai-plugin.json
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/agent-card.json
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/agent.json
+    status: 307
+    note: redirects to /auth/login — not served
+  - path: /.well-known/mcp.json
+    status: 307
+    note: redirects to /auth/login — not served

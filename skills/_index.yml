@@ -1,0 +1,21 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.airmdr.com/.well-known/agent-skills/airmdr/skill.md (provider-published) + generated flows grounded in openapi/
+skills:
+- name: airmdr
+  file: skills/airmdr-provider-skill.md
+  method: searched
+  source: https://docs.airmdr.com/.well-known/agent-skills/airmdr/skill.md
+  description: Provider-published Agent Skill (Mintlify agent-skills, referenced from the A2A agent card) covering platform concepts, integrations, playbooks, guidelines and API authentication.
+- name: airmdr-ingest-alert-and-track-investigation
+  file: skills/airmdr-ingest-alert-and-track-investigation.md
+  method: generated
+  operations: [getOrganizationListAPI, createAlertsAPI, createAlertFromWebhookAPI, getAlertAPI, getCaseAPIV2]
+- name: airmdr-triage-and-close-case
+  file: skills/airmdr-triage-and-close-case.md
+  method: generated
+  operations: [getCasesForOrgAPIV2, getCaseAPIV2, updateCaseAPIV2, addCaseCommentAPI, getCaseHistoryAPI, archiveCaseAPI]
+- name: airmdr-api-token-lifecycle
+  file: skills/airmdr-api-token-lifecycle.md
+  method: generated
+  operations: [createAPITokenForUserAPI, listTokensForUserAPI, deleteTokenAPI, getSessionAPI]

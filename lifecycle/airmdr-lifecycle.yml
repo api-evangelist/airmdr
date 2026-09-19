@@ -1,0 +1,33 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.airmdr.com/changelog/changelog, https://app.airmdr.com/docs/api/, openapi/airmdr-case-manager-openapi.yml, openapi/airmdr-user-management-service-openapi.yml
+versioning:
+  scheme: path-segment generation (/case… v1 and /v2/case… coexist in the Case Manager spec); info.version is 1.0.0 on both specs; product milestones M<n> (build 28.1.1 on the docs index)
+  policy_url: null
+  policy: not published
+deprecation:
+  policy_url: null
+  policy: not published — no Deprecation/Sunset (RFC 8594) headers documented
+  deprecated_operations: []
+  deprecated_fields:
+  - schema: CaseFilter
+    field: global_search_query
+    spec: openapi/airmdr-case-manager-openapi.yml
+  coexisting_generations:
+    v1_case_ops: 36
+    v2_case_ops: 59
+    note: v1 /case… paths remain alongside /v2/case… with no deprecated flag and no retirement date
+changelog: https://docs.airmdr.com/changelog/changelog
+changelog_subscribe: https://app.airmdr.com/subscribe
+status_page: null
+status_page_probe:
+- url: https://status.airmdr.com
+  status: 0
+  note: no DNS
+- url: https://airmdr.statuspage.io
+  status: 302
+  note: unclaimed Statuspage slug (redirects to statuspage.io)
+sla: not published (pricing FAQ commits to daily alert investigations and weekly escalations under an annual contract; no API uptime SLA)
+support:
+  url: https://airmdr.com/contact-us
+  note: M28 release notes announce a customer support ticket portal inside the app

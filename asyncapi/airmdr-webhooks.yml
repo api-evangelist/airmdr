@@ -1,0 +1,60 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.airmdr.com/api-reference/WebHook, openapi/airmdr-case-manager-openapi.yml (Webhooks tag), https://docs.airmdr.com/changelog/changelog (M28.1)
+asyncapi_spec: null
+asyncapi_probes:
+- url: https://docs.airmdr.com/asyncapi.yaml
+  status: 404
+- url: https://docs.airmdr.com/asyncapi.json
+  status: 404
+- url: https://app.airmdr.com/docs/api/asyncapi.yaml
+  status: 404
+- url: https://airmdr.com/asyncapi.yaml
+  status: 404
+direction: inbound
+summary: >-
+  AirMDR's webhook surface is INBOUND only: customers and third-party tools POST alerts INTO AirMDR. AirMDR does not
+  publish an outbound event/webhook catalog — notification of case activity is delivered through integrations
+  (Slack, MS Teams, PagerDuty, Jira, email) configured inside playbooks, not as subscribable HTTP callbacks, and no
+  AsyncAPI document is published anywhere.
+webhooks:
+- name: Alert ingestion (token-authenticated)
+  direction: inbound
+  method: POST
+  url: https://app.airmdr.com/airmdrapi/alerts
+  operationId: createAlertsAPI
+  auth: 'Cookie: Session="<API token>"'
+  payload:
+    alert_content: string (required)
+    alert_provider: string (required) — e.g. aws, microsoft_graph, cyberhaven
+    organization_code: string (required) — e.g. ASO
+    alert_type: string — required for Darryl to auto-investigate
+    created_at_source: integer int64 epoch seconds (optional)
+  response: 201 with alert_id (ORG-PROVIDER-<seq>), alert_uuid, investigation_status
+  docs: https://docs.airmdr.com/api-reference/WebHook
+- name: Alert ingestion (URL-secret webhook)
+  direction: inbound
+  method: POST
+  url: https://app.airmdr.com/airmdrapi/webhooks/{webhook_id}/{secret}/alerts
+  operationId: createAlertFromWebhookAPI
+  auth: webhook_id + secret embedded in the URL path (no headers required)
+  payload: the entire request body is the alert content (no wrapper key)
+  responses:
+    201: alert created
+    404: unknown webhook_id or invalid secret
+    409: duplicate alert
+  management:
+    create: createWebhookAPI (POST /webhooks) — Admin/Super Admin only
+    list: listWebhooksAPI (GET /webhooks)
+    delete: deleteWebhookAPI (DELETE /webhooks/{webhook_id})
+  added: M28.1 (2026-09-16) — "Webhook Alert Ingestion Without Custom Authentication Headers"
+  controls: authentication verification, duplicate-alert handling and rate limiting per the release notes (no published numbers)
+  docs: https://docs.airmdr.com/changelog/changelog
+event_states:
+  investigation_status:
+    0: Created
+    5: Submitted
+    10: InProgress
+    15: Completed
+    20: Failed
+  note: polled via getAlertAPI; there is no push callback for investigation completion

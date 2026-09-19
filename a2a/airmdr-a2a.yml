@@ -1,0 +1,36 @@
+generated: '2026-09-19'
+method: probed
+source: https://docs.airmdr.com/.well-known/agent-card.json
+card: a2a/airmdr-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: docs.airmdr.com
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://docs.airmdr.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  bytes: 908
+name: AirMDR
+version: 1.0.0
+protocolVersion: '0.3'
+url: https://docs.airmdr.com/
+preferredTransport: HTTP+JSON
+capabilities:
+  streaming: false
+  pushNotifications: false
+skills:
+- id: airmdr
+  name: airmdr
+  url: https://docs.airmdr.com/.well-known/agent-skills/airmdr/skill.md
+  local: skills/airmdr-provider-skill.md
+grade: conformant
+grading_basis: >-
+  A2A 1.0.0 hard checks — capabilities is an object, protocolVersion is present, skills is an array — all pass;
+  the optional preferredTransport, defaultInputModes and defaultOutputModes are also present.
+deviations:
+- protocolVersion is '0.3', not 1.0.0; the card uses the 0.3 supportedInterfaces shape
+- url and supportedInterfaces[].url point at the documentation site root, not at an A2A JSON-RPC task endpoint — the card is a discovery pointer to the docs and the agent skill, not a callable A2A agent
+- skills[0].tags is empty
+- authorship: the card is platform-authored (Mintlify serves one per docs project) and served from the docs host; it is not on the registrable domain airmdr.com (404) nor on app.airmdr.com (307 to login)

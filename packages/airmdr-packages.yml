@@ -1,0 +1,20 @@
+generated: '2026-09-19'
+method: searched
+source: registry.npmjs.org/airmdr (404), pypi.org/pypi/airmdr/json (404), https://github.com/AirMDR (2 public repos), https://docs.airmdr.com/llms.txt
+package_count: 0
+packages: []
+repositories:
+- name: self-serve-integration-templates
+  url: https://github.com/AirMDR/self-serve-integration-templates
+  official: true
+  kind: integration templates (provider/skill definitions for the self-serve integration builder), not a client library
+- name: SOCGrader
+  url: https://github.com/AirMDR/SOCGrader
+  official: true
+  kind: tooling repo, not a client library
+note: >-
+  AirMDR publishes no first-party client SDKs on npm, PyPI, Maven Central, NuGet, RubyGems, crates.io, Go or Packagist,
+  and the docs ship only cURL examples. The API docs say request headers "are automatically preloaded ... in your
+  request examples and SDKs" when a token is generated, which refers to the Redoc-generated snippets, not a shipped
+  library. The Remote Agent (https://docs.airmdr.com/Integrations/RemoteAgent) is a customer-installed connector
+  binary distributed from the console, not a registry package.
