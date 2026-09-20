@@ -1,0 +1,21 @@
+{
+  "repo": "airmdr",
+  "feeds": [
+    {
+      "source": "https://airmdr.com/blog",
+      "feed_url": "https://airmdr.com/blog/rss.xml",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    },
+    {
+      "source": "https://docs.airmdr.com/api-reference/apitoken",
+      "feed_url": "https://docs.airmdr.com/api-reference/apitoken",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-19T20:17:39Z"
+}
