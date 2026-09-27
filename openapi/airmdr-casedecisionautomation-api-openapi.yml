@@ -1,0 +1,382 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Case Decision Automation API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged CaseDecisionAutomation across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: CaseDecisionAutomation
+paths:
+  /case_decision_metrics:
+    post:
+      tags:
+      - CaseDecisionAutomation
+      operationId: createCaseDecisionMetricsAPI
+      summary: Create a new case decision metrics object for a given case
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaseDecisionMetricsRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case decision metrics created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case_decision_metrics/{case_identifier}:
+    patch:
+      tags:
+      - CaseDecisionAutomation
+      operationId: updateCaseDecisionMetricsAPI
+      summary: Update case decision metrics object for a given case
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: case_identifier
+        in: path
+        description: case identifier used to identify case
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCaseDecisionMetricsRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case decision metrics updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCaseDecisionMetrics'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+      - CaseDecisionAutomation
+      operationId: getCaseDecisionMetricsAPI
+      summary: Get case decision metrics object for a given case
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: case_identifier
+        in: path
+        description: case identifier used to identify case
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case decision metrics fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCaseDecisionMetrics'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case_execution_metrics:
+    post:
+      tags:
+      - CaseDecisionAutomation
+      operationId: createCaseExecutionMetricsAPI
+      summary: Create a new case execution metrics object for a given case
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaseExecutionMetricsRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case execution metrics created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case_execution_metrics/{execution_id}:
+    get:
+      tags:
+      - CaseDecisionAutomation
+      operationId: getCaseExecutionMetricsAPI
+      summary: Get case execution metrics object for a given case
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: execution_id
+        in: path
+        description: execution id used to identify execution
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case execution metrics fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCaseExecutionMetricsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    GetCaseExecutionMetricsResponse:
+      type: object
+      required:
+      - execution_id
+      - ioc_data
+      properties:
+        execution_id:
+          type: string
+        ioc_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IOCData'
+    RiskAssessment:
+      type: object
+      required:
+      - score
+      - severity
+      - summary
+      properties:
+        score:
+          type: integer
+        severity:
+          type: string
+        summary:
+          type: string
+    IOCScore:
+      type: object
+      required:
+      - ioc_type
+      - ioc_key
+      properties:
+        ioc_type:
+          type: string
+        ioc_key:
+          type: string
+        score:
+          type: integer
+        indicators:
+          type: string
+    CreateCaseExecutionMetricsRequest:
+      type: object
+      required:
+      - execution_id
+      - ioc_score
+      properties:
+        execution_id:
+          type: string
+        ioc_score:
+          $ref: '#/components/schemas/IOCScore'
+        ioc_features:
+          type: object
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    ConcernedIOC:
+      type: object
+      required:
+      - ioc_type
+      - ioc_key
+      properties:
+        ioc_type:
+          type: string
+        ioc_key:
+          type: string
+    UpdateCaseDecisionMetricsRequest:
+      type: object
+      properties:
+        execution_id:
+          type: array
+          items:
+            type: string
+        risk_assessment:
+          $ref: '#/components/schemas/RiskAssessment'
+        concerned_iocs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConcernedIOC'
+    GetCaseDecisionMetrics:
+      type: object
+      required:
+      - case_id
+      - execution_id
+      - risk_assessment
+      - created_at
+      - modified_at
+      - user_modified
+      properties:
+        case_id:
+          type: string
+        execution_id:
+          type: array
+          items:
+            type: string
+        risk_assessment:
+          $ref: '#/components/schemas/RiskAssessment'
+        concerned_iocs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConcernedIOC'
+        created_at:
+          type: integer
+          format: int64
+        modified_at:
+          type: integer
+          format: int64
+        user_modified:
+          type: boolean
+    CreateCaseDecisionMetricsRequest:
+      type: object
+      required:
+      - case_id
+      - execution_id
+      - risk_assessment
+      properties:
+        case_id:
+          type: string
+        execution_id:
+          type: array
+          items:
+            type: string
+        risk_assessment:
+          $ref: '#/components/schemas/RiskAssessment'
+        concerned_iocs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConcernedIOC'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    IOCData:
+      type: object
+      required:
+      - ioc_id
+      - ioc_score
+      properties:
+        ioc_id:
+          type: string
+        ioc_score:
+          $ref: '#/components/schemas/IOCScore'
+        ioc_features:
+          type: object
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-case-manager-openapi.json
+- airmdr-case-manager-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

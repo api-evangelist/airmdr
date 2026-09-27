@@ -1,0 +1,304 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Alert Types API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged AlertTypes across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: AlertTypes
+paths:
+  /alert_types/list:
+    post:
+      tags:
+      - AlertTypes
+      operationId: listAlertTypesByProvidersAPI
+      summary: Get alert types for multiple providers
+      description: Get the list of alert types for a given set of providers
+      parameters:
+      - name: X-Request-ID
+        in: header
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        schema:
+          type: string
+      - name: User-ID
+        in: header
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListAlertTypesByProvidersRequest'
+      responses:
+        '200':
+          description: List of alert types fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAlertTypesWithPropertiesResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /{provider_id}/alert_types:
+    put:
+      tags:
+      - AlertTypes
+      operationId: upsertAlertTypeAPI
+      summary: Upsert an alert type
+      parameters:
+      - name: provider_id
+        in: path
+        description: The name of the provider
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      requestBody:
+        description: The alert type to upsert
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAlertTypeRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Alert type upserted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpsertAlertTypeResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /{provider_id}/alert_types/list:
+    post:
+      tags:
+      - AlertTypes
+      operationId: listAlertTypesByProviderAPI
+      summary: Get the list of alert types by provider
+      parameters:
+      - name: provider_id
+        in: path
+        description: The id of the provider
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Page
+        in: query
+        description: The page number
+        schema:
+          type: integer
+      - name: Size
+        in: query
+        description: The number of results per page
+        schema:
+          type: integer
+      security:
+      - SessionCookie: []
+      requestBody:
+        description: The filter for alert types
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListAlertTypesRequest'
+      responses:
+        '200':
+          description: List of alert types with properties fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAlertTypesWithPropertiesResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    ListAlertTypesByProvidersRequest:
+      type: object
+      required:
+      - provider_ids
+      properties:
+        provider_ids:
+          type: array
+          items:
+            type: string
+          description: list of provider IDs to fetch alert types for
+        organization_ids:
+          type: array
+          items:
+            type: string
+          description: if provided, only alert types observed on alerts for these organizations are returned (queried directly from alerts collection instead of the alert_types catalog)
+    ListAlertTypesFilter:
+      type: object
+      properties:
+        alert_type:
+          type: array
+          items:
+            type: string
+    AlertTypeSeverity:
+      type: integer
+      enum:
+      - 10
+      - 20
+      - 30
+      - 40
+      x-enum-varnames:
+      - AlertTypeSeverityLow
+      - AlertTypeSeverityMedium
+      - AlertTypeSeverityHigh
+      - AlertTypeSeverityCritical
+    AlertTypeWithProperties:
+      type: object
+      required:
+      - alert_type
+      - alert_provider
+      - default_severity
+      - categories
+      - mitre_tactics
+      properties:
+        alert_type:
+          type: string
+        alert_provider:
+          type: string
+        default_severity:
+          $ref: '#/components/schemas/AlertTypeSeverity'
+        categories:
+          type: array
+          items:
+            type: string
+        mitre_tactics:
+          type: array
+          items:
+            type: string
+    ListAlertTypesWithPropertiesResponse:
+      type: object
+      required:
+      - data
+      - total
+      - message
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeWithProperties'
+        total:
+          type: integer
+        message:
+          type: string
+    UpsertAlertTypeRequest:
+      type: object
+      required:
+      - alert_type
+      - default_severity
+      - categories
+      - mitre_tactics
+      properties:
+        alert_type:
+          type: string
+        default_severity:
+          $ref: '#/components/schemas/AlertTypeSeverity'
+        categories:
+          type: array
+          items:
+            type: string
+        mitre_tactics:
+          type: array
+          items:
+            type: string
+    ListAlertTypesRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListAlertTypesFilter'
+    UpsertAlertTypeResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AlertTypeWithProperties'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-case-manager-openapi.json
+- airmdr-case-manager-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

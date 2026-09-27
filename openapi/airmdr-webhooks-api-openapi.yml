@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Webhooks API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Webhooks across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Webhooks
+paths:
+  /webhooks:
+    post:
+      tags:
+      - Webhooks
+      operationId: createWebhookAPI
+      summary: Create a webhook
+      description: Create a webhook. Admin/Super Admin only.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      requestBody:
+        description: Request body for creating a webhook.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+      - Webhooks
+      operationId: listWebhooksAPI
+      summary: List webhooks
+      description: List webhooks scoped to the caller's organization. Admin/Super Admin only.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: sort_by
+        in: query
+        required: false
+        description: Field to order webhooks by. Defaults to created_at.
+        schema:
+          type: string
+          enum:
+          - created_at
+          - provider_id
+          default: created_at
+      - name: sort_order
+        in: query
+        required: false
+        description: Sort direction. Defaults to desc.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Webhooks fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhooksResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /webhooks/{webhook_id}:
+    delete:
+      tags:
+      - Webhooks
+      operationId: deleteWebhookAPI
+      summary: Delete a webhook
+      description: Soft-delete a webhook. Admin/Super Admin only.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: webhook_id
+        in: path
+        description: The ID of the webhook to delete.
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '204':
+          description: Webhook deleted successfully
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /webhooks/{webhook_id}/{secret}/alerts:
+    post:
+      tags:
+      - Webhooks
+      operationId: createAlertFromWebhookAPI
+      summary: Create an alert from a webhook call
+      description: Create an alert from a webhook call. Authenticated purely by webhook_id + secret embedded in the URL path, not by session/header trust.
+      parameters:
+      - name: webhook_id
+        in: path
+        description: The ID of the webhook.
+        required: true
+        schema:
+          type: string
+      - name: secret
+        in: path
+        description: The raw webhook secret, verified against the webhook's stored secret_hash.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The entire request body is treated as the alert content — no wrapper key.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertContent'
+      responses:
+        '201':
+          description: Alert created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAlertFromWebhookResponse'
+        '404':
+          description: Unknown webhook_id or invalid secret
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Duplicate alert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    CreateAlertFromWebhookResponse:
+      type: object
+      properties:
+        alert_id:
+          type: string
+    ListWebhooksResponse:
+      type: object
+      properties:
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+    UserInformation:
+      type: object
+      required:
+      - firstname
+      - user_id
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        user_id:
+          type: string
+        email:
+          type: string
+    AlertContent:
+      type: object
+      additionalProperties: true
+      description: Free-form raw alert payload from the provider. The entire request body is treated as the alert content — there is no wrapper key.
+      x-go-type: json.RawMessage
+    Webhook:
+      type: object
+      properties:
+        webhook_id:
+          type: string
+        name:
+          type: string
+        webhook_url:
+          type: string
+          description: Full alert-ingestion URL, including the embedded secret. Only ever returned on creation.
+        organization_id:
+          type: string
+        organization_code:
+          type: string
+        provider_id:
+          type: string
+        provider:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          $ref: '#/components/schemas/UserInformation'
+    CreateWebhookRequest:
+      type: object
+      required:
+      - organization_id
+      - name
+      properties:
+        name:
+          type: string
+          description: User-facing label to identify this webhook among others in the org.
+        organization_id:
+          type: string
+        provider_id:
+          type: string
+          description: Optional. When omitted, alert_provider is inferred per alert via the data_extractor skill instead of being fixed on the webhook.
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+  parameters:
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-case-manager-openapi.json
+- airmdr-case-manager-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

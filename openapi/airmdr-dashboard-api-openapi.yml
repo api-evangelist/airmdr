@@ -1,0 +1,3979 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Dashboard API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Dashboard across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Dashboard
+paths:
+  /case/metrics:
+    get:
+      tags:
+      - Dashboard
+      operationId: getCaseMetrics
+      summary: Retrieve metrics data
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: days
+        in: query
+        description: Number of days to include in the metrics calculation (optional)
+        schema:
+          type: integer
+          minimum: 1
+          default: 7
+        required: false
+      - name: organization_id
+        in: query
+        description: Additional org id filter. Only applicable for Airmdr employees. If empty, metrics for all organizations are shown.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case metrics fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseMetricsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/analytics/metrics:
+    get:
+      tags:
+      - Dashboard
+      operationId: getCaseAnalyticsMetrics
+      summary: Retrieve case analytics dashboard metrics
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: days
+        in: query
+        description: Number of days to include in the metrics calculation.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 7
+      - name: organization_id
+        in: query
+        description: Org ID filter. Only applicable for AirMDR employees. If empty, metrics for all accessible organizations are returned.
+        required: false
+        schema:
+          type: string
+      - name: created_at_from
+        in: query
+        description: Start of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: created_at_to
+        in: query
+        description: End of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: force_refresh
+        in: query
+        description: When true, bypass any cached result and recompute the metrics.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Case analytics metrics fetched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseAnalyticsDashboardResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/soc/metrics:
+    get:
+      tags:
+      - Dashboard
+      operationId: getCaseSocPerformanceMetrics
+      summary: Retrieve SOC performance dashboard metrics
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: days
+        in: query
+        description: Number of days to include in the metrics calculation.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 7
+      - name: organization_id
+        in: query
+        description: Org ID filter. Only applicable for AirMDR employees. If empty, metrics for all accessible organizations are returned.
+        required: false
+        schema:
+          type: string
+      - name: created_at_from
+        in: query
+        description: Start of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: created_at_to
+        in: query
+        description: End of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: force_refresh
+        in: query
+        description: When true, bypass any cached result and recompute the metrics.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: SOC performance metrics fetched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocPerformanceDashboardResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/executive/metrics:
+    get:
+      tags:
+      - Dashboard
+      operationId: getCaseExecutiveMetrics
+      summary: Retrieve executive dashboard metrics
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: days
+        in: query
+        description: Number of days to include in the metrics calculation.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 7
+      - name: organization_id
+        in: query
+        description: Org ID filter. Only applicable for AirMDR employees. If empty, metrics for all accessible organizations are returned.
+        required: false
+        schema:
+          type: string
+      - name: created_at_from
+        in: query
+        description: Start of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: created_at_to
+        in: query
+        description: End of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: force_refresh
+        in: query
+        description: When true, bypass any cached result and recompute the metrics.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Executive metrics fetched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveDashboardResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/metrics/llm/summary:
+    get:
+      tags:
+      - Dashboard
+      operationId: getCaseMetricsLLMSummaryAPI
+      summary: Based on the parameters, retrieve LLM generated summary for the metrics data
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: days
+        in: query
+        description: Number of days to include in the metrics calculation (optional)
+        schema:
+          type: integer
+          minimum: 1
+          default: 7
+        required: false
+      - name: organization_id
+        in: query
+        description: Additional org id filter. Only applicable for Airmdr employees. If empty, metrics for all organizations are shown.
+        schema:
+          type: string
+      - name: metrics_type
+        in: query
+        required: true
+        description: Type of metrics to generate summary for
+        schema:
+          type: string
+          enum:
+          - case_analytics
+          - soc_performance
+          - system_health
+          - security_review
+          - case_analytics_v2
+          - soc_performance_v2
+      - name: created_at_from
+        in: query
+        description: Start of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: created_at_to
+        in: query
+        description: End of case creation time range as Unix timestamp (seconds).
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: force_refresh
+        in: query
+        description: When true, bypass any cached result and recompute the metrics.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case metrics summary generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseMetricsSummaryResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/metrics/detailed:
+    post:
+      tags:
+      - Dashboard
+      operationId: getDetailedCaseMetricsAPI
+      summary: Retrieve detailed metrics data
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: start_time
+        in: query
+        description: Start time for the metrics calculation
+        schema:
+          type: integer
+          format: int64
+          description: Start time for the metrics calculation
+        required: true
+      - name: end_time
+        in: query
+        description: End time for the metrics calculation
+        schema:
+          type: integer
+          format: int64
+          description: End time for the metrics calculation
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetDetailedMetricsRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case metrics fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDetailedMetricsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /cost_trim_analysis:
+    get:
+      tags:
+      - Dashboard
+      operationId: getCostTrimAnalysis
+      summary: Retrieve the cost-trim analysis snapshot
+      description: 'Returns the latest precomputed alert-type rollup used to surface
+
+        cost-trim opportunities (alert types that produce few or no customer
+
+        escalations). The same base row set is rolled up at request time into
+
+        one of several views (per-org, per-provider, per-type, etc.) so
+
+        dashboards can request exactly the shape they need.
+
+
+        Efficacy (`escalations / alerts`) is returned per row; bucketing of
+
+        efficacy into named tiers is left to the UI.
+
+
+        The snapshot is refreshed daily by a background scheduler; the `stale`
+
+        field on the response indicates whether the latest snapshot is older
+
+        than the configured freshness window.'
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: view
+        in: query
+        description: 'Roll-up shape. Defaults to `org_provider_type` (raw rows). Other
+
+          values produce server-side aggregations of the same base rows.
+
+          '
+        required: false
+        schema:
+          type: string
+          enum:
+          - org_provider_type
+          - org_type
+          - provider_type
+          - org
+          - provider
+          - type
+          - escalations_by_type
+          default: org_provider_type
+      - name: organization_id
+        in: query
+        description: 'Restrict the response to the given organization UUIDs. If omitted,
+
+          all organizations the caller has access to via RBAC are included.
+
+          Values are intersected with the accessible set server-side.
+
+          '
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        explode: true
+      - name: provider
+        in: query
+        description: Case-insensitive exact-match filter on `alert_provider`.
+        required: false
+        schema:
+          type: string
+      - name: alert_type
+        in: query
+        description: Case-insensitive substring filter on `alert_type`.
+        required: false
+        schema:
+          type: string
+      - name: min_alerts
+        in: query
+        description: Drop rows whose total alert count is below this threshold.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: escalation_thresholds
+        in: query
+        description: 'Comma-separated list of escalation-rate thresholds (0.0–1.0) used to
+
+          compute the `trim_headroom` columns on the `org` view. Defaults to
+
+          `0,0.05,0.10,0.25`.
+
+          '
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of rows to return.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 5000
+          default: 500
+      - name: offset
+        in: query
+        description: Row offset for pagination.
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Cost-trim analysis snapshot fetched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostTrimAnalysisResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/system-widgets:
+    get:
+      tags:
+      - Dashboard
+      operationId: listSystemWidgetsAPI
+      summary: List System Widgets
+      description: Returns the catalogue of all available system widgets from the Case Analytics, SOC Performance, and Security Review dashboards.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      responses:
+        '200':
+          description: System widgets retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSystemWidgetsResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard:
+    get:
+      tags:
+      - Dashboard
+      operationId: listDashboardsAPI
+      summary: List Dashboards
+      description: List all dashboards for the organization.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: organization_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter dashboards by organization.
+      responses:
+        '200':
+          description: Dashboards retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDashboardsResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Dashboard
+      operationId: createDashboardAPI
+      summary: Create Dashboard
+      description: Create a new empty dashboard.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDashboardRequest'
+      responses:
+        '201':
+          description: Dashboard created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummary'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}:
+    get:
+      tags:
+      - Dashboard
+      operationId: getDashboardSnapshotAPI
+      summary: Get Dashboard with latest snapshot of widgets
+      description: Get a dashboard with all its active widgets and their latest outputs.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Dashboard retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDashboardResponse'
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Dashboard
+      operationId: deleteDashboardAPI
+      summary: Delete Dashboard
+      description: Permanently delete a dashboard and all its widgets.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Dashboard deleted successfully.
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+      - Dashboard
+      operationId: updateDashboardAPI
+      summary: Update Dashboard
+      description: Rename the dashboard and/or persist widget layout positions. Only widgets listed in widget_layout_updates have their layout updated; others are untouched.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDashboardRequest'
+      responses:
+        '200':
+          description: Dashboard updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDashboardResponse'
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/email:
+    post:
+      tags:
+      - Dashboard
+      operationId: emailCustomDashboardAPI
+      summary: Email Custom Dashboard
+      description: Renders the dashboard as an HTML report with a PDF attachment and emails it to the given recipients.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCustomDashboardRequest'
+      responses:
+        '200':
+          description: Dashboard emailed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCustomDashboardResponse'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/widget:
+    post:
+      tags:
+      - Dashboard
+      operationId: createWidgetAPI
+      summary: Create Widget
+      description: Create a new widget on a dashboard. Returns the saved widget.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWidgetRequest'
+      responses:
+        '201':
+          description: Widget created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateWidgetResponse'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/widgets:
+    post:
+      tags:
+      - Dashboard
+      operationId: createWidgetsAPI
+      summary: Create Multiple Widgets
+      description: Bulk create multiple widgets on a dashboard. Each widget follows the same model as single widget creation.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWidgetsRequest'
+      responses:
+        '201':
+          description: Widgets created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateWidgetsResponse'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/widget/{widget_id}:
+    patch:
+      tags:
+      - Dashboard
+      operationId: updateWidgetAPI
+      summary: Update Widget
+      description: Update widget name, render type, description, layout, or source configuration. Only provided fields are updated.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: widget_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWidgetRequest'
+      responses:
+        '200':
+          description: Widget updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateWidgetResponse'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Widget or dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Dashboard
+      operationId: deleteWidgetAPI
+      summary: Delete Widget
+      description: Permanently delete a widget from a dashboard.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: widget_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Widget deleted successfully.
+        '404':
+          description: Widget or dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/schedule/list:
+    post:
+      tags:
+      - Dashboard
+      operationId: listDashboardSchedulesAPI
+      summary: List Dashboard Schedules
+      description: List all email schedules for a dashboard, optionally filtered by organization.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Dashboard to list schedules for.
+      - name: organization_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter schedules by organization.
+      responses:
+        '200':
+          description: Schedules retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDashboardSchedulesResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/schedule:
+    post:
+      tags:
+      - Dashboard
+      operationId: createDashboardScheduleAPI
+      summary: Bulk Create Dashboard Schedules
+      description: Create one or more recurring email schedules for a custom dashboard. Each item is created independently — one item's failure does not block the others; see the per-item results in the response.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCreateDashboardScheduleRequest'
+      responses:
+        '200':
+          description: Request processed. See per-item results for individual outcomes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkDashboardScheduleResponse'
+        '400':
+          description: Invalid request (e.g. no schedules provided, or too many).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+      - Dashboard
+      operationId: updateDashboardScheduleAPI
+      summary: Bulk Update Dashboard Schedules
+      description: Update one or more existing dashboard schedules. Only provided fields are updated on each schedule. Each item is applied independently — one item's failure does not block the others; see the per-item results in the response.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkUpdateDashboardScheduleRequest'
+      responses:
+        '200':
+          description: Request processed. See per-item results for individual outcomes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkDashboardScheduleResponse'
+        '400':
+          description: Invalid request (e.g. no schedules provided, or too many).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Dashboard
+      operationId: deleteDashboardScheduleAPI
+      summary: Bulk Delete Dashboard Schedules
+      description: Permanently delete one or more dashboard schedules. Each item is deleted independently — one item's failure does not block the others; see the per-item results in the response.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteDashboardScheduleRequest'
+      responses:
+        '200':
+          description: Request processed. See per-item results for individual outcomes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkDashboardScheduleResponse'
+        '400':
+          description: Invalid request (e.g. no schedule_ids provided, or too many).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/schedule/execution/list:
+    post:
+      tags:
+      - Dashboard
+      operationId: listDashboardScheduleExecutionsAPI
+      summary: List Dashboard Schedule Executions
+      description: List the run history across all schedules for a dashboard, most recent first. Supports filtering by organization, schedule, status, date range, and free-text search.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListDashboardScheduleExecutionsRequest'
+      responses:
+        '200':
+          description: Executions retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDashboardScheduleExecutionsResponse'
+        '404':
+          description: Dashboard not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/dashboard/{dashboard_id}/schedule/execution/{execution_id}/pdf:
+    get:
+      tags:
+      - Dashboard
+      operationId: getDashboardScheduleExecutionPdfAPI
+      summary: Get Dashboard Schedule Execution PDF
+      description: Download the PDF report generated by a schedule execution.
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: execution_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: PDF report binary content.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Execution or PDF not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/soc/email:
+    post:
+      tags:
+      - Dashboard
+      operationId: emailSocPerformanceReportAPI
+      summary: Email SOC Performance Report
+      description: Queues SOC Performance Report email for delivery.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocEmailRequest'
+      responses:
+        '200':
+          description: Email queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocEmailResponse'
+        '400':
+          description: Missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/analytics/email:
+    post:
+      tags:
+      - Dashboard
+      operationId: emailCaseAnalyticsReportAPI
+      summary: Email Case Analytics Report
+      description: Queues Case Analytics Report email for delivery.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAnalyticsEmailRequest'
+      responses:
+        '200':
+          description: Email queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseAnalyticsEmailResponse'
+        '400':
+          description: Missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    UpdateWidgetRequest:
+      type: object
+      properties:
+        widget_name:
+          type: string
+        render_type:
+          type: string
+        nl_description:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+    SeverityMetrics:
+      type: object
+      required:
+      - alert_count
+      properties:
+        severity:
+          type: integer
+        alert_count:
+          type: integer
+          description: Number of alerts
+    CaseAnalyticsDashboardResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseAnalyticsDashboardData'
+    WidgetLayout:
+      type: object
+      required:
+      - column
+      - row
+      - width
+      - height
+      - min_width
+      - min_height
+      properties:
+        column:
+          type: integer
+          description: Column position (0–9, step 3 for a 12-col layout).
+        row:
+          type: integer
+          description: Row position. Use 9999 to append to bottom.
+        width:
+          type: integer
+          minimum: 3
+          description: Number of columns the widget occupies.
+        height:
+          type: integer
+          minimum: 3
+          description: Number of rows the widget occupies.
+        min_width:
+          type: integer
+          description: Minimum number of columns (3).
+        min_height:
+          type: integer
+          description: Minimum number of rows (3).
+    PlaybookExecutionSource:
+      type: object
+      required:
+      - playbook_uuid
+      - node_id
+      - step_number
+      - schedule_id
+      properties:
+        playbook_uuid:
+          type: string
+        playbook_version:
+          type: integer
+          description: Specific playbook version to use. Defaults to latest if omitted.
+        node_id:
+          type: string
+          description: Unique identifier for the node within the playbook.
+        step_number:
+          type: integer
+          description: 1-indexed step number within the playbook.
+        schedule_id:
+          type: string
+          description: Schedule ID to pull data from. Uses most recent execution if omitted.
+    UpdateWidgetResponse:
+      type: object
+      required:
+      - widget_id
+      - dashboard_id
+      - widget_name
+      - updated_at
+      properties:
+        widget_id:
+          type: string
+        dashboard_id:
+          type: string
+        widget_name:
+          type: string
+        render_type:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        updated_at:
+          type: string
+          format: date-time
+        last_output:
+          description: Latest execution output for system widgets.
+    EntityCount:
+      type: object
+      required:
+      - name
+      - case_count
+      properties:
+        name:
+          type: string
+          description: Entity value (e.g. IP address, domain, username, hostname).
+        entity_type:
+          type: string
+          description: Entity type (ip, domain, user, service_account, host, file_hash, cloud_resource).
+        case_count:
+          type: integer
+          description: Number of distinct cases this entity appears in.
+    SystemWidgetSelection:
+      type: object
+      required:
+      - widget_id
+      - dashboard_source
+      - category
+      - days
+      - data_source_ids
+      properties:
+        widget_id:
+          type: string
+          description: ID of the system widget (e.g., mtta, top_attacking_ips).
+        dashboard_source:
+          type: string
+          description: Source dashboard (case_analytics, soc_performance, security_review).
+        category:
+          type: string
+          description: Category of the widget for organization.
+        days:
+          type: integer
+          description: Time window in days for the widget data (e.g. 7, 30, 90).
+        data_source_ids:
+          type: array
+          items:
+            type: string
+          description: List of data sources (filtered from metrics apis) to include in the widget.
+          minItems: 1
+    ProviderEscalationCount:
+      type: object
+      required:
+      - provider
+      - escalated_count
+      - not_escalated_count
+      - total
+      properties:
+        provider:
+          type: string
+          description: Detection source / provider name (security vendor). "Unknown" when the case has no provider.
+        display_name:
+          type: string
+          description: Human-readable provider name.
+        escalated_count:
+          type: integer
+          description: Cases from this provider with at least one escalation.
+        not_escalated_count:
+          type: integer
+          description: Benign cases from this provider (no escalation).
+        total:
+          type: integer
+          description: Total cases from this provider.
+    ProviderList:
+      type: object
+      required:
+      - provider
+      - alert_count
+      properties:
+        provider:
+          $ref: '#/components/schemas/ProviderSummary'
+        alert_count:
+          type: integer
+          description: Number of alerts
+    ConsistencyWidgets:
+      type: object
+      properties:
+        outlier_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutlierCase'
+          description: Top slowest investigations by investigation_completed_metric, descending.
+    GetDashboardResponse:
+      type: object
+      required:
+      - dashboard_id
+      - dashboard_name
+      - organization_id
+      - created_at
+      - widgets
+      properties:
+        dashboard_id:
+          type: string
+        dashboard_name:
+          type: string
+        description:
+          type: string
+        organization_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/WidgetDetail'
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    BulkDeleteDashboardScheduleRequest:
+      type: object
+      required:
+      - schedule_ids
+      properties:
+        schedule_ids:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 50
+    DetailedMetrics:
+      type: object
+      required:
+      - provider_metrics_list
+      - global_metrics
+      properties:
+        provider_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderMetrics'
+          description: Provider metrics list
+        alert_type_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeMetrics'
+          description: Alert type metrics list
+        global_metrics:
+          $ref: '#/components/schemas/GlobalMetrics'
+          description: Global metrics
+        daily_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyMetrics'
+          description: Daily metrics list
+    CaseMetricsLLMSummary:
+      type: object
+      required:
+      - risk
+      - tag
+      - title
+      - details
+      - footer_label
+      - footer_text
+      properties:
+        risk:
+          type: string
+          description: Drives the chip color. Accepts color-semantic (info/success/warning/danger, emitted by /query_metrics) or severity (Critical/High/Medium/Low/Informational, emitted by the monthly report).
+          enum:
+          - info
+          - success
+          - warning
+          - danger
+          - Critical
+          - High
+          - Medium
+          - Low
+          - Informational
+          x-enum-varnames:
+          - InfoLLMSummaryRisk
+          - SuccessLLMSummaryRisk
+          - WarningLLMSummaryRisk
+          - DangerLLMSummaryRisk
+          - CriticalLLMSummaryRisk
+          - HighLLMSummaryRisk
+          - MediumLLMSummaryRisk
+          - LowLLMSummaryRisk
+          - InformationalLLMSummaryRisk
+        tag:
+          type: string
+          description: Chip label, e.g. "1 CRITICAL ESCALATION", "TELEMETRY GAP".
+        title:
+          type: string
+          description: a brief summary text of this briefing point in < 10 words
+        details:
+          type: string
+          description: Narrative paragraph describing the briefing point.
+        footer_label:
+          type: string
+          description: Footer flips between a resolved/no-action STATUS line and a NEXT STEP line.
+          enum:
+          - STATUS
+          - NEXT STEP
+          x-enum-varnames:
+          - StatusLLMSummaryFooter
+          - NextStepLLMSummaryFooter
+        footer_text:
+          type: string
+          description: Footer body text for the STATUS / NEXT STEP line.
+    ThroughputWidgets:
+      type: object
+      properties:
+        total_cases:
+          type: integer
+          description: Total cases created in the date window.
+        daily_case_volume:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Case count per day in the window.
+        analyst_performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalystPerformance'
+          description: Per-analyst case volume and avg MTTI (manual cases only).
+        peak_load_by_hour:
+          type: array
+          items:
+            $ref: '#/components/schemas/HourCount'
+          description: Case volume by hour of day (UTC) — peak load signal.
+        adr_triage_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdrTriageCount'
+          description: Distribution of cases by automation tier (adr_triage).
+        status_breakdown:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Case count grouped by status (status_id → count).
+    SlaAdherenceResult:
+      type: object
+      required:
+      - total_cases
+      - met_count
+      - breach_count
+      - adherence_pct
+      properties:
+        total_cases:
+          type: integer
+        met_count:
+          type: integer
+          description: Cases where investigation_completed_metric <= target.
+        breach_count:
+          type: integer
+          description: Cases where investigation_completed_metric > target.
+        adherence_pct:
+          type: number
+          format: float
+          description: met_count / total_cases as a percentage.
+        avg_mtti_seconds:
+          type: integer
+          description: Average MTTI across all cases in this tier.
+    CreateWidgetsRequest:
+      type: object
+      required:
+      - widgets
+      properties:
+        widgets:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/CreateWidgetRequest'
+          description: List of widgets to create (1-100 widgets per request).
+    DashboardSchedule:
+      type: object
+      required:
+      - schedule_id
+      - organization_id
+      - organization_code
+      - name
+      - frequency
+      - recipients
+      - is_enabled
+      - frequency_display
+      - created_at
+      - updated_at
+      - created_by
+      properties:
+        schedule_id:
+          type: string
+        organization_id:
+          type: string
+        organization_code:
+          type: string
+          description: Human-readable org code shown in the schedule list (e.g. ASO).
+        name:
+          type: string
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        recurrence:
+          $ref: '#/components/schemas/ScheduleRecurrence'
+          description: Null for send_now schedules.
+        recipients:
+          type: array
+          items:
+            type: string
+            format: email
+          minItems: 1
+        is_enabled:
+          type: boolean
+          description: Whether the schedule is active. False pauses delivery without deleting the schedule.
+        frequency_display:
+          type: string
+          description: Human-readable recurrence summary shown in the list (e.g. "Every Monday at 9:00 AM", "Monthly on the 1st at 8:00 AM").
+        created_at:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (UTC).
+        updated_at:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (UTC).
+        created_by:
+          type: string
+          description: User ID of the creator.
+    BusinessHoursBreakdown:
+      type: object
+      required:
+      - business_hours_count
+      - after_hours_count
+      - total
+      properties:
+        business_hours_count:
+          type: integer
+          description: Cases created during standard business hours (Mon–Fri 09:00–17:00 UTC).
+        after_hours_count:
+          type: integer
+          description: Cases created outside business hours — nights, early mornings, and weekends (UTC).
+        total:
+          type: integer
+          description: Total cases across both buckets.
+        ai_summary:
+          type: string
+          description: AI-generated natural-language summary of the business-hours breakdown. Populated separately; may be absent.
+    GlobalMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - failed_alert_count
+        - successful_alert_sources
+        - failed_alert_sources
+        - successful_sources_without_alerts
+        properties:
+          global_provider_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProviderMetrics'
+            description: Provider metrics list
+          failed_alert_count:
+            type: integer
+            description: Number of failed alerts
+          successful_alert_sources:
+            type: array
+            items:
+              type: string
+            description: List of successful alert sources
+          failed_alert_sources:
+            type: array
+            items:
+              type: string
+            description: List of failed alert sources
+          successful_sources_without_alerts:
+            type: array
+            items:
+              type: string
+            description: List of successful sources without alerts
+    SystemWidget:
+      type: object
+      required:
+      - widget_id
+      - dashboard_source
+      - display_name
+      - category
+      properties:
+        widget_id:
+          type: string
+          description: Identifier used in CaseMetricSource.metric_widget_type when adding this widget to a custom dashboard.
+        dashboard_source:
+          $ref: '#/components/schemas/SystemWidgetDashboardSource'
+        display_name:
+          type: string
+        category:
+          type: string
+          description: Grouping label for display in the widget picker (e.g. IP & Network, User Risk).
+    EmailCustomDashboardResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming the dashboard report was emailed
+    CostTrimOrgRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - organization_uuid
+        - alert_types
+        properties:
+          organization_uuid:
+            type: string
+          organization_code:
+            type: string
+          alert_types:
+            type: integer
+            description: Count of distinct alert types within this org.
+          trim_headroom:
+            type: object
+            additionalProperties:
+              type: number
+              format: double
+            description: 'Map of threshold-name → fraction of total alerts in this org
+
+              that come from alert types with escalation rate ≤ threshold.
+
+              Keys are named `safe_trim_pct_0` for 0% and `trim_pct_N` for
+
+              N% (e.g. `trim_pct_5`, `trim_pct_10`, `trim_pct_25`).
+
+              '
+    DetectionWidgets:
+      type: object
+      properties:
+        high_value_detections:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types ranked by malicious case count.
+        false_positive_alert_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types ranked by false positive case count.
+        uninvestigated_alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types with no linked case (linked_case_id null and no non-empty case_id in linked_case_executions).
+        missing_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types where cases have a non-empty confidence.missing_information field, grouped by alert type.
+        top_alert_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Top 10 alert types ranked by case count within the requested date range.
+    ScheduleRecurrence:
+      type: object
+      description: Recurrence config. Required for daily/weekly/monthly; omit for send_now.
+      required:
+      - hour
+      - minute
+      - user_timezone_offset
+      properties:
+        hour:
+          type: integer
+          minimum: 0
+          maximum: 23
+          description: Hour of day to send (0–23, in the specified timezone).
+        minute:
+          type: integer
+          minimum: 0
+          maximum: 59
+          description: Minute of hour to send (0–59).
+        day_of_week:
+          type: integer
+          minimum: 0
+          maximum: 6
+          description: Day of week (0=Sunday, 6=Saturday). Required when frequency is weekly.
+        day_of_month:
+          type: integer
+          minimum: 1
+          maximum: 31
+          description: Day of month (1–31). Required when frequency is monthly.
+        user_timezone_offset:
+          type: integer
+          minimum: -720
+          maximum: 720
+          description: User's timezone offset in minutes from UTC. Required for all frequencies.
+    SystemWidgetDashboardSource:
+      type: string
+      enum:
+      - case_analytics
+      - soc_performance
+      - security_review
+      - executive
+    DashboardSummary:
+      type: object
+      required:
+      - dashboard_id
+      - dashboard_name
+      - organization_id
+      - created_at
+      - widget_count
+      - has_email_schedule
+      - organization_code
+      properties:
+        dashboard_id:
+          type: string
+        dashboard_name:
+          type: string
+        description:
+          type: string
+          description: Optional free-text description of the dashboard.
+        organization_id:
+          type: string
+        organization_code:
+          type: string
+          description: Human-readable code of the organization the dashboard belongs to. Derived from the organization, not stored on the dashboard.
+        created_at:
+          type: string
+          format: date-time
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+        widget_count:
+          type: integer
+          description: Number of widgets currently on the dashboard.
+        has_email_schedule:
+          type: boolean
+          description: Whether the dashboard has a recurring email schedule configured. Always false until scheduled dashboard emails are implemented.
+    EntityCountWithDays:
+      allOf:
+      - $ref: '#/components/schemas/EntityCount'
+      - type: object
+        required:
+        - days
+        properties:
+          days:
+            type: integer
+            description: Number of distinct days this entity appears in cases.
+    AdrTriageDailyBreakdown:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        fully_automated:
+          type: integer
+        partially_automated:
+          type: integer
+        manual:
+          type: integer
+    WidgetLayoutUpdate:
+      type: object
+      required:
+      - widget_id
+      - layout
+      properties:
+        widget_id:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+    AlertTypeCount:
+      type: object
+      required:
+      - alert_type
+      - total
+      properties:
+        alert_type:
+          type: string
+        total:
+          type: integer
+          description: Total cases for this alert type.
+        malicious:
+          type: integer
+          description: Cases with disposition=10 (Malicious).
+        false_positive:
+          type: integer
+          description: Cases with disposition in [1,5] (NoThreatFound + NonMaliciousPositive).
+    DailyCount:
+      type: object
+      required:
+      - date
+      - count
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        count:
+          type: integer
+    UpdateDashboardScheduleItem:
+      allOf:
+      - type: object
+        required:
+        - schedule_id
+        properties:
+          schedule_id:
+            type: string
+      - $ref: '#/components/schemas/UpdateDashboardScheduleRequest'
+    CostTrimRollupBase:
+      type: object
+      required:
+      - alerts
+      - investigated
+      - escalations
+      - efficacy
+      properties:
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        linked_case_count:
+          type: integer
+          format: int64
+        escalations:
+          type: integer
+          format: int64
+          description: Count of alerts whose linked case was escalated to the customer.
+        escalated_to_analyst:
+          type: integer
+          format: int64
+        efficacy:
+          type: number
+          format: double
+    EscalationBreakdown:
+      type: object
+      required:
+      - escalated_count
+      - not_escalated_count
+      - total
+      properties:
+        escalated_count:
+          type: integer
+          description: Number of cases with at least one escalation in the escalations[] array.
+        not_escalated_count:
+          type: integer
+          description: Number of cases with no escalations.
+        total:
+          type: integer
+          description: Total case count (escalated_count + not_escalated_count).
+        ai_summary:
+          type: string
+          description: AI-generated natural-language summary of the escalation breakdown. Populated separately; may be absent.
+    CreateWidgetsResponse:
+      type: object
+      required:
+      - widgets
+      properties:
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateWidgetResponse'
+          description: List of created widgets with their IDs and configurations.
+    SocPerformanceDashboardData:
+      type: object
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        speed_sla:
+          $ref: '#/components/schemas/SpeedSlaWidgets'
+        throughput:
+          $ref: '#/components/schemas/ThroughputWidgets'
+        investigation_quality:
+          $ref: '#/components/schemas/InvestigationQualityWidgets'
+        response_remediation:
+          $ref: '#/components/schemas/ResponseRemediationWidgets'
+        consistency:
+          $ref: '#/components/schemas/ConsistencyWidgets'
+        customer_experience:
+          $ref: '#/components/schemas/CustomerExperienceWidgets'
+        automation:
+          $ref: '#/components/schemas/AutomationWidgets'
+        operational_gaps:
+          $ref: '#/components/schemas/OperationalGapsWidgets'
+    HostWidgets:
+      type: object
+      properties:
+        repeat_incident_hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Hosts appearing in more than one case.
+        hosts_in_malicious_activity:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Hosts appearing in malicious cases.
+        multi_vector_targeted_hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiVectorHost'
+          description: Hosts involved in more than one distinct attack type.
+    AdrTriageCount:
+      type: object
+      required:
+      - adr_triage
+      - count
+      properties:
+        adr_triage:
+          type: integer
+          description: 'Automation level: 0=NA, 1=None (manual), 5=Partial, 10=Full (automated).'
+        count:
+          type: integer
+        percentage:
+          type: number
+          format: float
+          description: Percentage of total cases in this tier.
+    OperationalGapsWidgets:
+      type: object
+      properties:
+        missing_telemetry_by_alert_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingTelemetryCount'
+          description: Cases with non-empty confidence.missing_information, grouped by alert_type.
+        blocked_by_customer_by_category:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlockedByCategoryCount'
+          description: Cases with status=10 OR actions_required[status=2], grouped by category and severity tier.
+    CostTrimTotals:
+      type: object
+      required:
+      - alerts
+      - investigated
+      - escalations
+      - efficacy
+      properties:
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        escalations:
+          type: integer
+          format: int64
+          description: Count of alerts whose linked case was escalated to the customer.
+        efficacy:
+          type: number
+          format: double
+          description: Total escalations divided by total alerts.
+    SocPerformanceDashboardResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SocPerformanceDashboardData'
+    HourCount:
+      type: object
+      required:
+      - hour
+      - count
+      properties:
+        hour:
+          type: integer
+          description: Hour of day in UTC (0–23).
+        count:
+          type: integer
+          description: Number of cases created in this hour across all days in the window.
+    ListSystemWidgetsResponse:
+      type: object
+      required:
+      - widgets
+      properties:
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/SystemWidget'
+    MttiComparisonPoint:
+      type: object
+      required:
+      - x
+      - y
+      properties:
+        x:
+          type: number
+          format: float
+          description: Average investigation time in minutes.
+        y:
+          type: number
+          format: float
+          description: Time difference (avg_mtti - x) in minutes.
+    CreateDashboardScheduleRequest:
+      type: object
+      required:
+      - name
+      - frequency
+      - recipients
+      properties:
+        name:
+          type: string
+        organization_id:
+          type: string
+          description: Target organization to create the schedule in. Defaults to the user's logged in organization if not provided.
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        recurrence:
+          $ref: '#/components/schemas/ScheduleRecurrence'
+          description: Required when frequency is daily, weekly, or monthly. Omit for send_now.
+        recipients:
+          type: array
+          items:
+            type: string
+            format: email
+          minItems: 1
+        is_enabled:
+          type: boolean
+          description: Whether the schedule is active on creation. Defaults to true if omitted.
+    PercentileMetric:
+      type: object
+      properties:
+        p50_seconds:
+          type: integer
+          description: 50th percentile (median) value in seconds.
+        p95_seconds:
+          type: integer
+          description: 95th percentile value in seconds.
+        p99_seconds:
+          type: integer
+          description: 99th percentile value in seconds.
+    CostTrimProviderRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_provider
+        properties:
+          alert_provider:
+            type: string
+    CaseAnalyticsDashboardData:
+      type: object
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        network:
+          $ref: '#/components/schemas/NetworkWidgets'
+        users:
+          $ref: '#/components/schemas/UserWidgets'
+        hosts:
+          $ref: '#/components/schemas/HostWidgets'
+        detection:
+          $ref: '#/components/schemas/DetectionWidgets'
+        trends:
+          $ref: '#/components/schemas/TrendWidgets'
+        threat_categorization:
+          $ref: '#/components/schemas/ThreatCategorizationWidgets'
+        remediation:
+          $ref: '#/components/schemas/RemediationWidgets'
+        disposition_escalation:
+          $ref: '#/components/schemas/DispositionEscalationWidgets'
+    RemediationWidgets:
+      type: object
+      properties:
+        unresolved_actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionCount'
+          description: Cases ranked by count of actions with status in [0,1,2] (New, Pending, Customer Pending).
+        customer_action_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionCount'
+          description: Cases ranked by count of actions with status=2 (Customer Pending).
+    SpeedSlaWidgets:
+      type: object
+      properties:
+        mtta:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Acknowledge: avg(alert_acknowledged_at - alert_raised_at).'
+        mtti:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Investigate: avg(investigation_completed_at - alert_acknowledged_at).'
+        mttc:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Contain: avg(case_contained_at - alert_raised_at).'
+        mtt_close:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Close: avg(case_closed_at - alert_raised_at).'
+        sla_config:
+          $ref: '#/components/schemas/SlaConfig'
+          description: SLA targets echoed in response for UI display.
+        critical_incident_adherence:
+          $ref: '#/components/schemas/SlaAdherenceResult'
+          description: SLA adherence for Critical Incident Support (sev=15, target=2hr).
+        critical_alert_adherence:
+          $ref: '#/components/schemas/SlaAdherenceResult'
+          description: SLA adherence for Critical Alert Validation (sev=10, target=4hr).
+        non_critical_adherence:
+          $ref: '#/components/schemas/SlaAdherenceResult'
+          description: SLA adherence for Non-Critical Incident Support (sev≤5, target=8hr).
+        sla_adherence_trend:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlaAdherenceTrendPoint'
+          description: Daily SLA adherence % for all 3 tiers — three line charts over the date window.
+        response_time_percentiles:
+          $ref: '#/components/schemas/ResponseTimePercentiles'
+          description: P50/P95/P99 for each timing metric across closed cases in the window.
+    DailyMetrics:
+      type: object
+      required:
+      - date
+      - provider_list
+      properties:
+        date:
+          type: string
+        provider_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderList'
+          description: Provider list
+    BulkDashboardScheduleResponse:
+      type: object
+      required:
+      - results
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardScheduleResult'
+          description: One result per request item, in the same order as the request. A failure in one item does not affect the others.
+    OrganizationMetrics:
+      allOf:
+      - $ref: '#/components/schemas/DetailedMetrics'
+      - type: object
+        required:
+        - organization_id
+        properties:
+          organization_id:
+            type: string
+            description: Organization ID
+    BulkUpdateDashboardScheduleRequest:
+      type: object
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateDashboardScheduleItem'
+          minItems: 1
+          maxItems: 50
+    QuestionsAnsweredByOutcome:
+      type: object
+      required:
+      - disposition
+      - answered_count
+      properties:
+        disposition:
+          type: integer
+          description: 'Case disposition: 0=Pending, 1=NoThreatFound, 5=NonMaliciousPositive, 10=Malicious.'
+        label:
+          type: string
+          description: Human-readable outcome label (Malicious, Benign, Suspicious, etc.).
+        answered_count:
+          type: integer
+          description: Total explore_deeper_questions answered (status != Available, status != Data Needed) across cases with this disposition.
+    UserWidgets:
+      type: object
+      properties:
+        repeat_targeted_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users (type=user or service_account) appearing in more than one case.
+        users_in_malicious_activity:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users appearing in malicious cases (disposition=10).
+        users_high_false_positives:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users most frequently appearing in non-malicious cases (disposition in [1,5]).
+        multi_vector_targeted_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiVectorUser'
+          description: Users involved in more than one distinct attack type.
+    ListDashboardsResponse:
+      type: object
+      required:
+      - dashboards
+      properties:
+        dashboards:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSummary'
+    AnalystPerformance:
+      type: object
+      required:
+      - assignee_email
+      - case_count
+      properties:
+        assignee_email:
+          type: string
+        case_count:
+          type: integer
+          description: Number of cases assigned to this analyst in the window.
+        avg_mtti_seconds:
+          type: integer
+          description: Average MTTI in seconds for this analyst's cases (manual cases only).
+    CreateWidgetResponse:
+      type: object
+      required:
+      - widget_id
+      - dashboard_id
+      - widget_name
+      - source_type
+      - render_type
+      - layout
+      - created_at
+      properties:
+        widget_id:
+          type: string
+        dashboard_id:
+          type: string
+        widget_name:
+          type: string
+        source_type:
+          $ref: '#/components/schemas/WidgetSourceType'
+        render_type:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+        transformation_code:
+          type: string
+          description: Python code to transform the playbook step output.
+        created_at:
+          type: string
+          format: date-time
+        last_output:
+          description: Latest execution output for system widgets.
+    ExecutiveDashboardResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ExecutiveDashboardData'
+    CaseMetrics:
+      type: object
+      required:
+      - total_cases
+      - mean_time_to_ack
+      - mean_time_to_contain
+      - mean_time_to_close
+      - handled_by_darryl
+      - sub_category_count_darryl
+      - status_count
+      - severity_count
+      - escalated_to_customer_count
+      - case_count_per_day
+      properties:
+        total_cases:
+          type: integer
+          description: total cases covered in analysis
+        mean_time_to_ack:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mtta metrics
+        mean_time_to_investigate:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mtti metrics
+        mean_time_to_contain:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mttr metrics
+        mean_time_to_close:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mttc metrics
+        handled_by_darryl:
+          type: integer
+          description: cases handled by darryl out of all cases
+        sub_category_count_darryl:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Top-10 sub cateogries by count for cases handled by darryl
+        status_count:
+          type: object
+          additionalProperties:
+            type: integer
+          description: count of cases for each status type
+        severity_count:
+          type: object
+          additionalProperties:
+            type: integer
+          description: count of cases for each severity type
+        escalated_to_customer_count:
+          type: integer
+          description: number of cases escalated to customer
+        case_count_per_day:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+          description: count of cases for each severity type
+    ProviderSummary:
+      type: object
+      required:
+      - name
+      - display_name
+      - logo_url
+      - provider_id
+      properties:
+        name:
+          type: string
+        display_name:
+          type: string
+        logo_url:
+          type: string
+        provider_id:
+          type: string
+    CostTrimOrgTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - organization_uuid
+        - alert_type
+        properties:
+          organization_uuid:
+            type: string
+          organization_code:
+            type: string
+          alert_type:
+            type: string
+    KpiWidgets:
+      type: object
+      required:
+      - total_cases
+      - cases_escalated
+      - pending_case_actions
+      properties:
+        total_cases:
+          type: integer
+          description: Distinct cases created within the selected window.
+        cases_escalated:
+          type: integer
+          description: Cases with at least one escalation (escalation_type=Escalated).
+        pending_case_actions:
+          type: integer
+          description: Count of open case action items — matches the listCaseActionsV1 total (non-closed cases, non-empty actions, scoped to the window on modified_at).
+        mtti_seconds:
+          type: number
+          format: float
+          description: Mean time to investigate (investigation_completed_at - alert_acknowledged_at) in seconds, excluding cases flagged ignore_case_metric. Absent when no qualifying cases.
+    ExecutiveDashboardData:
+      type: object
+      description: Curated executive-view widgets. KPI card + escalation, detection, trend, and threat widgets reused from the analytics/SOC dashboards, plus recent malicious cases and MITRE category volume.
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        escalations_by_disposition:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: Escalated vs non-escalated case counts grouped by disposition (with_communication = escalated).
+        escalations_by_provider:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEscalationCount'
+          description: Escalated vs benign case counts grouped by security vendor (detection source).
+        high_value_detections:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types most likely to be malicious.
+        false_positive_alert_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types most likely to be false positives.
+        cases_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily total case volume within the requested window.
+        escalations_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily escalated case volume within the requested window.
+        cases_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count grouped by threat category.
+        escalations_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Escalated case count broken down by severity level.
+        recent_malicious_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentMaliciousCase'
+          description: Most recent malicious cases (disposition in [2,10]), newest first.
+        mitre_category_volume:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmergingThreat'
+          description: Case volume per threat category, current window vs the prior equal window.
+    SocEmailRequestFilter:
+      type: object
+      required:
+      - created_at_from
+      - created_at_to
+      properties:
+        org_id:
+          type: string
+          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
+        created_at_from:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (start of date range)
+        created_at_to:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (end of date range)
+        metadata:
+          type: object
+          description: Optional metadata for report customization
+    OutlierCase:
+      type: object
+      required:
+      - case_id
+      - case_uuid
+      properties:
+        case_id:
+          type: string
+        case_uuid:
+          type: string
+        category:
+          type: string
+        severity:
+          type: integer
+        assignee_email:
+          type: string
+        investigation_time_seconds:
+          type: integer
+          description: Time from alert_acknowledged_at to investigation_completed_at in seconds.
+        close_time_seconds:
+          type: integer
+          description: Time from alert_raised_at to case_closed_at in seconds.
+    UpdateDashboardScheduleRequest:
+      type: object
+      description: All fields optional. Only provided fields are updated.
+      properties:
+        name:
+          type: string
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        recurrence:
+          $ref: '#/components/schemas/ScheduleRecurrence'
+        recipients:
+          type: array
+          items:
+            type: string
+            format: email
+          minItems: 1
+          description: If provided, replaces the entire recipient list. Omit to leave unchanged.
+        is_enabled:
+          type: boolean
+          description: Set to false to pause the schedule without deleting it.
+    CaseMetricsSummaryResponse:
+      type: object
+      required:
+      - message
+      - summary
+      properties:
+        message:
+          type: string
+          description: Message indicating the status of the summary generation.
+        summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseMetricsLLMSummary'
+          description: A summary of the case metrics in natural language generated by Darryl using the available case data and metrics. This summary can be used to quickly understand the overall status and health of the case.
+    ScheduleFrequency:
+      type: string
+      enum:
+      - send_now
+      - daily
+      - weekly
+      - monthly
+      description: Delivery mode. send_now triggers an immediate one-off send; others set up a recurring schedule.
+    CaseReviewMetrics:
+      type: object
+      properties:
+        case_coverage:
+          type: number
+          format: double
+        darryl_investigated_case_coverage:
+          type: number
+          format: double
+        human_investigated_case_coverage:
+          type: number
+          format: double
+        cases_to_be_reviewed:
+          type: integer
+          description: Number of cases to be reviewed
+        cases_reviewed:
+          type: integer
+          description: Number of cases reviewed
+        high_quality_cases:
+          type: integer
+          description: Number of high quality cases
+        medium_quality_cases:
+          type: integer
+          description: Number of medium quality cases
+        low_quality_cases:
+          type: integer
+          description: Number of low quality cases
+        case_quality:
+          type: number
+          format: double
+        darryl_investigated_case_quality:
+          type: number
+          format: double
+        human_investigated_case_quality:
+          type: number
+          format: double
+    CaseActionCount:
+      type: object
+      required:
+      - case_id
+      - count
+      properties:
+        case_id:
+          type: string
+        count:
+          type: integer
+          description: Number of actions matching the filter for this case.
+    ListDashboardScheduleExecutionsRequest:
+      type: object
+      description: All fields optional. Omit entirely for an unfiltered, first-page listing.
+      properties:
+        organization_ids:
+          type: array
+          items:
+            type: string
+          description: Filter to executions of schedules targeting these organizations.
+        schedule_ids:
+          type: array
+          items:
+            type: string
+          description: Filter to executions of these specific schedules.
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduleExecutionStatus'
+          description: Filter by execution outcome.
+        executed_after:
+          type: string
+          format: date-time
+          description: Only include executions run at or after this time.
+        executed_before:
+          type: string
+          format: date-time
+          description: Only include executions run at or before this time.
+        search:
+          type: string
+          description: Free-text search across recipients, organization, and schedule name.
+        page:
+          type: integer
+          default: 1
+          description: Page number, 1-indexed.
+        page_size:
+          type: integer
+          default: 20
+          description: Number of executions per page.
+    DashboardScheduleExecution:
+      type: object
+      required:
+      - execution_id
+      - schedule_id
+      - schedule_name
+      - dashboard_id
+      - organization_id
+      - organization_code
+      - status
+      - recipients
+      - executed_at
+      - created_at
+      properties:
+        execution_id:
+          type: string
+        schedule_id:
+          type: string
+        schedule_name:
+          type: string
+          description: Snapshot of the schedule's name at the time it ran.
+        dashboard_id:
+          type: string
+        organization_id:
+          type: string
+        organization_code:
+          type: string
+          description: Human-readable code of the organization the schedule targeted.
+        status:
+          $ref: '#/components/schemas/ScheduleExecutionStatus'
+        recipients:
+          type: array
+          items:
+            type: string
+            format: email
+          description: Snapshot of the schedule's recipients at the time it ran.
+        executed_at:
+          type: string
+          format: date-time
+          description: When the schedule fired and attempted to render/send the report.
+        error_message:
+          type:
+          - string
+          - 'null'
+          description: Populated when status is not success.
+        created_at:
+          type: string
+          format: date-time
+        user_timezone_offset:
+          type: integer
+          description: User's timezone offset in minutes from UTC at the time the schedule was configured.
+    PrintConfig:
+      type: object
+      required:
+      - grid_width
+      - orientation
+      - page_size
+      properties:
+        grid_width:
+          type: integer
+          description: Grid width (number of columns) used when printing/exporting the dashboard.
+        orientation:
+          type: string
+          enum:
+          - portrait
+          - landscape
+          description: Page orientation for print/export.
+        page_size:
+          type: string
+          enum:
+          - letter
+          - A4
+          description: Page size for print/export.
+    AlertTypeMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - provider
+        - alert_type
+        properties:
+          provider:
+            $ref: '#/components/schemas/ProviderSummary'
+          alert_type:
+            type: string
+          severity_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/SeverityMetrics'
+              description: Severity metrics list
+    ResponseRemediationWidgets:
+      type: object
+      properties:
+        stalled_cases_count:
+          type: integer
+          description: Number of cases currently in status=10 (CustomerPending).
+        stalled_cases_by_category:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Stalled case count (status=10) grouped by case category.
+        customer_response_time:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Avg time from customer_pending_at to customer_responded_at. Requires two new timestamp fields on CaseTimeline: customer_pending_at (set on status→10) and customer_responded_at (set on first customer activity — comment, field change, or action update).'
+    CommunicationBySeverity:
+      type: object
+      required:
+      - severity
+      - with_communication
+      - without_communication
+      properties:
+        severity:
+          type: integer
+        severity_label:
+          type: string
+        with_communication:
+          type: integer
+        without_communication:
+          type: integer
+    ThreatCategorizationWidgets:
+      type: object
+      properties:
+        cases_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count grouped by category field.
+        high_severity_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count for severity in [10,15] (High, Critical) grouped by category.
+        emerging_threats:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmergingThreat'
+          description: Categories with significant growth vs the prior period.
+    TrendWidgets:
+      type: object
+      properties:
+        cases_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily case volume within the requested date range.
+        cases_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Case count broken down by severity level.
+        business_hours_breakdown:
+          $ref: '#/components/schemas/BusinessHoursBreakdown'
+          description: Case volume split by business hours (Mon–Fri 09:00–17:00 UTC) vs after-hours & weekends.
+    CostTrimSnapshotRow:
+      type: object
+      required:
+      - organization_uuid
+      - alert_provider
+      - alert_type
+      - alerts
+      - investigated
+      - escalated_to_customer
+      properties:
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        window_start:
+          type: integer
+          format: int64
+        window_end:
+          type: integer
+          format: int64
+        computed_at:
+          type: integer
+          format: int64
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        linked_case_count:
+          type: integer
+          format: int64
+        escalated_to_customer:
+          type: integer
+          format: int64
+        escalated_to_analyst:
+          type: integer
+          format: int64
+        first_seen_at:
+          type: integer
+          format: int64
+        last_seen_at:
+          type: integer
+          format: int64
+    QuestionsAnsweredSplit:
+      type: object
+      required:
+      - answered
+      - unanswered
+      - total
+      properties:
+        answered:
+          type: integer
+          description: Questions where status is not Available or Data Needed.
+        unanswered:
+          type: integer
+          description: Questions where status is Available or Data Needed.
+        total:
+          type: integer
+    SlaConfig:
+      type: object
+      description: 'Three SLA tiers. Critical Incident Support (sev=15): 2hr MTTI for true incidents (malware, lateral movement). Critical Alert Validation (sev=10): 4hr MTTI for critical alert detection and customer notification. Non-Critical (sev≤5): 8hr MTTI for incidents with mitigations in place.'
+      properties:
+        critical_incident_target_seconds:
+          type: integer
+          default: 7200
+          description: MTTI target for Critical severity (sev=15) true incidents — 2 hr.
+        critical_alert_target_seconds:
+          type: integer
+          default: 14400
+          description: MTTI target for High severity (sev=10) alert validation and customer notification — 4 hr.
+        non_critical_target_seconds:
+          type: integer
+          default: 28800
+          description: MTTI target for non-critical severity (sev≤5) incidents — 8 hr.
+    CaseAnalyticsEmailResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming email was queued
+    AutomationWidgets:
+      type: object
+      properties:
+        time_saved_chart:
+          type: array
+          items:
+            $ref: '#/components/schemas/MttiComparisonPoint'
+          description: Line chart data showing time difference (avg_mtti - x) for investigation durations from min to max in 1-minute increments.
+        adr_triage_trend:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdrTriageDailyBreakdown'
+          description: Daily automation tier breakdown for trend chart.
+    CostTrimAnalysisResponse:
+      type: object
+      required:
+      - view
+      - stale
+      - rows
+      - totals
+      properties:
+        computed_at:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) when the newest matching snapshot row was computed.
+        window_start:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) for the start of the snapshot window.
+        window_end:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) for the end of the snapshot window.
+        view:
+          type: string
+          description: The roll-up shape applied to `rows`.
+        stale:
+          type: boolean
+          description: True when the newest snapshot is older than the configured freshness window.
+        rows:
+          description: 'Roll-up rows. Shape depends on the `view` query param — see the
+
+            view-specific row schemas (`CostTrimSnapshotRow`,
+
+            `CostTrimOrgRow`, etc.) for the possible shapes.
+
+            '
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimSnapshotRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimOrgRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimOrgTypeRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimProviderTypeRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimProviderRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimAlertTypeRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimEscalationsByTypeRow'
+        totals:
+          $ref: '#/components/schemas/CostTrimTotals'
+    SocEmailRequest:
+      type: object
+      required:
+      - email_ids
+      - subject
+      - filter
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+        filter:
+          $ref: '#/components/schemas/SocEmailRequestFilter'
+          description: Filter parameters for the report
+    RecentMaliciousCase:
+      type: object
+      required:
+      - case_id
+      - name
+      - disposition
+      - severity
+      - created_at
+      properties:
+        case_id:
+          type: string
+        case_uuid:
+          type: string
+        name:
+          type: string
+          description: Case name.
+        disposition:
+          type: integer
+          description: Disposition value (2 or 10 = malicious).
+        severity:
+          type: integer
+          description: Severity value.
+        created_at:
+          type: integer
+          format: int64
+          description: Case creation time as Unix timestamp (seconds).
+        provider:
+          type: string
+          description: Detection source / provider name.
+        provider_display_name:
+          type: string
+          description: Human-readable provider name.
+        category:
+          type: string
+          description: Threat category.
+    UpdateDashboardResponse:
+      type: object
+      required:
+      - dashboard_id
+      - dashboard_name
+      - updated_at
+      properties:
+        dashboard_id:
+          type: string
+        dashboard_name:
+          type: string
+        description:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    DispositionEscalationWidgets:
+      type: object
+      properties:
+        disposition_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: For each disposition, count of cases with and without customer communication (escalated_to=0).
+        escalation_breakdown:
+          $ref: '#/components/schemas/EscalationBreakdown'
+          description: Case counts split by whether they have at least one customer escalation.
+        escalations_by_provider:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEscalationCount'
+          description: Escalated vs benign (not escalated) case counts grouped by security vendor (detection source / provider).
+    CreateWidgetRequest:
+      type: object
+      required:
+      - widget_name
+      - source_type
+      - render_type
+      - nl_description
+      - layout
+      properties:
+        widget_name:
+          type: string
+        source_type:
+          $ref: '#/components/schemas/WidgetSourceType'
+        render_type:
+          type: string
+          description: Visualization type (e.g. bar_chart, line_chart, table, number).
+        nl_description:
+          type: string
+          description: Natural language description used to generate the widget code.
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+          description: Optional specific system widget to display. If omitted with case_metric_source, returns aggregated view of all widgets for the dashboard.
+    CostTrimAlertTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_type
+        properties:
+          alert_type:
+            type: string
+    CaseAnalyticsEmailRequestFilter:
+      type: object
+      required:
+      - created_at_from
+      - created_at_to
+      properties:
+        org_id:
+          type: string
+          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
+        created_at_from:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (start of date range)
+        created_at_to:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (end of date range)
+        metadata:
+          type: object
+          description: Optional metadata for report customization
+    ListDashboardSchedulesResponse:
+      type: object
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSchedule'
+        total:
+          type: integer
+          description: Total count of schedules available for user.
+    AttackTypeCount:
+      type: object
+      required:
+      - type
+      - count
+      properties:
+        type:
+          type: string
+          description: Alert type name.
+        count:
+          type: integer
+          description: Number of cases involving this alert type for the given entity.
+    CostTrimProviderTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_provider
+        - alert_type
+        properties:
+          alert_provider:
+            type: string
+          alert_type:
+            type: string
+    MultiVectorHost:
+      type: object
+      required:
+      - name
+      - attack_types
+      properties:
+        name:
+          type: string
+          description: Hostname.
+        attack_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttackTypeCount'
+          description: Distinct alert types this host has been involved in, with case count per type.
+        case_count:
+          type: integer
+    MetricsAttributes:
+      required:
+      - mean_metric_total
+      - daily_mean_metrics
+      - mean_metrics_intervals
+      type: object
+      properties:
+        mean_metric_total:
+          type: number
+          description: Mean metric value for the total range
+        daily_mean_metrics:
+          type: object
+          additionalProperties:
+            type: number
+          description: Mean metric values for each day
+        mean_metrics_intervals:
+          type: object
+          additionalProperties:
+            type: number
+          description: Mean metric values for each interval
+    SocEmailResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming email was queued
+    GetDetailedMetricsRequest:
+      type: object
+      properties:
+        global_metrics_organization_filter:
+          type: array
+          items:
+            type: string
+          description: Organization IDs for which the global metrics should be fetched
+        alert_type_metrics_organization_filter:
+          type: array
+          items:
+            type: string
+          description: Organization IDs for which the alert type metrics should be fetched
+    MultiVectorUser:
+      type: object
+      required:
+      - name
+      - attack_types
+      properties:
+        name:
+          type: string
+          description: Username or service account name.
+        attack_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttackTypeCount'
+          description: Distinct alert types this user has been involved in, with case count per type.
+        case_count:
+          type: integer
+    BlockedByCategoryCount:
+      type: object
+      required:
+      - category
+      - total
+      properties:
+        category:
+          type: string
+        critical_high_count:
+          type: integer
+          description: Blocked cases with severity in [10, 15] (High, Critical).
+        medium_count:
+          type: integer
+          description: Blocked cases with severity=5 (Medium).
+        low_info_count:
+          type: integer
+          description: Blocked cases with severity in [0, 1, 2] (Unassigned, Low, Informational).
+        total:
+          type: integer
+          description: Total blocked cases in this category.
+    BulkCreateDashboardScheduleRequest:
+      type: object
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateDashboardScheduleRequest'
+          minItems: 1
+          maxItems: 50
+    CustomerExperienceWidgets:
+      type: object
+      properties:
+        cases_with_communication_count:
+          type: integer
+          description: Cases with at least one escalation entry where escalated_to=0 (EscalatedToCustomer). Escalation is the confirmed trigger for customer notification tracking.
+        escalation_breakdown:
+          $ref: '#/components/schemas/EscalationBreakdown'
+          description: Overall breakdown of escalated vs non-escalated cases.
+        communication_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationBySeverity'
+          description: For each severity, count of cases with and without customer communication.
+        communication_by_disposition:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: For each disposition, count of cases with and without customer communication.
+    CommunicationByDisposition:
+      type: object
+      required:
+      - disposition
+      - with_communication
+      - without_communication
+      properties:
+        disposition:
+          type: integer
+        disposition_label:
+          type: string
+        with_communication:
+          type: integer
+        without_communication:
+          type: integer
+    WidgetSourceType:
+      type: string
+      enum:
+      - playbook_execution
+      - case_metric
+    ListDashboardScheduleExecutionsResponse:
+      type: object
+      required:
+      - executions
+      - total
+      properties:
+        executions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardScheduleExecution'
+        total:
+          type: integer
+          description: Total count of executions for this schedule.
+    CategoryCount:
+      type: object
+      required:
+      - category
+      - count
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+    ResponseTimeMetric:
+      type: object
+      required:
+      - avg_seconds
+      - case_count
+      - mean_metrics_intervals
+      - daily_mean_metrics
+      properties:
+        avg_seconds:
+          type: integer
+        case_count:
+          type: integer
+        mean_metrics_intervals:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+        daily_mean_metrics:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+    CostTrimEscalationsByTypeRow:
+      type: object
+      required:
+      - alert_type
+      - escalations
+      properties:
+        alert_type:
+          type: string
+        escalations:
+          type: integer
+          format: int64
+    EmailCustomDashboardRequest:
+      type: object
+      required:
+      - dashboard
+      - email_ids
+      - subject
+      properties:
+        dashboard:
+          $ref: '#/components/schemas/GetDashboardResponse'
+          description: The dashboard to email, exactly as returned by GET /v2/dashboard/{dashboard_id} (including print_config). Not re-fetched or recalculated server-side.
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the dashboard report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+    UpdateDashboardRequest:
+      type: object
+      properties:
+        dashboard_name:
+          type: string
+          description: New display name for the dashboard.
+        description:
+          type: string
+          description: New description for the dashboard.
+        widget_layout_updates:
+          type: array
+          description: Partial layout update. Only listed widgets are updated.
+          items:
+            $ref: '#/components/schemas/WidgetLayoutUpdate'
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    CaseAnalyticsEmailRequest:
+      type: object
+      required:
+      - email_ids
+      - subject
+      - filter
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+        filter:
+          $ref: '#/components/schemas/CaseAnalyticsEmailRequestFilter'
+          description: Filter parameters for the report
+    ScheduleExecutionStatus:
+      type: string
+      enum:
+      - success
+      - partial_data
+      - render_error
+      - delivery_failed
+      - failed
+      description: Outcome of a schedule run.
+    GetDetailedMetricsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AggregatedMetrics'
+    MissingTelemetryCount:
+      type: object
+      required:
+      - alert_type
+      - case_count
+      properties:
+        alert_type:
+          type: string
+        case_count:
+          type: integer
+          description: Cases where confidence.missing_information is non-empty.
+    SlaAdherenceTrendPoint:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        critical_incident_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Critical Incident Support (sev=15, target=2hr) on this day.
+        critical_alert_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Critical Alert Validation (sev=10, target=4hr) on this day.
+        non_critical_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Non-Critical Incident Support (sev≤5, target=8hr) on this day.
+    EmergingThreat:
+      type: object
+      required:
+      - category
+      - current_count
+      - prior_count
+      properties:
+        category:
+          type: string
+        current_count:
+          type: integer
+          description: Case count in the current window.
+        prior_count:
+          type: integer
+          description: Case count in the prior equal window.
+        growth_rate:
+          type: number
+          format: float
+          description: Growth as a ratio (current / prior). Null if prior_count is zero.
+    CreateDashboardRequest:
+      type: object
+      required:
+      - dashboard_name
+      properties:
+        dashboard_name:
+          type: string
+        description:
+          type: string
+          description: Optional free-text description of the dashboard.
+        organization_id:
+          type: string
+          description: Target organisation to create the dashboard in. If not provided, defaults to the user's logged in organization.
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    ProviderMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - provider
+        properties:
+          provider:
+            $ref: '#/components/schemas/ProviderSummary'
+          alert_type_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/AlertTypeMetrics'
+            description: Alert type metrics list
+    ReworkDailyPoint:
+      type: object
+      required:
+      - date
+      - rework_count
+      - rework_rate
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        rework_count:
+          type: integer
+          description: Number of reinvestigated cases on this day.
+        rework_rate:
+          type: number
+          format: float
+          description: rework_count / total_cases_that_day as a percentage.
+        avg_rework_seconds:
+          type: integer
+          description: Average time from case_closed_at to reinvestigated_at for reinvestigated cases on this day.
+    InvestigationQualityWidgets:
+      type: object
+      properties:
+        questions_per_category:
+          $ref: '#/components/schemas/QuestionsAnsweredByCategory'
+          description: Answered vs unanswered question counts across 3 categories. Grouped bar chart.
+        escalations_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Escalated case count grouped by severity.
+        rework_daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReworkDailyPoint'
+          description: Daily reinvestigation count, rate, and avg time to rework.
+        quality_score_daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityScoreDailyPoint'
+          description: Daily avg quality score — three line charts (overall, Darryl, human).
+        questions_answered_by_outcome:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionsAnsweredByOutcome'
+          description: Count of answered explore_deeper_questions grouped by case disposition (outcome).
+    SeverityCount:
+      type: object
+      required:
+      - severity
+      - severity_label
+      - count
+      properties:
+        severity:
+          type: integer
+          description: Severity value (0=Unassigned, 1=Low, 2=Informational, 5=Medium, 10=High, 15=Critical).
+        severity_label:
+          type: string
+          description: Human-readable severity label.
+        count:
+          type: integer
+          description: Number of cases with this severity.
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    DashboardScheduleResult:
+      type: object
+      required:
+      - success
+      properties:
+        schedule_id:
+          type: string
+          description: Echoes the request item's schedule_id for update/delete results. For create results, present only when success is true (once the new schedule has been assigned an ID).
+        success:
+          type: boolean
+        schedule:
+          $ref: '#/components/schemas/DashboardSchedule'
+          description: The resulting schedule. Present when success is true, for create and update results (omitted for delete).
+        error:
+          type: string
+          description: Human-readable failure reason. Present when success is false.
+    QuestionsAnsweredByCategory:
+      type: object
+      description: Answered vs unanswered question split across the 3 question categories. Used for grouped bar chart.
+      properties:
+        investigation_questions:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.custom_questions[]
+        faqs:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.faqs[]
+        explore_deeper:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.explore_deeper_questions[]
+    WidgetDetail:
+      type: object
+      required:
+      - widget_id
+      - dashboard_id
+      - widget_name
+      - source_type
+      - render_type
+      - layout
+      - created_at
+      - updated_at
+      properties:
+        widget_id:
+          type: string
+        dashboard_id:
+          type: string
+        widget_name:
+          type: string
+        source_type:
+          $ref: '#/components/schemas/WidgetSourceType'
+        render_type:
+          type: string
+        nl_description:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+        transformation_code:
+          type: string
+          description: Python code to transform the playbook step output.
+        last_output:
+          description: Latest execution output stored on the widget document.
+        raw_data_preview:
+          description: Raw/unprocessed output from playbook step execution before transformation.
+        execution_data_updated_at:
+          type: integer
+          format: int64
+          description: Unix timestamp (ms) at which the underlying execution data was last updated.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Metrics:
+      allOf:
+      - $ref: '#/components/schemas/CaseReviewMetrics'
+      - type: object
+        properties:
+          darryl_reviewed_case_metrics:
+            $ref: '#/components/schemas/CaseReviewMetrics'
+            description: Darryl reviewed case metrics
+          human_reviewed_case_metrics:
+            $ref: '#/components/schemas/CaseReviewMetrics'
+            description: Human reviewed case metrics
+          darryl_investigated_cases:
+            type: integer
+            description: Number of cases investigated by darryl
+          human_investigated_cases:
+            type: integer
+            description: Number of cases investigated by human
+          alert_count:
+            type: integer
+            description: Number of alerts
+          alert_type_count:
+            type: integer
+            description: Number of alert types
+    NetworkWidgets:
+      type: object
+      properties:
+        top_attacking_ips:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Top IPs linked to malicious cases (disposition=10), ranked by case count.
+        persistent_ips:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCountWithDays'
+          description: IPs appearing in more than one case, ranked by case count.
+        internal_ips:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: RFC1918 IPs generating the most cases.
+        top_attacking_domains:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Top domains linked to malicious cases (disposition=10), ranked by case count.
+        common_iocs:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: All entity types seen across multiple cases, ranked by case count.
+    QualityScoreDailyPoint:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        overall:
+          type: number
+          format: double
+          description: Average case_score across all cases on this day.
+        darryl_investigated:
+          type: number
+          format: double
+          description: Average case_score for Darryl-investigated cases on this day.
+        human_investigated:
+          type: number
+          format: double
+          description: Average case_score for human-investigated cases on this day.
+    ResponseTimePercentiles:
+      type: object
+      properties:
+        mtta:
+          $ref: '#/components/schemas/PercentileMetric'
+        mtti:
+          $ref: '#/components/schemas/PercentileMetric'
+        mttc:
+          $ref: '#/components/schemas/PercentileMetric'
+        mtt_close:
+          $ref: '#/components/schemas/PercentileMetric'
+    AggregatedMetrics:
+      allOf:
+      - $ref: '#/components/schemas/DetailedMetrics'
+      - type: object
+        required:
+        - organization_metrics_list
+        properties:
+          organization_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrganizationMetrics'
+              description: Organization metrics list
+    CaseMetricsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseMetrics'
+          description: case metrics object
+  parameters:
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-case-manager-openapi.json
+- airmdr-case-manager-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

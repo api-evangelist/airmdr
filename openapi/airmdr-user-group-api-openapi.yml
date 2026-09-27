@@ -1,0 +1,678 @@
+openapi: 3.2.0
+info:
+  title: Airmdr User Group API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged User Group across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: User Group
+  description: Endpoints to manage user groups
+paths:
+  /usergroup:
+    post:
+      tags:
+      - User Group
+      operationId: createUserGroupAPI
+      summary: create user group
+      description: Creates a user group. This group can only be granted access to descendant organizations. Only users from the same parent organization can be added to the user group. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserGroupRequest'
+      responses:
+        '201':
+          description: user group created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserGroupResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        '409':
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /usergroup/filter:
+    post:
+      tags:
+      - User Group
+      operationId: filterUserGroupsAPI
+      summary: filter user groups
+      description: Filter user groups by organization ids and user ids accessible to the logged in user. If no filter is provided, all user groups in all accessible organizations are returned. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: true
+        description: Page number for paginated results.
+        schema:
+          type: integer
+      - name: size
+        in: query
+        required: true
+        description: Number of results per page.
+        schema:
+          type: integer
+      security:
+      - SessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterUserGroupRequest'
+      responses:
+        '200':
+          description: all user groups fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserGroupResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /usergroup/{user_group_id}:
+    get:
+      tags:
+      - User Group
+      operationId: getUserGroupAPI
+      summary: get user group
+      description: Get details of a user group. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: user_group_id
+        in: path
+        description: The ID of the user group to update
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: user group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserGroupResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+      - User Group
+      operationId: updateUserGroupAPI
+      summary: update user group
+      description: Updates a user group. This group can only be granted access to descendant organizations. Only users from the same parent organization can be added to the user group. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: user_group_id
+        in: path
+        description: The ID of the user group to update
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserGroupRequest'
+      responses:
+        '200':
+          description: user group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserGroupResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        '409':
+          description: conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - User Group
+      operationId: deleteUserGroupAPI
+      summary: delete user group
+      description: Deletes a user group. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: user_group_id
+        in: path
+        description: The ID of the user group to update
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: user group deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteUserGroupResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    403Error:
+      type: object
+      properties:
+        message:
+          type: string
+          const: User does not have permission to perform this action
+    CreateUserGroupRequest:
+      type: object
+      required:
+      - name
+      - parent_organization_id
+      properties:
+        name:
+          type: string
+          description: name of the user group
+        description:
+          type: string
+          description: description of the user group
+        parent_organization_id:
+          type: string
+          description: id of the organization where the user group needs to be created
+        user_ids:
+          type: array
+          description: list of id of the users to add to the user group
+          items:
+            type: string
+        accessible_organizations:
+          type: array
+          description: list of organization ids and future child organizations setting the user group will have access to
+          items:
+            $ref: '#/components/schemas/AccessibleOrganizationsRequest'
+        can_assign_cases:
+          type: boolean
+          description: flag indicating whether cases can be assigned to user group
+        case_categories:
+          type: array
+          description: list of case catgeory names which can be assigned to users of the group
+          items:
+            type: string
+        features:
+          type: array
+          description: list of features and the permissions for the same to be added to the user group
+          items:
+            $ref: '#/components/schemas/FeaturePermission'
+    AccessibleOrganizationsRequest:
+      type: object
+      required:
+      - organization_id
+      properties:
+        organization_id:
+          type: string
+        select_all_child_orgs:
+          type: boolean
+        include_current_organization:
+          type: boolean
+          description: If false, user group does not include current organization id. The default value is true.
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
+    GetUserGroupResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserGroup'
+          description: user group object
+    UpdateUserGroupResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserGroup'
+          description: user group object
+    FeaturePermission:
+      type: object
+      required:
+      - feature_id
+      - can_read
+      - can_write
+      properties:
+        feature_id:
+          type: string
+          description: id of the feature
+        can_read:
+          type: boolean
+          default: true
+          description: flag indicating whether the user group can read the feature
+        can_write:
+          type: boolean
+          default: false
+          description: flag indicating whether the user group can write the feature
+    AccessibleOrganizationsFilterRequest:
+      type: object
+      required:
+      - organization_id
+      properties:
+        organization_id:
+          type: string
+    SortFields:
+      type: object
+      required:
+      - field
+      - sort_order
+      properties:
+        field:
+          type: string
+          description: indicates which field will be used for sorting
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: indicates sort order - asc or desc
+    UserGroupListItem:
+      type: object
+      required:
+      - user_group_id
+      - name
+      - type
+      - users
+      - accessible_organizations
+      - parent_organization
+      - created_at
+      - created_by
+      - modified_at
+      properties:
+        user_group_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/UserGroupType'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMinimal'
+        accessible_organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationMinimalWithUserGroupConfig'
+        parent_organization:
+          $ref: '#/components/schemas/OrganizationMinimal'
+        created_at:
+          type: integer
+          format: int64
+        created_by:
+          type: string
+        modified_at:
+          type: integer
+          format: int64
+    DeleteUserGroupResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    OrganizationMinimalWithUserGroupConfig:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        select_all_child_orgs:
+          type: boolean
+          description: flag if the user group needs to be mapped to future child organizations of this organization
+        include_current_organization:
+          type: boolean
+          description: If false, user group does not include current organization id. The default value is true.
+    UserGroupType:
+      type: string
+      enum:
+      - default
+      - admin
+      - custom
+      x-enum-varnames:
+      - UserGroupTypeDefault
+      - UserGroupTypeAdmin
+      - UserGroupTypeCustom
+    UpdateUserGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the user group
+        description:
+          type: string
+          description: description of the user group
+        user_ids:
+          type: array
+          description: list of id of the users to add to the user group
+          items:
+            type: string
+        accessible_organizations:
+          type: array
+          description: list of organization ids and future child organizations setting the user group will have access to
+          items:
+            $ref: '#/components/schemas/AccessibleOrganizationsRequest'
+        can_assign_cases:
+          type: boolean
+          description: flag indicating whether cases can be assigned to user group
+        case_categories:
+          type: array
+          description: list of case catgeory names which can be assigned to users of the group
+          items:
+            type: string
+        features:
+          type: array
+          description: list of features and the permissions for the same to be added to the user group
+          items:
+            $ref: '#/components/schemas/FeaturePermission'
+    FilterUserGroupRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListUserGroupFilter'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortFields'
+    SortOrder:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - Asc
+      - Desc
+    UserMinimal:
+      type: object
+      required:
+      - user_id
+      - first_name
+      - last_name
+      properties:
+        user_id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    ListUserGroupFilter:
+      type: object
+      properties:
+        search:
+          type: string
+          description: search key for user group name
+        accessible_organization_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessibleOrganizationsFilterRequest'
+          description: The list of organization IDs which can be accessed by user groups returning groups having atleast one accessible organization with required permissions
+        user_id_list:
+          type: array
+          items:
+            type: string
+          description: The list of user IDs which belong to the user group.
+        parent_organization_id_list:
+          type: array
+          items:
+            type: string
+          description: The list of organization IDs in which the user group was created.
+        exclude_parent_organization_groups:
+          type: boolean
+          description: If true, also returns user groups owned by ancestor / ASO / ARO organizations that the caller can act on (e.g. to assign cases to a parent team), in addition to groups owned by the caller's own accessible organizations. If false or omitted, only groups owned by the caller's own accessible organizations are returned. The default value is false. Regardless of this flag, each group's accessible organizations are always trimmed to those the caller is permitted to see.
+        no_organization_linked:
+          type: boolean
+          description: Fetch user groups which do not have access to any organization.
+        no_user_present:
+          type: boolean
+          description: Fetch user groups which do not have any users.
+        user_group_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserGroupType'
+          description: List of user group types for which information is to be retrieved.
+        category_names:
+          type: array
+          items:
+            type: string
+          description: List of category names which user group have access to.
+        permissions:
+          type: array
+          items:
+            type: string
+          description: List of permissions which user group have access to.
+    UserGroup:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/UserGroupListItem'
+      - properties:
+          can_assign_cases:
+            type: boolean
+            description: flag indicating whether cases can be assigned to user group
+          case_categories:
+            type: array
+            description: list of case categorie names which are assigned to user group
+            items:
+              type: string
+          features:
+            type: array
+            description: list of features and the permissions for the same to be added to the user group
+            items:
+              $ref: '#/components/schemas/FeaturePermission'
+    ListUserGroupResponse:
+      type: object
+      required:
+      - message
+      - data
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserGroupListItem'
+        total:
+          type: integer
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-user-management-service-openapi.json
+- airmdr-user-management-service-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

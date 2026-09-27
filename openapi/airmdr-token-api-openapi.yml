@@ -1,0 +1,363 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Token API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Token across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Token
+  description: Endpoints to manage tokens
+paths:
+  /users/tokens:
+    post:
+      tags:
+      - Token
+      operationId: createAPITokenForUserAPI
+      summary: create API token
+      description: Creates API Token for the Requestor. Api tokens are user level and permissions associated with a token are the same as that of the user who created that token. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: return_active_token_if_exists
+        in: query
+        description: If true, returns an existing active token instead of creating a new one. Defaults to false.
+        schema:
+          type: boolean
+          default: false
+      security:
+      - SessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the Token to be created
+                organization_id:
+                  type: string
+                  description: Optional. Scope the token to a specific organization that the requesting user can access (one they can switch session context into). Must be an accessible organization for the requestor, otherwise the request is rejected with 403. If omitted, the token is scoped to the requestor's own organization.
+              required:
+              - name
+      responses:
+        '200':
+          description: api token creation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAPITokenResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+      - Token
+      operationId: listTokensForUserAPI
+      summary: list all API Tokens created by a user
+      description: List all API Tokens created by a User. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: The User ID for whom to fetch tokens. If not provided, fetches tokens for the authenticated user (User-ID header).
+        schema:
+          type: string
+        required: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: fetched API Tokens successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAPITokensResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /users/tokens/slack:
+    post:
+      tags:
+      - Token
+      operationId: createAPITokenForSlackWorkflowAPI
+      summary: Issues or returns the API token used to authenticate actions when the user…
+      description: Creates and returns a new API token—used for processing user actions triggered by Slack mentions—if one does not already exist for the authenticated user; otherwise returns the existing token to ensure consistent authentication during Slack-initiated workflows.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAPITokenForSlackWorkflowRequest'
+      responses:
+        '200':
+          description: api token creation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAPITokenForSlackWorkflowResponse'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /users/tokens/{token_id}:
+    delete:
+      tags:
+      - Token
+      operationId: deleteTokenAPI
+      summary: delete an API Token
+      description: Deletes API Token. Only creator can delete their token. This action can only be performed by superadmin or admin accounts.
+      parameters:
+      - name: token_id
+        in: path
+        description: The id of the token to be deleted
+        required: true
+        schema:
+          type: string
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+        required: true
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: api token deletion successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '403':
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    CreateAPITokenForSlackWorkflowRequest:
+      type: object
+      required:
+      - user_id
+      - organization_id
+      properties:
+        user_id:
+          type: string
+          description: The User ID of the user to create the Slack token for.
+        organization_id:
+          type: string
+          description: The Organization ID of the organization to create the Slack token for.
+    403Error:
+      type: object
+      properties:
+        message:
+          type: string
+          const: User does not have permission to perform this action
+    GetAPITokenResponse:
+      type: object
+      required:
+      - token_id
+      - name
+      - created_at
+      properties:
+        token_id:
+          type: string
+        encrypted_token:
+          type: string
+        encrypted_version_id:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        last_used_at:
+          type: integer
+          format: int64
+        organization_id:
+          type: string
+    CreateAPITokenForSlackWorkflowResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/GetAPITokenResponse'
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    ListAPITokensResponse:
+      type: object
+      required:
+      - message
+      - data
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetAPITokenResponse'
+        total:
+          type: integer
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    CreateAPITokenResponse:
+      type: object
+      required:
+      - token_id
+      - name
+      - token
+      - created_at
+      properties:
+        token_id:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+          description: The token created for the user
+        created_at:
+          type: integer
+          format: int64
+        last_used_at:
+          type: integer
+          format: int64
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-user-management-service-openapi.json
+- airmdr-user-management-service-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

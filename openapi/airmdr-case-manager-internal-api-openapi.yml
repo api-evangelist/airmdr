@@ -1,0 +1,648 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Case Manager Internal API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Case Manager Internal across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Case Manager Internal
+paths:
+  /v2/case/reindex:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: reindexCasesV2API
+      summary: Reindex Cases V2 into Opensearch
+      description: Ollivander will be requested to reinsert every Case one by one via RabbitMQ queues
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: Execution-ID
+        in: header
+        description: ID of the execution if action is perfomed through a darryl action
+        schema:
+          type: string
+      - name: Organization-Hosturl
+        in: header
+        description: The host url of the organization
+        schema:
+          type: string
+      - name: register
+        in: query
+        description: whether to register the entity again
+        schema:
+          type: boolean
+          default: false
+      - name: starting_time
+        in: query
+        description: Optional unix timestamp (seconds). If provided, only cases created at or after this time will be reindexed.
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: Optional unix timestamp (seconds). If provided, only cases created at or before this time will be reindexed (inclusive).
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseReindexRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/reindex:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: reindexCasesAPI
+      summary: Reindex Cases into Opensearch
+      description: Ollivander will be requested to reinsert every Case one by one via RabbitMQ queues
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: register
+        in: query
+        description: whether to register the entity again
+        schema:
+          type: boolean
+          default: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/orgcode/migrate:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: addOrgCodeAPI
+      summary: Add org code to to all cases
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: case created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/cache/purge:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: purgeCacheAPI
+      summary: Purge case related cache in redis
+      description: Use this endpoint to purge a particular or all case related cache stored in redis
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: cache_prefix
+        in: query
+        required: true
+        description: Prefix to the cache that has to be purged.
+        schema:
+          type: string
+          default: false
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: cache purged successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /internal/investigation_credits/charge:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: chargeInvestigationCredits
+      summary: Charge investigation credits for an alert investigation
+      description: 'Service-to-service endpoint used by the agentic investigation service to
+
+        spend credits for one investigation. The credit budget is charged
+
+        atomically at the assigned tier; if the budget cannot afford it the tier
+
+        is downgraded (ultimately to a free L1). Idempotent on idempotency_key so
+
+        redelivered or retried requests never double-charge.'
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      security:
+      - SessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeInvestigationCreditsRequest'
+      responses:
+        '200':
+          description: Investigation credits charged successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeInvestigationCreditsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /internal/investigation_credits/refund:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: refundInvestigationCredits
+      summary: Refund a previously charged investigation
+      description: 'Reverses a prior charge (e.g. when the investigation failed). Idempotent:
+
+        refunding an unknown, free, or already-refunded charge is a no-op.'
+      parameters:
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      security:
+      - SessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundInvestigationCreditsRequest'
+      responses:
+        '200':
+          description: Refund processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundInvestigationCreditsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /alerts/reindex:
+    post:
+      tags:
+      - Case Manager Internal
+      operationId: reindexAlertsAPI
+      summary: Reindex Alerts into Opensearch
+      description: Ollivander will be requested to reinsert every Alerts one by one via RabbitMQ queues
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: Organization-Hosturl
+        in: header
+        description: The host url of the organization.
+        schema:
+          type: string
+      - name: register
+        in: query
+        description: whether to register the entity again
+        schema:
+          type: boolean
+          default: false
+      - name: starting_time
+        in: query
+        description: Optional unix timestamp (seconds). If provided, only alerts created at or after this time will be reindexed.
+        schema:
+          type: integer
+          format: int64
+      - name: end_time
+        in: query
+        description: Optional unix timestamp (seconds). If provided, only alerts created at or before this time will be reindexed (inclusive).
+        schema:
+          type: integer
+          format: int64
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: alerts reindexed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /alerts/{alert_id}/mark_agent_investigated:
+    patch:
+      tags:
+      - Case Manager Internal
+      operationId: markAlertAgentInvestigatedAPI
+      summary: Mark alert as investigated with agent
+      description: Sets is_investigated_with_agent to true for the given alert. Internal endpoint for service-to-service use.
+      parameters:
+      - name: alert_id
+        in: path
+        required: true
+        description: The ID of the alert to mark as investigated with agent.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/user-id'
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/x-request-id'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Alert marked as investigated with agent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '404':
+          description: Alert not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /investigation_quota:
+    get:
+      tags:
+      - Case Manager Internal
+      operationId: getInvestigationQuotaAPI
+      summary: Get investigation quota for an organization
+      description: Returns the weekly investigation limit and current usage for an organization. Requires the caller to have access to the requested organization.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: organization_id
+        in: query
+        required: true
+        description: The ID of the organization to fetch the investigation quota for.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Investigation quota fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestigationQuotaResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /case/delete_organization/{organization_code}:
+    delete:
+      tags:
+      - Case Manager Internal
+      operationId: deleteOrganizationAPI
+      summary: Delete Cases and Alerts for an organization
+      description: Use this endpoint to delete all cases and alerts for an organization
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request
+        schema:
+          type: string
+      - name: organization_code
+        in: path
+        description: The code of the organization to be deleted
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Organization deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    ChargeInvestigationCreditsRequest:
+      type: object
+      required:
+      - organization_code
+      - alert_id
+      - alert_provider
+      - alert_type
+      - idempotency_key
+      properties:
+        organization_code:
+          type: string
+        alert_id:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        idempotency_key:
+          type: string
+          description: unique per investigation attempt; dedupes retries/redeliveries
+    CaseReindexRequest:
+      type: object
+      required:
+      - case_uuids
+      properties:
+        case_uuids:
+          type: array
+          items:
+            type: string
+          description: The list of case uuids to reindex. If this non empty list is provided, only the cases in this list will be reindexed else all cases will be reindexed.
+    RefundInvestigationCreditsResponse:
+      type: object
+      required:
+      - refunded
+      properties:
+        refunded:
+          type: boolean
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    InvestigationQuotaResponse:
+      type: object
+      required:
+      - limit_set
+      properties:
+        limit_set:
+          type: boolean
+          description: Whether a weekly investigation limit is configured for this organization
+        weekly_limit:
+          type: integer
+          description: The configured weekly investigation limit (only present when limit_set is true)
+        investigations_used:
+          type: integer
+          description: Number of investigations consumed this week (only present when limit_set is true)
+        investigations_remaining:
+          type: integer
+          description: Number of investigations remaining this week (only present when limit_set is true)
+    ChargeInvestigationCreditsResponse:
+      type: object
+      required:
+      - granted_tier
+      - model
+      - credits_charged
+      - downgraded
+      - floored
+      - duplicate
+      properties:
+        granted_tier:
+          type: string
+          description: the tier the caller should actually run at
+        model:
+          type: string
+        credits_charged:
+          type: number
+          format: double
+        downgraded:
+          type: boolean
+          description: granted tier is cheaper than the requested/assigned tier
+        floored:
+          type: boolean
+          description: budget could not afford even L1; granted a free L1
+        duplicate:
+          type: boolean
+          description: idempotent replay of a prior charge
+        balance_after:
+          type: number
+          format: double
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    RefundInvestigationCreditsRequest:
+      type: object
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
+  parameters:
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-case-manager-openapi.json
+- airmdr-case-manager-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

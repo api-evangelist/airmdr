@@ -1,0 +1,526 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Session API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Session across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Session
+  description: Endpoints to manage sessions
+paths:
+  /user/authenticate:
+    post:
+      tags:
+      - Session
+      operationId: authenticateUserAPI
+      summary: authenticate user
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticateRequest'
+      responses:
+        '200':
+          description: user authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticateUserResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /user/login:
+    post:
+      tags:
+      - Session
+      operationId: loginUserAPI
+      summary: login user
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: user logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /user/login/url:
+    post:
+      tags:
+      - Session
+      operationId: getLoginUrlAPI
+      summary: get login url based on user email
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-Hosturl
+        in: header
+        description: The hosturl associated with the request.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetLoginUrlRequest'
+      responses:
+        '200':
+          description: user logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLoginUrlResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /user/logout:
+    get:
+      tags:
+      - Session
+      operationId: logoutUserAPI
+      summary: logout user
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      responses:
+        '302':
+          description: user logged out successfully
+          headers:
+            Location:
+              description: URL to redirect the user to after successful logout.
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /session:
+    get:
+      tags:
+      - Session
+      operationId: getSessionAPI
+      summary: get session details
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: session details fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Session
+      operationId: updateSessionAPI
+      summary: update session
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSessionRequest'
+      responses:
+        '200':
+          description: session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSessionResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    UpdateSessionResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    LoginUserData:
+      type: object
+      required:
+      - session_token
+      - user
+      properties:
+        session_token:
+          type: string
+        active_organization_id:
+          type: string
+        user:
+          $ref: '#/components/schemas/LoginUser'
+    LoginRequest:
+      type: object
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    AuthenticateUserData:
+      type: object
+      required:
+      - session_id
+      - user_id
+      - organization_id
+      - organization_hosturl
+      - active_organization_id
+      - email
+      properties:
+        session_id:
+          type: string
+        user_id:
+          type: string
+        organization_id:
+          type: string
+        organization_hosturl:
+          type: string
+        active_organization_id:
+          type: string
+        email:
+          type: string
+        organization_code:
+          type: string
+        token_id:
+          type: string
+          description: UUID of the API token used to authenticate, when the request is authenticated via an API token. Empty for interactive login sessions.
+        token_name:
+          type: string
+          description: Human-readable name of the API token used to authenticate. Empty for interactive login sessions.
+    LoginMethod:
+      type: string
+      enum:
+      - password
+      - sso
+      x-enum-varnames:
+      - LoginMethodPassword
+      - LoginMethodSSO
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
+    UpdateSessionRequest:
+      type: object
+      required:
+      - active_organization_id
+      properties:
+        active_organization_id:
+          type: string
+    AirMDRFeature:
+      type: object
+      required:
+      - feature_id
+      - name
+      properties:
+        feature_id:
+          type: string
+          description: The id of the feature
+        name:
+          type: string
+          description: The name of the feature
+        description:
+          type: string
+          description: The description of the feature
+    GetLoginUrlResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginUrl'
+    LoginUserResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginUserData'
+    AuthenticateRequest:
+      type: object
+      required:
+      - session_token
+      properties:
+        session_token:
+          type: string
+        metadata:
+          type: object
+    UserRole:
+      type: string
+      description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
+      enum:
+      - user
+      - admin
+      - superadmin
+      x-enum-varnames:
+      - UserRoleUser
+      - UserRoleAdmin
+      - UserRoleSuperAdmin
+    GetLoginUrlRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        redirect_url:
+          type: string
+    AuthenticateUserResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AuthenticateUserData'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    LoginUrl:
+      type: object
+      required:
+      - email
+      - login_method
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        login_method:
+          $ref: '#/components/schemas/LoginMethod'
+          description: The method for login, can be password or sso
+        login_url:
+          type: string
+          description: The login url in case the login method is sso
+        logo_url:
+          type: string
+          description: The url of the logo of the user's organization
+    Permission:
+      type: object
+      required:
+      - permission_id
+      - name
+      properties:
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    LoginUser:
+      type: object
+      required:
+      - user_id
+      - first_name
+      - last_name
+      - email
+      - parent_organization
+      - role
+      - status
+      properties:
+        user_id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        preferred_name:
+          type: string
+        email:
+          type: string
+        parent_organization:
+          $ref: '#/components/schemas/OrganizationMinimal'
+        created_at:
+          type: integer
+          format: int64
+        created_by:
+          type: string
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        role:
+          $ref: '#/components/schemas/UserRole'
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/AirMDRFeature'
+        permission:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+        last_login:
+          type: integer
+          format: int64
+        is_internal:
+          type: boolean
+          description: Whether user belongs to airmdr organization or not
+    UserStatus:
+      type: string
+      description: user account status
+      enum:
+      - active
+      - pending
+      - disabled
+      - deleted
+      - password_reset_required
+      x-enum-varnames:
+      - UserStatusActive
+      - UserStatusPending
+      - UserStatusDisabled
+      - UserStatusDeleted
+      - UserStatusPasswordResetRequired
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-user-management-service-openapi.json
+- airmdr-user-management-service-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

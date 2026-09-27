@@ -31,60 +31,14 @@ tags:
 - SOC Automation
 - Threat Detection
 - MCP
+- A2A
 apis:
-- name: AirMDR Case Manager API
-  description: >-
-    REST API for the AirMDR case management surface: create, read, update, list, link, clone and archive cases (v1
-    and v2), case findings, evidence, attachments, comments, history and watchers, alert ingestion (the webhook
-    entry point), alert catalog and alert types, MITRE tactics, dashboards and SOC/executive metrics, security
-    reviews and a Query DSL. 175 operations across 139 paths, authenticated with an API token in the Session cookie.
-  humanURL: https://app.airmdr.com/docs/api/case_manager.html
-  baseURL: https://app.airmdr.com/airmdrapi
-  tags:
-  - Security
-  - Case Management
-  - Alert Triage
-  - Incident Response
-  - Security Operations
-  properties:
-  - type: OpenAPI
-    url: openapi/airmdr-case-manager-openapi.yml
-  - type: OpenAPI
-    url: https://app.airmdr.com/docs/api/case_manager.html
-    name: Published Redoc reference (spec embedded in the page)
-  - type: Documentation
-    url: https://docs.airmdr.com/api-reference/apilandingpage
-  - type: APIReference
-    url: https://app.airmdr.com/docs/api/case_manager.html
-- name: AirMDR User Management Service API
-  description: >-
-    REST API for organizations, users, user groups, sessions, API tokens, passwords, permissions and RBAC templates
-    on the AirMDR platform, including organization configuration for investigation depth, credits and features. 60
-    operations across 47 paths, authenticated with an API token in the Session cookie.
-  humanURL: https://app.airmdr.com/docs/api/user_management_service.html
-  baseURL: https://app.airmdr.com/airmdrapi
-  tags:
-  - Security
-  - User Management
-  - Identity
-  - Access Control
-  - Security Operations
-  properties:
-  - type: OpenAPI
-    url: openapi/airmdr-user-management-service-openapi.yml
-  - type: OpenAPI
-    url: https://app.airmdr.com/docs/api/user_management_service.html
-    name: Published Redoc reference (spec embedded in the page)
-  - type: Documentation
-    url: https://docs.airmdr.com/api-reference/apitoken
-  - type: APIReference
-    url: https://app.airmdr.com/docs/api/user_management_service.html
 - name: AirMDR Documentation MCP Server
   description: >-
-    Hosted, unauthenticated Streamable-HTTP MCP server on the AirMDR documentation host (Mintlify-operated) exposing
-    three tools: search the AirMDR documentation, run read-only queries against a virtual filesystem of the docs
-    pages, and submit documentation feedback. It documents the platform; it does not call the Case Manager or User
-    Management APIs.
+    Hosted, unauthenticated Streamable-HTTP MCP server on the AirMDR documentation host (Mintlify-operated)
+    exposing three tools: search the AirMDR documentation, run read-only queries against a virtual filesystem
+    of the docs pages, and submit documentation feedback. It documents the platform; it does not call
+    the Case Manager or User Management APIs.
   humanURL: https://docs.airmdr.com/
   baseURL: https://docs.airmdr.com/mcp
   tags:
@@ -98,6 +52,402 @@ apis:
     url: https://docs.airmdr.com/mcp
   - type: Documentation
     url: https://docs.airmdr.com/
+- aid: airmdr:airmdr-alertcatalog-api
+  name: AirMDR Alert Catalog API
+  description: The AlertCatalog API from AirMDR — 8 operation(s) for alertcatalog.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - AlertCatalog
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-alertcatalog-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-alerts-api
+  name: AirMDR Alerts API
+  description: The Alerts API from AirMDR — 15 operation(s) for alerts.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-alerts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-alerttypes-api
+  name: AirMDR Alert Types API
+  description: The AlertTypes API from AirMDR — 3 operation(s) for alerttypes.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - AlertTypes
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-alerttypes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-case-manager-api
+  name: AirMDR Case Manager API
+  description: The Case Manager API from AirMDR — 32 operation(s) for case manager.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Case Manager
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-case-manager-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-case-manager-internal-api
+  name: AirMDR Case Manager Internal API
+  description: The Case Manager Internal API from AirMDR — 10 operation(s) for case manager internal.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Case Manager Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-case-manager-internal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-case-manager-v2-api
+  name: AirMDR Case Manager V2 API
+  description: The Case Manager V2 API from AirMDR — 43 operation(s) for case manager v2.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Case Manager V2
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-case-manager-v2-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-casedecisionautomation-api
+  name: AirMDR Case Decision Automation API
+  description: The CaseDecisionAutomation API from AirMDR — 4 operation(s) for casedecisionautomation.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - CaseDecisionAutomation
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-casedecisionautomation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-dashboard-api
+  name: AirMDR Dashboard API
+  description: The Dashboard API from AirMDR — 20 operation(s) for dashboard.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Dashboard
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-dashboard-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-internal-api
+  name: AirMDR Internal API
+  description: The Internal API from AirMDR — 8 operation(s) for internal.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-internal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-mitretactics-api
+  name: AirMDR Mitre Tactics API
+  description: The MitreTactics API from AirMDR — 1 operation(s) for mitretactics.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - MitreTactics
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-mitretactics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-organization-api
+  name: AirMDR Organization API
+  description: Endpoints to manage organizations
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Organization
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-organization-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-password-api
+  name: AirMDR Password API
+  description: Endpoints to manage user password
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Password
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-password-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-permission-api
+  name: AirMDR Permission API
+  description: Endpoints to read system permissions
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Permission
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-permission-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-ping-api
+  name: AirMDR Ping API
+  description: The Ping API from AirMDR — 1 operation(s) for ping.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Ping
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-ping-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-query-dsl-api
+  name: AirMDR Query DSL API
+  description: The Query DSL API from AirMDR — 3 operation(s) for query dsl.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Query DSL
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-query-dsl-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-security-review-api
+  name: AirMDR Security Review API
+  description: The Security Review API from AirMDR — 5 operation(s) for security review.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Security Review
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-security-review-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-session-api
+  name: AirMDR Session API
+  description: Endpoints to manage sessions
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Session
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-session-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-token-api
+  name: AirMDR Token API
+  description: Endpoints to manage tokens
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Token
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-token-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-trial-api
+  name: AirMDR Trial API
+  description: The Trial API from AirMDR — 1 operation(s) for trial.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Trial
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-trial-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-user-api
+  name: AirMDR User API
+  description: Endpoints to manager users
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-user-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-user-group-api
+  name: AirMDR User Group API
+  description: Endpoints to manage user groups
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - User Group
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-user-group-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
+- aid: airmdr:airmdr-webhooks-api
+  name: AirMDR Webhooks API
+  description: The Webhooks API from AirMDR — 3 operation(s) for webhooks.
+  humanURL: https://app.airmdr.com/docs/api/case_manager.html
+  baseURL: https://app.airmdr.com/airmdrapi
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/airmdr-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apilandingpage
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/case_manager.html
+  - type: Documentation
+    url: https://docs.airmdr.com/api-reference/apitoken
+  - type: APIReference
+    url: https://app.airmdr.com/docs/api/user_management_service.html
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -189,3 +539,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 27
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://docs.airmdr.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3"
+  control: 404

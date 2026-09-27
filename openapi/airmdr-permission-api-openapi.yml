@@ -1,0 +1,711 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Permission API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Permission across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Permission
+  description: Endpoints to read system permissions
+paths:
+  /permission:
+    get:
+      tags:
+      - Permission
+      operationId: listPermissionsAPI
+      summary: list permissions
+      description: List of permissions available in the system.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: all permissions fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FetchAllPermissionsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /permission/disabled:
+    get:
+      tags:
+      - Permission
+      operationId: listDisabledPermissionsAPI
+      summary: list disabled permissions for user
+      description: List of disabled permissions in the system for user and organization.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: permissions fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FetchDisabledPermissionsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /organization/rbac/template:
+    get:
+      tags:
+      - Permission
+      operationId: ListOrganizationRBACTemplateAPI
+      summary: List Organization RBAC templates
+      description: List the availableRBAC templates.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: RBAC template fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOrganizationRBACTemplateResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Permission
+      operationId: createOrganizationRBACTemplateAPI
+      summary: Create Organization RBAC template
+      description: Create a new organization RBAC template.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRBACTemplate'
+      responses:
+        '200':
+          description: Organization RBAC template created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrganizationRBACTemplateResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /organization/rbac/template/{template_id}:
+    get:
+      tags:
+      - Permission
+      operationId: getOrganizationRBACTemplateAPI
+      summary: Get Organization RBAC template
+      description: Get the RBAC template for the organization.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: template_id
+        in: path
+        description: The ID of the RBAC template
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Organization RBAC template fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrganizationRBACTemplateResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Permission
+      operationId: updateOrganizationRBACTemplateAPI
+      summary: Update Organization RBAC template
+      description: Update the RBAC template for the organization.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: template_id
+        in: path
+        description: The ID of the RBAC template
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRBACTemplate'
+      responses:
+        '200':
+          description: Organization RBAC template updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrganizationRBACTemplateResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Permission
+      operationId: deleteOrganizationRBACTemplateAPI
+      summary: Delete Organization RBAC template
+      description: Delete the RBAC template for the organization.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: template_id
+        in: path
+        description: The ID of the RBAC template
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Organization RBAC template deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /organization/rbac/permissions:
+    get:
+      tags:
+      - Permission
+      operationId: listOrganizationRBACTemplatePermissionAPI
+      summary: List of allowed permissions for the organization RBAC template
+      description: List the permission for the organization RBAC template.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: List of allowed permissions for the organization RBAC template fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOrganizationRBACPermissionsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /organization/rbac/allowed_movement:
+    get:
+      tags:
+      - Permission
+      operationId: ListAllowedRBACMovementAPI
+      summary: List allowed RBAC movement
+      description: List the allowed RBAC movement for the organization.
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: List of allowed RBAC movement fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationRBACMovementResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    OrgRBACPermissions:
+      type: object
+      required:
+      - parent_visibility
+      - child_visibility
+      - org_visibility
+      properties:
+        parent_visibility:
+          $ref: '#/components/schemas/ParentVisibilityPermissions'
+        child_visibility:
+          $ref: '#/components/schemas/ChildVisibilityPermissions'
+        org_visibility:
+          $ref: '#/components/schemas/OrgVisibilityPermissions'
+    OrganizationRBACTemplate:
+      type: object
+      required:
+      - template_id
+      - display_name
+      - parent_visibility
+      - child_visibility
+      - org_visibility
+      properties:
+        template_id:
+          type: string
+          description: Unique identifier for the RBAC template
+        display_name:
+          type: string
+          description: Display name for the RBAC template
+        parent_visibility:
+          $ref: '#/components/schemas/ParentVisibility'
+          description: Visibility settings for parent organizations
+        child_visibility:
+          $ref: '#/components/schemas/ChildVisibility'
+          description: Visibility settings for child organizations
+        org_visibility:
+          $ref: '#/components/schemas/OrgVisibility'
+          description: Organization-level visibility settings
+    OrgVisibility:
+      type: object
+      description: Organization-level visibility settings
+      required:
+      - org_data
+      properties:
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility
+    OrganizationRBACMovementAllowList:
+      type: object
+      required:
+      - template_id
+      - allowlist
+      properties:
+        template_id:
+          type: string
+          description: Unique identifier for the RBAC template
+        allowlist:
+          type: array
+          items:
+            type: string
+          description: List of RBAC templates allowed for movement
+    AccessType:
+      type: string
+      enum:
+      - Create
+      - Update
+      - Delete
+      - BulkUpdate
+      - BulkDelete
+      x-enum-varnames:
+      - AccessTypeCreate
+      - AccessTypeUpdate
+      - AccessTypeDelete
+      - AccessTypeBulkUpdate
+      - AccessTypeBulkDelete
+    ListOrganizationRBACTemplateResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationRBACTemplate'
+    OrganizationRBACMovementResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationRBACMovementAllowList'
+        message:
+          type: string
+          description: Message indicating the result of the movement
+    ChildVisibility:
+      type: object
+      description: What child orgs are allowed to see
+      required:
+      - org_data
+      properties:
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility for child organizations
+    ParentVisibility:
+      type: object
+      description: What parents are allowed to see
+      required:
+      - user_mgmt
+      - org_data
+      properties:
+        user_mgmt:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: User management visibility for parent organizations
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility for parent organizations
+    GetOrganizationRBACTemplateResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/OrganizationRBACTemplate'
+    EntityAccess:
+      type: object
+      required:
+      - scope
+      - org_hierarchy
+      - organization_ids
+      properties:
+        scope:
+          type: integer
+        org_hierarchy:
+          $ref: '#/components/schemas/OrganizationHierarchy'
+        organization_ids:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+    OrgVisibilityPermissions:
+      type: object
+      required:
+      - org_data
+      properties:
+        org_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+    OrganizationHierarchy:
+      type: string
+      enum:
+      - parent_orgs
+      - child_orgs
+      - user_org
+      - all_orgs
+      - except_entity_orgs
+      x-enum-varnames:
+      - OrganizationHierarchyParentOrgs
+      - OrganizationHierarchyChildOrgs
+      - OrganizationHierarchyUserOrg
+      - OrganizationHierarchyAllOrgs
+      - OrganizationHierarchyExceptEntityOrgs
+    PermissionAccess:
+      type: object
+      required:
+      - access_type
+      - entities
+      properties:
+        access_type:
+          $ref: '#/components/schemas/AccessType'
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityAccess'
+    DisabledPermission:
+      type: object
+      required:
+      - feature
+      - access_list
+      properties:
+        feature:
+          type: string
+        access_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionAccess'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    FetchDisabledPermissionsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          required:
+          - disabled_permissions
+          properties:
+            disabled_permissions:
+              type: array
+              items:
+                $ref: '#/components/schemas/DisabledPermission'
+    ChildVisibilityPermissions:
+      type: object
+      required:
+      - org_data
+      properties:
+        org_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+    Permission:
+      type: object
+      required:
+      - permission_id
+      - name
+      properties:
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    ListOrganizationRBACPermissionsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/OrgRBACPermissions'
+    ParentVisibilityPermissions:
+      type: object
+      required:
+      - user_mgmt
+      - org_data
+      properties:
+        user_mgmt:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+        org_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+    VisibilitySetting:
+      type: string
+      enum:
+      - full_access
+      - no_access
+      - org_context_access
+      - usage_access
+      x-enum-varnames:
+      - VisibilityFullAccess
+      - VisibilityNoAccess
+      - VisibilityOrgContextAccess
+      - VisibilityUsageAccess
+    FetchAllPermissionsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-user-management-service-openapi.json
+- airmdr-user-management-service-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL

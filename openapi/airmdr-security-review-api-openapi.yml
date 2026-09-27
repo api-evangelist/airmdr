@@ -1,0 +1,1226 @@
+openapi: 3.2.0
+info:
+  title: Airmdr Security Review API
+  version: 1.0.0
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  description: 'Operations tagged Security Review across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /airmdrapi
+- url: https://app.airmdr.com/airmdrapi
+  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
+tags:
+- name: Security Review
+paths:
+  /v2/security-report/generate:
+    post:
+      tags:
+      - Security Review
+      operationId: generateSecurityReportAPI
+      summary: Generate a security review report (internal only)
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateSecurityReportRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '202':
+          description: Security review generation triggered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSecurityReportResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/security-report/list:
+    post:
+      tags:
+      - Security Review
+      operationId: listSecurityReportsAPI
+      summary: List security reviews accessible to the requesting user's org
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          default: 20
+          maximum: 100
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListSecurityReportsRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: List of security reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSecurityReportsResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/security-report/{report_id}:
+    get:
+      tags:
+      - Security Review
+      operationId: getSecurityReportAPI
+      summary: Get a security review including the full report
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Security review retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSecurityReportResponse'
+        '409':
+          description: Report not yet ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+      - Security Review
+      operationId: updateSecurityReportAPI
+      summary: Update security metrics (internal only)
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSecurityReportRequest'
+      responses:
+        '200':
+          description: Security report metrics updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSecurityReportResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Security Review
+      operationId: deleteSecurityReportAPI
+      summary: Delete a security review report
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Security review deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/security-report/{report_id}/email:
+    post:
+      tags:
+      - Security Review
+      operationId: emailSecurityReportAPI
+      summary: Email the full security review report to the given email addresses (internal…
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailSecurityReportRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Security review email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '409':
+          description: Report not yet ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+  /v2/security-report/watchers:
+    get:
+      tags:
+      - Security Review
+      operationId: listReportWatchersAPI
+      summary: List the report watchers (weekly/monthly email recipients) configured for an…
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      - name: organization_id
+        in: query
+        description: The organization whose report watchers should be returned.
+        required: true
+        schema:
+          type: string
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Report watchers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListReportWatchersResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Security Review
+      operationId: upsertReportWatcherAPI
+      summary: Add or update a single report watcher and the report frequencies…
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertReportWatcherRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Report watcher saved successfully; returns the updated watcher list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListReportWatchersResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Security Review
+      operationId: deleteReportWatcherAPI
+      summary: Remove a report watcher from all report frequencies for an organization
+      parameters:
+      - name: User-ID
+        in: header
+        description: The User ID of the requestor.
+        required: true
+        schema:
+          type: string
+      - name: Organization-ID
+        in: header
+        description: The Organization ID associated with the requestor.
+        required: true
+        schema:
+          type: string
+      - name: X-Request-ID
+        in: header
+        description: The ID associated with the request.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteReportWatcherRequest'
+      security:
+      - SessionCookie: []
+      responses:
+        '200':
+          description: Report watcher removed successfully; returns the updated watcher list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListReportWatchersResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    servers:
+    - url: /airmdrapi
+components:
+  schemas:
+    SecurityReviewImprovement:
+      type: object
+      required:
+      - title
+      - description
+      - icon_link
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        icon_link:
+          type: string
+    UpdateSecurityReviewDataSources:
+      type: object
+      properties:
+        top_alert_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertSourceCount'
+        top_alert_types_by_frequency:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeFrequency'
+    AlertSourceCount:
+      type: object
+      required:
+      - source_name
+      - count
+      properties:
+        source_name:
+          type: string
+        count:
+          type: integer
+    SecurityReportSummary:
+      type: object
+      description: List item — excludes the full report payload
+      required:
+      - review_id
+      - organization_id
+      - triggered_by
+      - status
+      - time_range_start
+      - time_range_end
+      - created_at
+      properties:
+        review_id:
+          type: string
+        organization_id:
+          type: string
+        triggered_by:
+          type: string
+        status:
+          $ref: '#/components/schemas/SecurityReviewStatus'
+        time_range_start:
+          type: integer
+          format: int64
+        time_range_end:
+          type: integer
+          format: int64
+        generated_at:
+          type: integer
+          format: int64
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64
+    ResponseTimePoint:
+      type: object
+      required:
+      - mtti_minutes
+      - mtta_minutes
+      properties:
+        mtti_minutes:
+          type: number
+          format: double
+        mtta_minutes:
+          type: number
+          format: double
+    FPBenignSummary:
+      type: object
+      required:
+      - fp_narrative
+      - benign_narrative
+      properties:
+        fp_narrative:
+          type: string
+        benign_narrative:
+          type: string
+    SecurityReviewDataSourceStatus:
+      type: object
+      required:
+      - alert_source
+      - status
+      properties:
+        alert_source:
+          type: string
+        status:
+          $ref: '#/components/schemas/DataSourceConnectionStatus'
+        note:
+          type: string
+    DataSourceHealthSummary:
+      type: object
+      required:
+      - provider
+      - provider_url
+      - connections_summary
+      properties:
+        provider:
+          type: string
+          description: Name of the provider/integration
+        provider_url:
+          type: string
+          description: URL to manage provider connections
+        connections_summary:
+          $ref: '#/components/schemas/ConnectionCountSummary'
+    SecurityReviewKPIs:
+      type: object
+      required:
+      - total_cases
+      - escalated_count
+      - false_positive_count
+      - benign_count
+      - malicious_count
+      - mtti
+      - mtta
+      properties:
+        total_cases:
+          type: integer
+        escalated_count:
+          type: integer
+        false_positive_count:
+          type: integer
+        benign_count:
+          type: integer
+        malicious_count:
+          type: integer
+        mtti:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+        mtta:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+    ResponseTimeMetric:
+      type: object
+      required:
+      - avg_seconds
+      - case_count
+      - mean_metrics_intervals
+      - daily_mean_metrics
+      properties:
+        avg_seconds:
+          type: integer
+        case_count:
+          type: integer
+        mean_metrics_intervals:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+        daily_mean_metrics:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+    ReportWatcher:
+      type: object
+      description: A single report watcher and the report frequencies they are subscribed to
+      required:
+      - email
+      - weekly
+      - monthly
+      properties:
+        email:
+          type: string
+          description: Watcher email address
+        weekly:
+          type: boolean
+          description: Whether this watcher receives the weekly security review report
+        monthly:
+          type: boolean
+          description: Whether this watcher receives the monthly security review report
+    UpdateSecurityReviewPeriodComparison:
+      type: object
+      properties:
+        total_cases:
+          $ref: '#/components/schemas/PeriodMetric'
+        escalations:
+          $ref: '#/components/schemas/PeriodMetric'
+        fp_rate:
+          $ref: '#/components/schemas/PeriodMetric'
+        avg_mtti:
+          $ref: '#/components/schemas/PeriodMetric'
+    SecurityReviewReport:
+      type: object
+      required:
+      - kpis
+      - executive_briefing
+      - data_sources
+      - case_disposition_breakdown
+      - severity_breakdown
+      - escalations
+      - fp_benign_summary
+      - data_source_health
+      - missing_data_sources
+      - strategic_improvements
+      - daily_case_volume
+      - period_comparison
+      - response_time_trend
+      properties:
+        kpis:
+          $ref: '#/components/schemas/SecurityReviewKPIs'
+        executive_briefing:
+          type: array
+          items:
+            $ref: '#/components/schemas/BriefingSummary'
+        data_sources:
+          $ref: '#/components/schemas/SecurityReviewDataSources'
+        case_disposition_breakdown:
+          $ref: '#/components/schemas/SecurityReviewCaseDispositionMetrics'
+        severity_breakdown:
+          $ref: '#/components/schemas/SecurityReviewSeverityMetrics'
+        escalations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewEscalation'
+        fp_benign_summary:
+          $ref: '#/components/schemas/FPBenignSummary'
+        data_source_health:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSourceHealthSummary'
+          description: Health assessment per provider, including authenticated, unauthenticated, and failed auth connection counts
+        missing_data_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewDataSourceStatus'
+          description: Subset of data_source_health containing only sources with not_connected or partial status
+        strategic_improvements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewImprovement'
+        daily_case_volume:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Map of date (YYYY-MM-DD) to case count
+        period_comparison:
+          $ref: '#/components/schemas/SecurityReviewPeriodComparison'
+        response_time_trend:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ResponseTimePoint'
+          description: Map of date (YYYY-MM-DD) to MTTI/MTTA values
+    ListSecurityReportsResponse:
+      type: object
+      required:
+      - message
+      - total
+      - data
+      properties:
+        message:
+          type: string
+        total:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReportSummary'
+    SecurityReviewDataSources:
+      type: object
+      required:
+      - top_alert_sources
+      - top_alert_types_by_frequency
+      properties:
+        top_alert_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertSourceCount'
+        top_alert_types_by_frequency:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeFrequency'
+    BriefingSummary:
+      type: object
+      required:
+      - risk
+      - tag
+      - title
+      - details
+      - footer_label
+      - footer_text
+      properties:
+        risk:
+          type: string
+          description: Drives the chip color. Accepts color-semantic (info/success/warning/danger, emitted by /query_metrics) or severity (Critical/High/Medium/Low/Informational, emitted by the monthly report).
+          enum:
+          - info
+          - success
+          - warning
+          - danger
+          - Critical
+          - High
+          - Medium
+          - Low
+          - Informational
+          x-enum-varnames:
+          - InfoBriefingRisk
+          - SuccessBriefingRisk
+          - WarningBriefingRisk
+          - DangerBriefingRisk
+          - CriticalBriefingRisk
+          - HighBriefingRisk
+          - MediumBriefingRisk
+          - LowBriefingRisk
+          - InformationalBriefingRisk
+        tag:
+          type: string
+          description: Chip label, e.g. "1 CRITICAL ESCALATION", "TELEMETRY GAP".
+        title:
+          type: string
+        details:
+          type: string
+          description: Narrative paragraph describing the briefing point.
+        footer_label:
+          type: string
+          description: Footer flips between a resolved/no-action STATUS line and a NEXT STEP line.
+          enum:
+          - STATUS
+          - NEXT STEP
+          x-enum-varnames:
+          - StatusBriefingFooter
+          - NextStepBriefingFooter
+        footer_text:
+          type: string
+          description: Footer body text for the STATUS / NEXT STEP line.
+    AlertTypeFrequency:
+      type: object
+      required:
+      - alert_name
+      - alert_source
+      - case_count
+      properties:
+        alert_name:
+          type: string
+        alert_source:
+          type: string
+        case_count:
+          type: integer
+    SecurityReviewEscalation:
+      type: object
+      required:
+      - description
+      properties:
+        description:
+          type: string
+    GenerateSecurityReportResponse:
+      type: object
+      required:
+      - message
+      - review_id
+      properties:
+        message:
+          type: string
+        review_id:
+          type: string
+    DataSourceConnectionStatus:
+      type: string
+      enum:
+      - connected
+      - not_connected
+      - partial
+      x-enum-varnames:
+      - ConnectedDataSourceStatus
+      - NotConnectedDataSourceStatus
+      - PartialDataSourceStatus
+    UpdateSecurityReviewReport:
+      type: object
+      properties:
+        kpis:
+          $ref: '#/components/schemas/UpdateSecurityReviewKPIs'
+        executive_briefing:
+          type: array
+          items:
+            $ref: '#/components/schemas/BriefingSummary'
+        data_sources:
+          $ref: '#/components/schemas/UpdateSecurityReviewDataSources'
+        case_disposition_breakdown:
+          $ref: '#/components/schemas/SecurityReviewCaseDispositionMetrics'
+        severity_breakdown:
+          $ref: '#/components/schemas/SecurityReviewSeverityMetrics'
+        escalations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewEscalation'
+        fp_benign_summary:
+          $ref: '#/components/schemas/FPBenignSummary'
+        data_source_health:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewDataSourceStatus'
+          description: AI-generated health assessment of all identified data sources
+        missing_data_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewDataSourceStatus'
+          description: Sources with not_connected or partial status only
+        strategic_improvements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityReviewImprovement'
+        daily_case_volume:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Map of date (YYYY-MM-DD) to case count
+        period_comparison:
+          $ref: '#/components/schemas/UpdateSecurityReviewPeriodComparison'
+        response_time_trend:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ResponseTimePoint'
+          description: Map of date (YYYY-MM-DD) to MTTI/MTTA values
+    SecurityReviewSeverityMetrics:
+      type: object
+      required:
+      - critical_count
+      - high_count
+      - medium_count
+      - low_count
+      properties:
+        critical_count:
+          type: integer
+        high_count:
+          type: integer
+        medium_count:
+          type: integer
+        low_count:
+          type: integer
+    UpsertReportWatcherRequest:
+      type: object
+      description: Add or update a single watcher. Set weekly/monthly to control which report cadences the email is subscribed to. At least one of weekly or monthly must be true.
+      required:
+      - organization_id
+      - email
+      - weekly
+      - monthly
+      properties:
+        organization_id:
+          type: string
+          description: The organization the watcher belongs to
+        email:
+          type: string
+          description: Watcher email address
+        weekly:
+          type: boolean
+          description: Subscribe (true) or unsubscribe (false) this email from the weekly report
+        monthly:
+          type: boolean
+          description: Subscribe (true) or unsubscribe (false) this email from the monthly report
+    SecurityReviewPeriodComparison:
+      type: object
+      required:
+      - total_cases
+      - escalations
+      - fp_rate
+      - avg_mtti
+      properties:
+        total_cases:
+          $ref: '#/components/schemas/PeriodMetric'
+        escalations:
+          $ref: '#/components/schemas/PeriodMetric'
+        fp_rate:
+          $ref: '#/components/schemas/PeriodMetric'
+        avg_mtti:
+          $ref: '#/components/schemas/PeriodMetric'
+        prior_period_label:
+          type: string
+          description: Human-readable date range for the prior period (e.g. "Jan 1, 2025 – Jan 31, 2025")
+    DeleteReportWatcherRequest:
+      type: object
+      required:
+      - organization_id
+      - email
+      properties:
+        organization_id:
+          type: string
+          description: The organization the watcher belongs to
+        email:
+          type: string
+          description: Watcher email address to remove from all report frequencies
+    GenerateSecurityReportRequest:
+      type: object
+      required:
+      - organization_id
+      - time_range_start
+      - time_range_end
+      properties:
+        organization_id:
+          type: string
+          description: Target customer org to generate the report for
+        time_range_start:
+          type: integer
+          format: int64
+          description: Start of the reporting period (Unix ms)
+        time_range_end:
+          type: integer
+          format: int64
+          description: End of the reporting period (Unix ms)
+    ListReportWatchersResponse:
+      type: object
+      required:
+      - message
+      - organization_id
+      - watchers
+      properties:
+        message:
+          type: string
+        organization_id:
+          type: string
+        watchers:
+          type: array
+          description: The de-duplicated set of watchers, each with their weekly/monthly subscription flags
+          items:
+            $ref: '#/components/schemas/ReportWatcher'
+    PeriodMetric:
+      type: object
+      required:
+      - current
+      - previous
+      - pct_change
+      properties:
+        current:
+          type: number
+          format: double
+        previous:
+          type: number
+          format: double
+        pct_change:
+          type: number
+          format: double
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    ListSecurityReportsRequest:
+      type: object
+      properties:
+        sort:
+          type: object
+          required:
+          - field
+          - order
+          properties:
+            field:
+              type: string
+              enum:
+              - created_at
+              - time_range
+              - status
+              - organization_name
+            order:
+              type: string
+              enum:
+              - ascending
+              - descending
+        filter:
+          type: object
+          properties:
+            organization_id:
+              type: array
+              description: List of organization IDs to include. Relevant for users from parent orgs with access to child orgs (e.g. ASOs, MSSPs).
+              items:
+                type: string
+            status:
+              type: array
+              description: List of statuses to include. Defaults to all statuses when omitted.
+              items:
+                $ref: '#/components/schemas/SecurityReviewStatus'
+            created_between:
+              type: object
+              description: Filter by report creation timestamp (epoch seconds). Useful for filtering reports generated this month vs last month.
+              properties:
+                start:
+                  type: integer
+                  format: int64
+                end:
+                  type: integer
+                  format: int64
+            generated_between:
+              type: object
+              description: Filter by the time range used to trigger report generation. Useful for distinguishing weekly vs monthly reports.
+              properties:
+                start:
+                  type: integer
+                  format: int64
+                end:
+                  type: integer
+                  format: int64
+    GetSecurityReportResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SecurityReport'
+    SecurityReviewCaseDispositionMetrics:
+      type: object
+      required:
+      - false_positive_count
+      - benign_count
+      - malicious_count
+      - escalated_count
+      properties:
+        false_positive_count:
+          type: integer
+        benign_count:
+          type: integer
+        malicious_count:
+          type: integer
+        escalated_count:
+          type: integer
+    EmailSecurityReportRequest:
+      type: object
+      required:
+      - email_ids
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Subject of the email
+    SecurityReviewStatus:
+      type: string
+      enum:
+      - scheduled
+      - queued
+      - processing
+      - successful
+      - failed
+      x-enum-varnames:
+      - ScheduledSecurityReviewStatus
+      - QueuedSecurityReviewStatus
+      - ProcessingSecurityReviewStatus
+      - SuccessfulSecurityReviewStatus
+      - FailedSecurityReviewStatus
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    UpdateSecurityReviewKPIs:
+      type: object
+      properties:
+        total_cases:
+          type: integer
+        escalated_count:
+          type: integer
+        false_positive_count:
+          type: integer
+        benign_count:
+          type: integer
+        malicious_count:
+          type: integer
+        mtti:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+        mtta:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+    SecurityReport:
+      type: object
+      required:
+      - review_id
+      - organization_id
+      - triggered_by
+      - status
+      - time_range_start
+      - time_range_end
+      - generated_at
+      - created_at
+      - updated_at
+      properties:
+        review_id:
+          type: string
+        organization_id:
+          type: string
+        triggered_by:
+          type: string
+        status:
+          $ref: '#/components/schemas/SecurityReviewStatus'
+        time_range_start:
+          type: integer
+          format: int64
+        time_range_end:
+          type: integer
+          format: int64
+        generated_at:
+          type: integer
+          format: int64
+        error_message:
+          type: string
+        report:
+          $ref: '#/components/schemas/SecurityReviewReport'
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64
+    UpdateSecurityReportRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/SecurityReviewStatus'
+        error_message:
+          type: string
+        report:
+          $ref: '#/components/schemas/UpdateSecurityReviewReport'
+    ConnectionCountSummary:
+      type: object
+      required:
+      - authentication_failed_count
+      - expired_count
+      - near_expiry_count
+      - requested_count
+      - total
+      properties:
+        authentication_failed_count:
+          type: integer
+          description: Number of connections with failed authentication
+        expired_count:
+          type: integer
+          description: Number of expired connections
+        near_expiry_count:
+          type: integer
+          description: Number of connections near expiry
+        requested_count:
+          type: integer
+          description: Number of requested connections
+        total:
+          type: integer
+          description: Total number of connections
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: Session
+x-refined-from:
+- airmdr-case-manager-openapi.json
+- airmdr-case-manager-openapi.yml
+x-tagGroups:
+- name: Included APIs
+  tags:
+  - Case Manager V2
+  - Dashboard
+  - Alerts
+  - Webhooks
+  - Query DSL
