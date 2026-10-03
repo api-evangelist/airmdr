@@ -1,14 +1,10 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Session API
+  title: User Management Service Session API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Session across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: Endpoints to manage sessions
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Session
   description: Endpoints to manage sessions
@@ -53,8 +49,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /user/login:
     post:
       tags:
@@ -85,8 +79,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /user/login/url:
     post:
       tags:
@@ -122,8 +114,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /user/logout:
     get:
       tags:
@@ -160,8 +150,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /session:
     get:
       tags:
@@ -236,39 +224,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
-    UpdateSessionResponse:
+    GetLoginUrlRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        redirect_url:
+          type: string
+    UserRole:
+      type: string
+      description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
+      enum:
+      - user
+      - admin
+      - superadmin
+      x-enum-varnames:
+      - UserRoleUser
+      - UserRoleAdmin
+      - UserRoleSuperAdmin
+    LoginUserResponse:
       type: object
       required:
+      - data
       - message
       properties:
         message:
           type: string
-    LoginUserData:
-      type: object
-      required:
-      - session_token
-      - user
-      properties:
-        session_token:
-          type: string
-        active_organization_id:
-          type: string
-        user:
-          $ref: '#/components/schemas/LoginUser'
-    LoginRequest:
-      type: object
-      required:
-      - email
-      - password
-      properties:
-        email:
-          type: string
-        password:
-          type: string
+        data:
+          $ref: '#/components/schemas/LoginUserData'
     AuthenticateUserData:
       type: object
       required:
@@ -299,37 +284,23 @@ components:
         token_name:
           type: string
           description: Human-readable name of the API token used to authenticate. Empty for interactive login sessions.
-    LoginMethod:
-      type: string
-      enum:
-      - password
-      - sso
-      x-enum-varnames:
-      - LoginMethodPassword
-      - LoginMethodSSO
-    OrganizationMinimal:
+    AuthenticateUserResponse:
       type: object
       required:
-      - organization_id
-      - name
-      - code
-      - sso_enabled
+      - data
+      - message
       properties:
-        organization_id:
+        message:
           type: string
-          description: unique id of the organization
-        name:
+        data:
+          $ref: '#/components/schemas/AuthenticateUserData'
+    UpdateSessionResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
           type: string
-          description: name of the organization
-        code:
-          type: string
-          description: code of the organization
-        logo_url:
-          type: string
-          description: url of the organization's logo
-        sso_enabled:
-          type: boolean
-          description: flag indicating whether sso is enabled for the organization
     UpdateSessionRequest:
       type: object
       required:
@@ -362,79 +333,31 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/LoginUrl'
-    LoginUserResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/LoginUserData'
-    AuthenticateRequest:
-      type: object
-      required:
-      - session_token
-      properties:
-        session_token:
-          type: string
-        metadata:
-          type: object
-    UserRole:
-      type: string
-      description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
-      enum:
-      - user
-      - admin
-      - superadmin
-      x-enum-varnames:
-      - UserRoleUser
-      - UserRoleAdmin
-      - UserRoleSuperAdmin
-    GetLoginUrlRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        redirect_url:
-          type: string
-    AuthenticateUserResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/AuthenticateUserData'
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    LoginUrl:
+    LoginRequest:
       type: object
       required:
       - email
-      - login_method
+      - password
       properties:
         email:
           type: string
-          description: The email of the user
-        login_method:
-          $ref: '#/components/schemas/LoginMethod'
-          description: The method for login, can be password or sso
-        login_url:
+        password:
           type: string
-          description: The login url in case the login method is sso
-        logo_url:
-          type: string
-          description: The url of the logo of the user's organization
+    UserStatus:
+      type: string
+      description: user account status
+      enum:
+      - active
+      - pending
+      - disabled
+      - deleted
+      - password_reset_required
+      x-enum-varnames:
+      - UserStatusActive
+      - UserStatusPending
+      - UserStatusDisabled
+      - UserStatusDeleted
+      - UserStatusPasswordResetRequired
     Permission:
       type: object
       required:
@@ -493,34 +416,94 @@ components:
         is_internal:
           type: boolean
           description: Whether user belongs to airmdr organization or not
-    UserStatus:
+    LoginMethod:
       type: string
-      description: user account status
       enum:
-      - active
-      - pending
-      - disabled
-      - deleted
-      - password_reset_required
+      - password
+      - sso
       x-enum-varnames:
-      - UserStatusActive
-      - UserStatusPending
-      - UserStatusDisabled
-      - UserStatusDeleted
-      - UserStatusPasswordResetRequired
+      - LoginMethodPassword
+      - LoginMethodSSO
+    LoginUrl:
+      type: object
+      required:
+      - email
+      - login_method
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        login_method:
+          $ref: '#/components/schemas/LoginMethod'
+          description: The method for login, can be password or sso
+        login_url:
+          type: string
+          description: The login url in case the login method is sso
+        logo_url:
+          type: string
+          description: The url of the logo of the user's organization
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    LoginUserData:
+      type: object
+      required:
+      - session_token
+      - user
+      properties:
+        session_token:
+          type: string
+        active_organization_id:
+          type: string
+        user:
+          $ref: '#/components/schemas/LoginUser'
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
+    AuthenticateRequest:
+      type: object
+      required:
+      - session_token
+      properties:
+        session_token:
+          type: string
+        metadata:
+          type: object
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-user-management-service-openapi.json
-- airmdr-user-management-service-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:
-  - Case Manager V2
-  - Dashboard
-  - Alerts
-  - Webhooks
-  - Query DSL
+  - Organization
+  - User
+  - User Group
+  - Token
+  - Permission

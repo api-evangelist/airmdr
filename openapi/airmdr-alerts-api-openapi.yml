@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Alerts API
+  title: Case Manager Alerts API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Alerts across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Alerts
 paths:
@@ -66,8 +61,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/analyze:
     post:
       tags:
@@ -124,8 +117,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/export:
     post:
       tags:
@@ -176,8 +167,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/{alert_id}:
     get:
       tags:
@@ -278,8 +267,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/{alert_id}/investigate:
     post:
       tags:
@@ -328,8 +315,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/{alert_id}/investigate/agentic-preview:
     post:
       tags:
@@ -374,8 +359,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/bulk/hard_delete:
     delete:
       tags:
@@ -424,8 +407,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/{alert_id}/hard_delete:
     delete:
       tags:
@@ -473,8 +454,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alert_types:
     get:
       tags:
@@ -522,8 +501,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alert_budget_overview:
     get:
       tags:
@@ -619,8 +596,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alert_skip_list:
     get:
       tags:
@@ -657,8 +632,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alert_skip_list/apply:
     post:
       tags:
@@ -697,8 +670,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alert_skip_list/hold:
     post:
       tags:
@@ -737,8 +708,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts_list:
     post:
       tags:
@@ -799,8 +768,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/execution/{execution_id}:
     get:
       tags:
@@ -848,10 +815,293 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
+    AlertSkipListResponse:
+      type: object
+      required:
+      - organization_uuid
+      - rows
+      - stale
+      properties:
+        budget:
+          type: integer
+          format: int64
+          description: Weekly alert budget (weekly_investigation_limit). Absent when no budget is set.
+        allowed_pct_of_budget:
+          type: number
+          format: double
+          description: Allowed percentage of budget for the org (0..1). Absent when no budget is set.
+        actual:
+          type: integer
+          format: int64
+          description: Actual weekly alert volume for the org.
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        computed_at:
+          type: integer
+          format: int64
+        window_start:
+          type: integer
+          format: int64
+        window_end:
+          type: integer
+          format: int64
+        stale:
+          type: boolean
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertSkipRow'
+    CaseExecutionDetails:
+      type: object
+      properties:
+        case_id:
+          type: string
+        investigation_status:
+          $ref: '#/components/schemas/AlertInvestigationStatus'
+        investigation_playbook_id:
+          type: string
+        investigation_playbook_name:
+          type: string
+        execution_id:
+          type: string
+        linked_manually:
+          type: boolean
+          description: Flag to indicate if the case was linked manually or through investigation playbook
+        is_agentic_case:
+          type: boolean
+          description: whether the linked case was created by agentic investigation
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    AlertMinimal:
+      type: object
+      required:
+      - alert_id
+      - alert_uuid
+      - alert_content
+      - alert_provider
+      - alert_ioc
+      - organization_uuid
+      - organization_code
+      - created_at
+      - created_by
+      - created_at_source
+      - fetched_playbook_id
+      - fetched_playbook_name
+      - investigation_status
+      - alert_provider_details
+      - linked_case_count
+      - alert_link
+      properties:
+        alert_id:
+          type: string
+        alert_uuid:
+          type: string
+        alert_content:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        alert_ioc:
+          $ref: '#/components/schemas/AlertsIOC'
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        created_by:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        modified_at:
+          type: integer
+          format: int64
+        created_at_source:
+          type: integer
+          format: int64
+        fetched_playbook_id:
+          type: string
+        fetched_playbook_name:
+          type: string
+        fetched_execution_id:
+          type: string
+        investigation_playbook_id:
+          type: string
+        investigation_playbook_name:
+          type: string
+        investigation_status:
+          $ref: '#/components/schemas/AlertInvestigationStatus'
+        investigation_retry_count:
+          type: integer
+        investigation_completed_time:
+          type: integer
+          format: int64
+        execution_id:
+          type: string
+        linked_case_id:
+          type: string
+          description: ID of the latest case linked to the alert
+        original_alert_id:
+          type: string
+          description: When investigation_status is Duplicate, the alert_id this alert was found to be a duplicate of
+        alert_provider_details:
+          $ref: '#/components/schemas/ProviderDetails'
+        resolved:
+          type: boolean
+        linked_case_count:
+          type: integer
+          description: Count of the other cases that are also linked to the alert in addition to the latest case
+        alert_link:
+          type: string
+          description: URL for the alert
+    AlertTypeSeverity:
+      type: integer
+      enum:
+      - 10
+      - 20
+      - 30
+      - 40
+      x-enum-varnames:
+      - AlertTypeSeverityLow
+      - AlertTypeSeverityMedium
+      - AlertTypeSeverityHigh
+      - AlertTypeSeverityCritical
+    AlertSkipSummary:
+      type: object
+      properties:
+        applied:
+          type: integer
+          description: Count of alert types currently applied (skipped).
+        pending:
+          type: integer
+          description: Count of alert types proposed this week, not yet applied.
+        needs_approval:
+          type: integer
+          description: Count of escalation-bearing types awaiting admin approval.
+        next_auto_apply_at:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) of the soonest pending auto-apply. Absent when none pending.
+    AlertBudgetTotals:
+      type: object
+      required:
+      - budget
+      - actual
+      properties:
+        budget:
+          type: integer
+          format: int64
+          description: Sum of per-org weekly budgets (orgs with a budget set).
+        actual:
+          type: integer
+          format: int64
+          description: Sum of per-org actual weekly alert volume.
+        pct_of_budget:
+          type: number
+          format: double
+          description: actual / budget across all orgs with a budget set.
+    InvestigateAlertResponse:
+      type: object
+      required:
+      - alert_id
+      - message
+      properties:
+        alert_id:
+          type: string
+        message:
+          type: string
+    SortFields:
+      type: object
+      required:
+      - field
+      - sort_order
+      properties:
+        field:
+          type: string
+          description: indicates which field will be used for sorting
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: indicates sort order - asc or desc
+    AlertTypeWithProperties:
+      type: object
+      required:
+      - alert_type
+      - alert_provider
+      - default_severity
+      - categories
+      - mitre_tactics
+      properties:
+        alert_type:
+          type: string
+        alert_provider:
+          type: string
+        default_severity:
+          $ref: '#/components/schemas/AlertTypeSeverity'
+        categories:
+          type: array
+          items:
+            type: string
+        mitre_tactics:
+          type: array
+          items:
+            type: string
+    AnalyzeAlertRequest:
+      type: object
+      required:
+      - alert_content
+      properties:
+        alert_content:
+          type: string
+    AlertSkipLifecycleRequest:
+      type: object
+      required:
+      - organization_id
+      properties:
+        organization_id:
+          type: string
+        items:
+          type: array
+          description: 'Alert types to act on. At least one item is required; the request is
+
+            rejected with 400 when empty.
+
+            '
+          items:
+            $ref: '#/components/schemas/AlertSkipItem'
+        reason:
+          type: string
+          description: Optional free-text reason, recorded in the audit trail.
+    ListAlertsRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListAlertsFilter'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortFields'
+        ignore_alert_content:
+          type: boolean
+          description: Flag to indicate whether to ignore the alert content. If true, the alert content will not be fetched.
+    TimeRange:
+      type: object
+      properties:
+        from_date:
+          type: integer
+          format: int64
+        to_date:
+          type: integer
+          format: int64
     AlertsIOC:
       type: object
       properties:
@@ -881,29 +1131,169 @@ components:
             type: string
         ioc_fields:
           type: object
-    AlertTypeWithProperties:
+    AlertSkipRow:
       type: object
       required:
-      - alert_type
       - alert_provider
-      - default_severity
-      - categories
-      - mitre_tactics
+      - alert_type
+      - alerts_per_week
+      - status
       properties:
+        alert_provider:
+          type: string
         alert_type:
+          type: string
+        alerts_per_week:
+          type: integer
+          format: int64
+        cases_per_week:
+          type: integer
+          format: int64
+        escalations_30d:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum:
+          - not_skipped
+          - recommended
+          - skipped
+          - excluded
+        source:
+          type: string
+          enum:
+          - system_suggested
+          - user
+        requires_approval:
+          type: boolean
+    AnalyzeAlertResponse:
+      type: object
+      required:
+      - alert_content
+      - alert_provider
+      - alert_type
+      properties:
+        alert_content:
           type: string
         alert_provider:
           type: string
-        default_severity:
-          $ref: '#/components/schemas/AlertTypeSeverity'
-        categories:
+        alert_type:
+          type: string
+        created_at_source:
+          type: integer
+          format: int64
+    ListAlertsResponse:
+      type: object
+      required:
+      - data
+      - total
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertMinimal'
+          description: list of alerts
+        total:
+          type: integer
+    ConnectionDetails:
+      type: object
+      properties:
+        connection_id:
+          type: string
+        connection_name:
+          type: string
+    AlertBudgetOverviewResponse:
+      type: object
+      required:
+      - orgs
+      - totals
+      - stale
+      properties:
+        computed_at:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) when the newest matching snapshot row was computed.
+        window_start:
+          type: integer
+          format: int64
+        window_end:
+          type: integer
+          format: int64
+        stale:
+          type: boolean
+          description: True when the newest snapshot is older than the configured freshness window.
+        orgs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertBudgetOverviewRow'
+        total:
+          type: integer
+          description: Total number of accessible org rows before pagination.
+        limit:
+          type: integer
+          description: The page size applied to this response.
+        offset:
+          type: integer
+          description: The row offset applied to this response.
+        totals:
+          $ref: '#/components/schemas/AlertBudgetTotals'
+    BulkDeleteAlertsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
           type: array
           items:
             type: string
-        mitre_tactics:
+    AlertBudgetOverviewRow:
+      type: object
+      required:
+      - organization_uuid
+      - actual
+      - over_budget
+      properties:
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        organization_name:
+          type: string
+        budget:
+          type: integer
+          format: int64
+          description: Weekly alert budget (weekly_investigation_limit). Absent when no budget is set.
+        actual:
+          type: integer
+          format: int64
+          description: Actual weekly alert volume for the org.
+        pct_of_budget:
+          type: number
+          format: double
+          description: actual / budget (0..n). Absent when no budget is set.
+        over_budget:
+          type: boolean
+        enforce_weekly_limit:
+          type: boolean
+          description: Whether the org's blind weekly cutoff is enforced (EnforceWeeklyInvestigationLimit).
+        skip_summary:
+          $ref: '#/components/schemas/AlertSkipSummary'
+    BulkDeleteAlertsRequest:
+      type: object
+      required:
+      - alert_uuids
+      properties:
+        alert_uuids:
           type: array
           items:
             type: string
+    ListAlertTypesResponse:
+      type: array
+      items:
+        type: string
     ListAlertsFilter:
       type: object
       properties:
@@ -958,6 +1348,86 @@ components:
         no_linked_cases:
           type: boolean
           description: Flag to filter alerts where there is no linked cases
+    CreateAlertsRequest:
+      type: object
+      required:
+      - alert_content
+      - alert_provider
+      - organization_code
+      properties:
+        alert_content:
+          type: string
+          description: The content/body of the alert
+        alert_provider:
+          type: string
+          description: The provider/source of the alert (e.g. aws, microsoft_graph, etc.)
+        alert_type:
+          type: string
+          description: The type/category of the alert
+        fetched_playbook_id:
+          type: string
+          description: ID of the playbook that fetched this alert
+        fetched_playbook_name:
+          type: string
+          description: Name of the playbook that fetched this alert
+        fetched_execution_id:
+          type: string
+          description: Execution ID of the playbook run that fetched this alert
+        organization_code:
+          type: string
+          description: Code/identifier of the organization this alert belongs to
+        alert_ioc:
+          $ref: '#/components/schemas/AlertsIOC'
+          description: Indicators of Compromise (IOCs) associated with this alert
+        created_at_source:
+          type: integer
+          format: int64
+          description: Timestamp when the alert was created at the source/provider
+        add_alert_definition:
+          type: boolean
+          description: Flag to add alert definition to the alert content, True for alerts creating airmdr detection playbooks
+        is_test_alert:
+          type: boolean
+          description: Flag indicating whether this alert is a test alert and should be treated differently
+        original_alert_id:
+          type: string
+          description: When creating with investigation_status Duplicate, the alert_id this alert duplicates
+    UpdateAlertRequest:
+      type: object
+      properties:
+        alert_provider:
+          type: string
+        investigation_status:
+          $ref: '#/components/schemas/AlertInvestigationStatus'
+        investigation_playbook_id:
+          type: string
+        investigation_playbook_name:
+          type: string
+        investigation_retry_count:
+          type: integer
+        execution_id:
+          type: string
+        linked_case_id:
+          type: string
+        alert_ioc:
+          $ref: '#/components/schemas/AlertsIOC'
+        resolved:
+          type: boolean
+        alert_summary:
+          type: string
+          description: Human-readable summary of the alert
+        original_alert_id:
+          type: string
+          description: When setting investigation_status to Duplicate, the alert_id this alert duplicates
+    ProviderDetails:
+      type: object
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+        provider_id:
+          type: string
     GetAlertResponse:
       type: object
       required:
@@ -1059,349 +1529,6 @@ components:
         alert_link:
           type: string
           description: URL for the alert
-    AlertMinimal:
-      type: object
-      required:
-      - alert_id
-      - alert_uuid
-      - alert_content
-      - alert_provider
-      - alert_ioc
-      - organization_uuid
-      - organization_code
-      - created_at
-      - created_by
-      - created_at_source
-      - fetched_playbook_id
-      - fetched_playbook_name
-      - investigation_status
-      - alert_provider_details
-      - linked_case_count
-      - alert_link
-      properties:
-        alert_id:
-          type: string
-        alert_uuid:
-          type: string
-        alert_content:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        alert_ioc:
-          $ref: '#/components/schemas/AlertsIOC'
-        organization_uuid:
-          type: string
-        organization_code:
-          type: string
-        created_by:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        modified_at:
-          type: integer
-          format: int64
-        created_at_source:
-          type: integer
-          format: int64
-        fetched_playbook_id:
-          type: string
-        fetched_playbook_name:
-          type: string
-        fetched_execution_id:
-          type: string
-        investigation_playbook_id:
-          type: string
-        investigation_playbook_name:
-          type: string
-        investigation_status:
-          $ref: '#/components/schemas/AlertInvestigationStatus'
-        investigation_retry_count:
-          type: integer
-        investigation_completed_time:
-          type: integer
-          format: int64
-        execution_id:
-          type: string
-        linked_case_id:
-          type: string
-          description: ID of the latest case linked to the alert
-        original_alert_id:
-          type: string
-          description: When investigation_status is Duplicate, the alert_id this alert was found to be a duplicate of
-        alert_provider_details:
-          $ref: '#/components/schemas/ProviderDetails'
-        resolved:
-          type: boolean
-        linked_case_count:
-          type: integer
-          description: Count of the other cases that are also linked to the alert in addition to the latest case
-        alert_link:
-          type: string
-          description: URL for the alert
-    TimeRange:
-      type: object
-      properties:
-        from_date:
-          type: integer
-          format: int64
-        to_date:
-          type: integer
-          format: int64
-    AlertBudgetOverviewResponse:
-      type: object
-      required:
-      - orgs
-      - totals
-      - stale
-      properties:
-        computed_at:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds) when the newest matching snapshot row was computed.
-        window_start:
-          type: integer
-          format: int64
-        window_end:
-          type: integer
-          format: int64
-        stale:
-          type: boolean
-          description: True when the newest snapshot is older than the configured freshness window.
-        orgs:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertBudgetOverviewRow'
-        total:
-          type: integer
-          description: Total number of accessible org rows before pagination.
-        limit:
-          type: integer
-          description: The page size applied to this response.
-        offset:
-          type: integer
-          description: The row offset applied to this response.
-        totals:
-          $ref: '#/components/schemas/AlertBudgetTotals'
-    AlertTypeSeverity:
-      type: integer
-      enum:
-      - 10
-      - 20
-      - 30
-      - 40
-      x-enum-varnames:
-      - AlertTypeSeverityLow
-      - AlertTypeSeverityMedium
-      - AlertTypeSeverityHigh
-      - AlertTypeSeverityCritical
-    AlertSkipSummary:
-      type: object
-      properties:
-        applied:
-          type: integer
-          description: Count of alert types currently applied (skipped).
-        pending:
-          type: integer
-          description: Count of alert types proposed this week, not yet applied.
-        needs_approval:
-          type: integer
-          description: Count of escalation-bearing types awaiting admin approval.
-        next_auto_apply_at:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds) of the soonest pending auto-apply. Absent when none pending.
-    AlertBudgetTotals:
-      type: object
-      required:
-      - budget
-      - actual
-      properties:
-        budget:
-          type: integer
-          format: int64
-          description: Sum of per-org weekly budgets (orgs with a budget set).
-        actual:
-          type: integer
-          format: int64
-          description: Sum of per-org actual weekly alert volume.
-        pct_of_budget:
-          type: number
-          format: double
-          description: actual / budget across all orgs with a budget set.
-    AlertBudgetOverviewRow:
-      type: object
-      required:
-      - organization_uuid
-      - actual
-      - over_budget
-      properties:
-        organization_uuid:
-          type: string
-        organization_code:
-          type: string
-        organization_name:
-          type: string
-        budget:
-          type: integer
-          format: int64
-          description: Weekly alert budget (weekly_investigation_limit). Absent when no budget is set.
-        actual:
-          type: integer
-          format: int64
-          description: Actual weekly alert volume for the org.
-        pct_of_budget:
-          type: number
-          format: double
-          description: actual / budget (0..n). Absent when no budget is set.
-        over_budget:
-          type: boolean
-        enforce_weekly_limit:
-          type: boolean
-          description: Whether the org's blind weekly cutoff is enforced (EnforceWeeklyInvestigationLimit).
-        skip_summary:
-          $ref: '#/components/schemas/AlertSkipSummary'
-    ListAlertsResponse:
-      type: object
-      required:
-      - data
-      - total
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertMinimal'
-          description: list of alerts
-        total:
-          type: integer
-    AlertSkipLifecycleRequest:
-      type: object
-      required:
-      - organization_id
-      properties:
-        organization_id:
-          type: string
-        items:
-          type: array
-          description: 'Alert types to act on. At least one item is required; the request is
-
-            rejected with 400 when empty.
-
-            '
-          items:
-            $ref: '#/components/schemas/AlertSkipItem'
-        reason:
-          type: string
-          description: Optional free-text reason, recorded in the audit trail.
-    ConnectionDetails:
-      type: object
-      properties:
-        connection_id:
-          type: string
-        connection_name:
-          type: string
-    AlertSkipItem:
-      type: object
-      required:
-      - alert_provider
-      - alert_type
-      properties:
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-    SortFields:
-      type: object
-      required:
-      - field
-      - sort_order
-      properties:
-        field:
-          type: string
-          description: indicates which field will be used for sorting
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: indicates sort order - asc or desc
-    BulkDeleteAlertsResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            type: string
-    UpdateAlertRequest:
-      type: object
-      properties:
-        alert_provider:
-          type: string
-        investigation_status:
-          $ref: '#/components/schemas/AlertInvestigationStatus'
-        investigation_playbook_id:
-          type: string
-        investigation_playbook_name:
-          type: string
-        investigation_retry_count:
-          type: integer
-        execution_id:
-          type: string
-        linked_case_id:
-          type: string
-        alert_ioc:
-          $ref: '#/components/schemas/AlertsIOC'
-        resolved:
-          type: boolean
-        alert_summary:
-          type: string
-          description: Human-readable summary of the alert
-        original_alert_id:
-          type: string
-          description: When setting investigation_status to Duplicate, the alert_id this alert duplicates
-    ListAlertTypesResponse:
-      type: array
-      items:
-        type: string
-    AlertSkipRow:
-      type: object
-      required:
-      - alert_provider
-      - alert_type
-      - alerts_per_week
-      - status
-      properties:
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        alerts_per_week:
-          type: integer
-          format: int64
-        cases_per_week:
-          type: integer
-          format: int64
-        escalations_30d:
-          type: integer
-          format: int64
-        status:
-          type: string
-          enum:
-          - not_skipped
-          - recommended
-          - skipped
-          - excluded
-        source:
-          type: string
-          enum:
-          - system_suggested
-          - user
-        requires_approval:
-          type: boolean
     AlertInvestigationStatus:
       type: integer
       enum:
@@ -1426,6 +1553,14 @@ components:
       - AlertInvestigationStatusStopped
       - AlertInvestigationStatusSkipped
       - AlertInvestigationStatusDuplicate
+    SortOrder:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - Asc
+      - Desc
     Error:
       type: object
       required:
@@ -1434,128 +1569,6 @@ components:
         message:
           type: string
           description: user friendly error message
-    ListAlertsRequest:
-      type: object
-      properties:
-        filter:
-          $ref: '#/components/schemas/ListAlertsFilter'
-        sort:
-          type: array
-          items:
-            $ref: '#/components/schemas/SortFields'
-        ignore_alert_content:
-          type: boolean
-          description: Flag to indicate whether to ignore the alert content. If true, the alert content will not be fetched.
-    BulkDeleteAlertsRequest:
-      type: object
-      required:
-      - alert_uuids
-      properties:
-        alert_uuids:
-          type: array
-          items:
-            type: string
-    AlertSkipListResponse:
-      type: object
-      required:
-      - organization_uuid
-      - rows
-      - stale
-      properties:
-        budget:
-          type: integer
-          format: int64
-          description: Weekly alert budget (weekly_investigation_limit). Absent when no budget is set.
-        allowed_pct_of_budget:
-          type: number
-          format: double
-          description: Allowed percentage of budget for the org (0..1). Absent when no budget is set.
-        actual:
-          type: integer
-          format: int64
-          description: Actual weekly alert volume for the org.
-        organization_uuid:
-          type: string
-        organization_code:
-          type: string
-        computed_at:
-          type: integer
-          format: int64
-        window_start:
-          type: integer
-          format: int64
-        window_end:
-          type: integer
-          format: int64
-        stale:
-          type: boolean
-        rows:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertSkipRow'
-    CreateAlertsRequest:
-      type: object
-      required:
-      - alert_content
-      - alert_provider
-      - organization_code
-      properties:
-        alert_content:
-          type: string
-          description: The content/body of the alert
-        alert_provider:
-          type: string
-          description: The provider/source of the alert (e.g. aws, microsoft_graph, etc.)
-        alert_type:
-          type: string
-          description: The type/category of the alert
-        fetched_playbook_id:
-          type: string
-          description: ID of the playbook that fetched this alert
-        fetched_playbook_name:
-          type: string
-          description: Name of the playbook that fetched this alert
-        fetched_execution_id:
-          type: string
-          description: Execution ID of the playbook run that fetched this alert
-        organization_code:
-          type: string
-          description: Code/identifier of the organization this alert belongs to
-        alert_ioc:
-          $ref: '#/components/schemas/AlertsIOC'
-          description: Indicators of Compromise (IOCs) associated with this alert
-        created_at_source:
-          type: integer
-          format: int64
-          description: Timestamp when the alert was created at the source/provider
-        add_alert_definition:
-          type: boolean
-          description: Flag to add alert definition to the alert content, True for alerts creating airmdr detection playbooks
-        is_test_alert:
-          type: boolean
-          description: Flag indicating whether this alert is a test alert and should be treated differently
-        original_alert_id:
-          type: string
-          description: When creating with investigation_status Duplicate, the alert_id this alert duplicates
-    InvestigateAlertResponse:
-      type: object
-      required:
-      - alert_id
-      - message
-      properties:
-        alert_id:
-          type: string
-        message:
-          type: string
-    ProviderDetails:
-      type: object
-      properties:
-        name:
-          type: string
-        icon:
-          type: string
-        provider_id:
-          type: string
     LinkedCaseSummary:
       type: object
       properties:
@@ -1581,71 +1594,17 @@ components:
         agentic_investigation_id:
           type: string
           description: ID of the agentic investigation associated with this case
-    AnalyzeAlertResponse:
+    AlertSkipItem:
       type: object
       required:
-      - alert_content
       - alert_provider
       - alert_type
       properties:
-        alert_content:
-          type: string
         alert_provider:
           type: string
         alert_type:
           type: string
-        created_at_source:
-          type: integer
-          format: int64
-    SortOrder:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - Asc
-      - Desc
-    Success:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly message
-    AnalyzeAlertRequest:
-      type: object
-      required:
-      - alert_content
-      properties:
-        alert_content:
-          type: string
-    CaseExecutionDetails:
-      type: object
-      properties:
-        case_id:
-          type: string
-        investigation_status:
-          $ref: '#/components/schemas/AlertInvestigationStatus'
-        investigation_playbook_id:
-          type: string
-        investigation_playbook_name:
-          type: string
-        execution_id:
-          type: string
-        linked_manually:
-          type: boolean
-          description: Flag to indicate if the case was linked manually or through investigation playbook
-        is_agentic_case:
-          type: boolean
-          description: whether the linked case was created by agentic investigation
   parameters:
-    organization-id:
-      name: Organization-ID
-      in: header
-      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
     x-request-id:
       name: X-Request-ID
       in: header
@@ -1658,14 +1617,17 @@ components:
       description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:

@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Query DSL API
+  title: Case Manager Query DSL API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Query DSL across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Query DSL
 paths:
@@ -171,8 +166,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/query/validate:
     post:
       tags:
@@ -236,8 +229,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/query/schema:
     get:
       tags:
@@ -324,10 +315,165 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
+    FieldSchema:
+      type: object
+      required:
+      - type
+      - filterable
+      - selectable
+      - sortable
+      - aggregatable
+      properties:
+        type:
+          type: string
+          enum:
+          - string
+          - int
+          - bool
+          - datetime
+          - array
+          description: Field data type
+        filterable:
+          type: boolean
+          description: Whether this field can be used in where clauses
+        selectable:
+          type: boolean
+          description: Whether this field can be included in select
+        sortable:
+          type: boolean
+          description: Whether this field can be used for sorting
+        aggregatable:
+          type: boolean
+          description: Whether this field can be used in group_by
+    QueryValidateRequest:
+      type: object
+      required:
+      - collection
+      properties:
+        collection:
+          type: string
+          description: The collection to validate against
+          enum:
+          - cases
+          - alerts
+        select:
+          type: array
+          items:
+            type: string
+        where:
+          type: object
+          additionalProperties: true
+        sort:
+          type: object
+          additionalProperties:
+            type: string
+        limit:
+          type: integer
+        offset:
+          type: integer
+        aggregate:
+          $ref: '#/components/schemas/AggregateRequest'
+    AggregateRequest:
+      type: object
+      properties:
+        group_by:
+          type: array
+          items:
+            oneOf:
+            - type: string
+              description: Field name to group by
+            - type: object
+              description: Complex grouping like date truncation {"$dateTrunc":{"field":"created_at","unit":"day"}}
+              additionalProperties: true
+          description: Fields to group by
+        metrics:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: true
+          description: Metric definitions with aggregation operators
+        unwind:
+          type: string
+          description: 'Array field to unwind before grouping. Required for entity/event-level analytics.
+
+            Valid values per collection — cases: "entities", "events"; alerts: "mitre_tactics".
+
+            Example: unwind "entities" with group_by ["entities.name"] to count cases per IP/user/host.
+
+            '
+    QueryErrorResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Error message
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryValidationError'
+          description: Detailed validation errors
+    QueryExecuteResponse:
+      type: object
+      required:
+      - data
+      - total
+      - limit
+      - offset
+      - collection
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Query results
+        total:
+          type: integer
+          description: Total number of matching documents
+        limit:
+          type: integer
+          description: Limit used for the query
+        offset:
+          type: integer
+          description: Offset used for the query
+        collection:
+          type: string
+          description: Collection that was queried
+    QueryValidateResponse:
+      type: object
+      required:
+      - valid
+      properties:
+        valid:
+          type: boolean
+          description: Whether the query is valid
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryValidationError'
+          description: Validation errors if any
+    QuerySchemaResponse:
+      type: object
+      required:
+      - collections
+      properties:
+        collections:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CollectionSchema'
+          description: Available collection schemas
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     QueryValidationError:
       type: object
       required:
@@ -340,6 +486,31 @@ components:
         message:
           type: string
           description: Error description
+    CollectionSchema:
+      type: object
+      required:
+      - name
+      - fields
+      properties:
+        name:
+          type: string
+          description: Collection name
+        fields:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FieldSchema'
+          description: Available fields in this collection
+        array_fields:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Valid unwind names and their MongoDB paths.
+
+            Keys are the values accepted in aggregate.unwind (e.g. "entities", "events").
+
+            Use these to discover which array fields support unwind-based aggregation.
+
+            '
     QueryExecuteRequest:
       type: object
       required:
@@ -382,196 +553,11 @@ components:
         aggregate:
           $ref: '#/components/schemas/AggregateRequest'
           description: Aggregation configuration for analytics queries
-    AggregateRequest:
-      type: object
-      properties:
-        group_by:
-          type: array
-          items:
-            oneOf:
-            - type: string
-              description: Field name to group by
-            - type: object
-              description: Complex grouping like date truncation {"$dateTrunc":{"field":"created_at","unit":"day"}}
-              additionalProperties: true
-          description: Fields to group by
-        metrics:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties: true
-          description: Metric definitions with aggregation operators
-        unwind:
-          type: string
-          description: 'Array field to unwind before grouping. Required for entity/event-level analytics.
-
-            Valid values per collection — cases: "entities", "events"; alerts: "mitre_tactics".
-
-            Example: unwind "entities" with group_by ["entities.name"] to count cases per IP/user/host.
-
-            '
-    QuerySchemaResponse:
-      type: object
-      required:
-      - collections
-      properties:
-        collections:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CollectionSchema'
-          description: Available collection schemas
-    FieldSchema:
-      type: object
-      required:
-      - type
-      - filterable
-      - selectable
-      - sortable
-      - aggregatable
-      properties:
-        type:
-          type: string
-          enum:
-          - string
-          - int
-          - bool
-          - datetime
-          - array
-          description: Field data type
-        filterable:
-          type: boolean
-          description: Whether this field can be used in where clauses
-        selectable:
-          type: boolean
-          description: Whether this field can be included in select
-        sortable:
-          type: boolean
-          description: Whether this field can be used for sorting
-        aggregatable:
-          type: boolean
-          description: Whether this field can be used in group_by
-    QueryErrorResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: Error message
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueryValidationError'
-          description: Detailed validation errors
-    CollectionSchema:
-      type: object
-      required:
-      - name
-      - fields
-      properties:
-        name:
-          type: string
-          description: Collection name
-        fields:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/FieldSchema'
-          description: Available fields in this collection
-        array_fields:
-          type: object
-          additionalProperties:
-            type: string
-          description: 'Valid unwind names and their MongoDB paths.
-
-            Keys are the values accepted in aggregate.unwind (e.g. "entities", "events").
-
-            Use these to discover which array fields support unwind-based aggregation.
-
-            '
-    QueryExecuteResponse:
-      type: object
-      required:
-      - data
-      - total
-      - limit
-      - offset
-      - collection
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-          description: Query results
-        total:
-          type: integer
-          description: Total number of matching documents
-        limit:
-          type: integer
-          description: Limit used for the query
-        offset:
-          type: integer
-          description: Offset used for the query
-        collection:
-          type: string
-          description: Collection that was queried
-    QueryValidateRequest:
-      type: object
-      required:
-      - collection
-      properties:
-        collection:
-          type: string
-          description: The collection to validate against
-          enum:
-          - cases
-          - alerts
-        select:
-          type: array
-          items:
-            type: string
-        where:
-          type: object
-          additionalProperties: true
-        sort:
-          type: object
-          additionalProperties:
-            type: string
-        limit:
-          type: integer
-        offset:
-          type: integer
-        aggregate:
-          $ref: '#/components/schemas/AggregateRequest'
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    QueryValidateResponse:
-      type: object
-      required:
-      - valid
-      properties:
-        valid:
-          type: boolean
-          description: Whether the query is valid
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueryValidationError'
-          description: Validation errors if any
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:

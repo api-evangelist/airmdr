@@ -1,14 +1,10 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Token API
+  title: User Management Service Token API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Token across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: Endpoints to manage tokens
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Token
   description: Endpoints to manage tokens
@@ -130,8 +126,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /users/tokens/slack:
     post:
       tags:
@@ -184,8 +178,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /users/tokens/{token_id}:
     delete:
       tags:
@@ -238,8 +230,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
     CreateAPITokenForSlackWorkflowRequest:
@@ -260,6 +250,68 @@ components:
         message:
           type: string
           const: User does not have permission to perform this action
+    CreateAPITokenForSlackWorkflowResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/GetAPITokenResponse'
+    CreateAPITokenResponse:
+      type: object
+      required:
+      - token_id
+      - name
+      - token
+      - created_at
+      properties:
+        token_id:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+          description: The token created for the user
+        created_at:
+          type: integer
+          format: int64
+        last_used_at:
+          type: integer
+          format: int64
+    ListAPITokensResponse:
+      type: object
+      required:
+      - message
+      - data
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetAPITokenResponse'
+        total:
+          type: integer
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     GetAPITokenResponse:
       type: object
       required:
@@ -283,81 +335,16 @@ components:
           format: int64
         organization_id:
           type: string
-    CreateAPITokenForSlackWorkflowResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/GetAPITokenResponse'
-    Success:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly message
-    ListAPITokensResponse:
-      type: object
-      required:
-      - message
-      - data
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/GetAPITokenResponse'
-        total:
-          type: integer
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    CreateAPITokenResponse:
-      type: object
-      required:
-      - token_id
-      - name
-      - token
-      - created_at
-      properties:
-        token_id:
-          type: string
-        name:
-          type: string
-        token:
-          type: string
-          description: The token created for the user
-        created_at:
-          type: integer
-          format: int64
-        last_used_at:
-          type: integer
-          format: int64
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-user-management-service-openapi.json
-- airmdr-user-management-service-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:
-  - Case Manager V2
-  - Dashboard
-  - Alerts
-  - Webhooks
-  - Query DSL
+  - Organization
+  - User
+  - User Group
+  - Token
+  - Permission

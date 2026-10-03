@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Webhooks API
+  title: Case Manager Webhooks API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Webhooks across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Webhooks
 paths:
@@ -90,8 +85,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /webhooks/{webhook_id}:
     delete:
       tags:
@@ -120,8 +113,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /webhooks/{webhook_id}/{secret}/alerts:
     post:
       tags:
@@ -174,15 +165,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
-    CreateAlertFromWebhookResponse:
-      type: object
-      properties:
-        alert_id:
-          type: string
     ListWebhooksResponse:
       type: object
       properties:
@@ -190,6 +174,38 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Webhook'
+    CreateWebhookRequest:
+      type: object
+      required:
+      - organization_id
+      - name
+      properties:
+        name:
+          type: string
+          description: User-facing label to identify this webhook among others in the org.
+        organization_id:
+          type: string
+        provider_id:
+          type: string
+          description: Optional. When omitted, alert_provider is inferred per alert via the data_extractor skill instead of being fixed on the webhook.
+    AlertContent:
+      type: object
+      additionalProperties: true
+      description: Free-form raw alert payload from the provider. The entire request body is treated as the alert content — there is no wrapper key.
+      x-go-type: json.RawMessage
+    CreateAlertFromWebhookResponse:
+      type: object
+      properties:
+        alert_id:
+          type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     UserInformation:
       type: object
       required:
@@ -204,11 +220,6 @@ components:
           type: string
         email:
           type: string
-    AlertContent:
-      type: object
-      additionalProperties: true
-      description: Free-form raw alert payload from the provider. The entire request body is treated as the alert content — there is no wrapper key.
-      x-go-type: json.RawMessage
     Webhook:
       type: object
       properties:
@@ -232,39 +243,11 @@ components:
           format: date-time
         created_by:
           $ref: '#/components/schemas/UserInformation'
-    CreateWebhookRequest:
-      type: object
-      required:
-      - organization_id
-      - name
-      properties:
-        name:
-          type: string
-          description: User-facing label to identify this webhook among others in the org.
-        organization_id:
-          type: string
-        provider_id:
-          type: string
-          description: Optional. When omitted, alert_provider is inferred per alert via the data_extractor skill instead of being fixed on the webhook.
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
   parameters:
     organization-id:
       name: Organization-ID
       in: header
       description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    user-id:
-      name: User-ID
-      in: header
-      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
     x-request-id:
@@ -273,14 +256,17 @@ components:
       description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:

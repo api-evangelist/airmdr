@@ -1,14 +1,10 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Permission API
+  title: User Management Service Permission API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Permission across 2 of this provider''s published API definitions: airmdr-user-management-service-openapi.json, airmdr-user-management-service-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: Endpoints to read system permissions
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Permission
   description: Endpoints to read system permissions
@@ -51,8 +47,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /permission/disabled:
     get:
       tags:
@@ -91,8 +85,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /organization/rbac/template:
     get:
       tags:
@@ -174,8 +166,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /organization/rbac/template/{template_id}:
     get:
       tags:
@@ -312,8 +302,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /organization/rbac/permissions:
     get:
       tags:
@@ -352,8 +340,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /organization/rbac/allowed_movement:
     get:
       tags:
@@ -392,23 +378,135 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
-    OrgRBACPermissions:
+    ParentVisibilityPermissions:
       type: object
       required:
-      - parent_visibility
-      - child_visibility
-      - org_visibility
+      - user_mgmt
+      - org_data
       properties:
-        parent_visibility:
-          $ref: '#/components/schemas/ParentVisibilityPermissions'
-        child_visibility:
-          $ref: '#/components/schemas/ChildVisibilityPermissions'
-        org_visibility:
-          $ref: '#/components/schemas/OrgVisibilityPermissions'
+        user_mgmt:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+        org_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+    EntityAccess:
+      type: object
+      required:
+      - scope
+      - org_hierarchy
+      - organization_ids
+      properties:
+        scope:
+          type: integer
+        org_hierarchy:
+          $ref: '#/components/schemas/OrganizationHierarchy'
+        organization_ids:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    PermissionAccess:
+      type: object
+      required:
+      - access_type
+      - entities
+      properties:
+        access_type:
+          $ref: '#/components/schemas/AccessType'
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityAccess'
+    VisibilitySetting:
+      type: string
+      enum:
+      - full_access
+      - no_access
+      - org_context_access
+      - usage_access
+      x-enum-varnames:
+      - VisibilityFullAccess
+      - VisibilityNoAccess
+      - VisibilityOrgContextAccess
+      - VisibilityUsageAccess
+    GetOrganizationRBACTemplateResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/OrganizationRBACTemplate'
+    ListOrganizationRBACPermissionsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/OrgRBACPermissions'
+    AccessType:
+      type: string
+      enum:
+      - Create
+      - Update
+      - Delete
+      - BulkUpdate
+      - BulkDelete
+      x-enum-varnames:
+      - AccessTypeCreate
+      - AccessTypeUpdate
+      - AccessTypeDelete
+      - AccessTypeBulkUpdate
+      - AccessTypeBulkDelete
+    DisabledPermission:
+      type: object
+      required:
+      - feature
+      - access_list
+      properties:
+        feature:
+          type: string
+        access_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionAccess'
+    OrgVisibilityPermissions:
+      type: object
+      required:
+      - org_data
+      properties:
+        org_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisibilitySetting'
+    OrgVisibility:
+      type: object
+      description: Organization-level visibility settings
+      required:
+      - org_data
+      properties:
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility
     OrganizationRBACTemplate:
       type: object
       required:
@@ -433,15 +531,18 @@ components:
         org_visibility:
           $ref: '#/components/schemas/OrgVisibility'
           description: Organization-level visibility settings
-    OrgVisibility:
+    Permission:
       type: object
-      description: Organization-level visibility settings
       required:
-      - org_data
+      - permission_id
+      - name
       properties:
-        org_data:
-          $ref: '#/components/schemas/VisibilitySetting'
-          description: Other organization data visibility
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
     OrganizationRBACMovementAllowList:
       type: object
       required:
@@ -456,54 +557,6 @@ components:
           items:
             type: string
           description: List of RBAC templates allowed for movement
-    AccessType:
-      type: string
-      enum:
-      - Create
-      - Update
-      - Delete
-      - BulkUpdate
-      - BulkDelete
-      x-enum-varnames:
-      - AccessTypeCreate
-      - AccessTypeUpdate
-      - AccessTypeDelete
-      - AccessTypeBulkUpdate
-      - AccessTypeBulkDelete
-    ListOrganizationRBACTemplateResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationRBACTemplate'
-    OrganizationRBACMovementResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationRBACMovementAllowList'
-        message:
-          type: string
-          description: Message indicating the result of the movement
-    ChildVisibility:
-      type: object
-      description: What child orgs are allowed to see
-      required:
-      - org_data
-      properties:
-        org_data:
-          $ref: '#/components/schemas/VisibilitySetting'
-          description: Other organization data visibility for child organizations
     ParentVisibility:
       type: object
       description: What parents are allowed to see
@@ -517,34 +570,20 @@ components:
         org_data:
           $ref: '#/components/schemas/VisibilitySetting'
           description: Other organization data visibility for parent organizations
-    GetOrganizationRBACTemplateResponse:
+    OrgRBACPermissions:
       type: object
       required:
-      - data
-      - message
+      - parent_visibility
+      - child_visibility
+      - org_visibility
       properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/OrganizationRBACTemplate'
-    EntityAccess:
-      type: object
-      required:
-      - scope
-      - org_hierarchy
-      - organization_ids
-      properties:
-        scope:
-          type: integer
-        org_hierarchy:
-          $ref: '#/components/schemas/OrganizationHierarchy'
-        organization_ids:
-          type: array
-          items:
-            type: string
-        metadata:
-          type: object
-    OrgVisibilityPermissions:
+        parent_visibility:
+          $ref: '#/components/schemas/ParentVisibilityPermissions'
+        child_visibility:
+          $ref: '#/components/schemas/ChildVisibilityPermissions'
+        org_visibility:
+          $ref: '#/components/schemas/OrgVisibilityPermissions'
+    ChildVisibilityPermissions:
       type: object
       required:
       - org_data
@@ -567,38 +606,40 @@ components:
       - OrganizationHierarchyUserOrg
       - OrganizationHierarchyAllOrgs
       - OrganizationHierarchyExceptEntityOrgs
-    PermissionAccess:
+    FetchAllPermissionsResponse:
       type: object
       required:
-      - access_type
-      - entities
-      properties:
-        access_type:
-          $ref: '#/components/schemas/AccessType'
-        entities:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityAccess'
-    DisabledPermission:
-      type: object
-      required:
-      - feature
-      - access_list
-      properties:
-        feature:
-          type: string
-        access_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionAccess'
-    Error:
-      type: object
-      required:
+      - data
       - message
       properties:
         message:
           type: string
-          description: user friendly error message
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    ChildVisibility:
+      type: object
+      description: What child orgs are allowed to see
+      required:
+      - org_data
+      properties:
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility for child organizations
+    OrganizationRBACMovementResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationRBACMovementAllowList'
+        message:
+          type: string
+          description: Message indicating the result of the movement
     FetchDisabledPermissionsResponse:
       type: object
       required:
@@ -616,72 +657,15 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/DisabledPermission'
-    ChildVisibilityPermissions:
-      type: object
-      required:
-      - org_data
-      properties:
-        org_data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisibilitySetting'
-    Permission:
-      type: object
-      required:
-      - permission_id
-      - name
-      properties:
-        permission_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    Success:
+    Error:
       type: object
       required:
       - message
       properties:
         message:
           type: string
-          description: user friendly message
-    ListOrganizationRBACPermissionsResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/OrgRBACPermissions'
-    ParentVisibilityPermissions:
-      type: object
-      required:
-      - user_mgmt
-      - org_data
-      properties:
-        user_mgmt:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisibilitySetting'
-        org_data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VisibilitySetting'
-    VisibilitySetting:
-      type: string
-      enum:
-      - full_access
-      - no_access
-      - org_context_access
-      - usage_access
-      x-enum-varnames:
-      - VisibilityFullAccess
-      - VisibilityNoAccess
-      - VisibilityOrgContextAccess
-      - VisibilityUsageAccess
-    FetchAllPermissionsResponse:
+          description: user friendly error message
+    ListOrganizationRBACTemplateResponse:
       type: object
       required:
       - data
@@ -692,20 +676,17 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Permission'
+            $ref: '#/components/schemas/OrganizationRBACTemplate'
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-user-management-service-openapi.json
-- airmdr-user-management-service-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:
-  - Case Manager V2
-  - Dashboard
-  - Alerts
-  - Webhooks
-  - Query DSL
+  - Organization
+  - User
+  - User Group
+  - Token
+  - Permission

@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Mitre Tactics API
+  title: Case Manager Mitre Tactics API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged MitreTactics across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: MitreTactics
 paths:
@@ -102,22 +97,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
-    AddMitreTacticsResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            type: string
     ListMitreTacticsResponse:
       type: object
       required:
@@ -141,6 +122,18 @@ components:
         message:
           type: string
           description: user friendly error message
+    AddMitreTacticsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
     AddMitreTacticsRequest:
       type: object
       required:
@@ -155,9 +148,6 @@ components:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:

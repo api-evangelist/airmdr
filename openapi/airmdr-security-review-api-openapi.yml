@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Security Review API
+  title: Case Manager Security Review API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Security Review across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Security Review
 paths:
@@ -57,8 +52,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/security-report/list:
     post:
       tags:
@@ -115,8 +108,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/security-report/{report_id}:
     get:
       tags:
@@ -257,8 +248,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/security-report/{report_id}/email:
     post:
       tags:
@@ -315,8 +304,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/security-report/watchers:
     get:
       tags:
@@ -450,153 +437,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
-    SecurityReviewImprovement:
+    SecurityReviewEscalation:
       type: object
       required:
-      - title
       - description
-      - icon_link
       properties:
-        title:
-          type: string
         description:
           type: string
-        icon_link:
-          type: string
-    UpdateSecurityReviewDataSources:
-      type: object
-      properties:
-        top_alert_sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertSourceCount'
-        top_alert_types_by_frequency:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeFrequency'
-    AlertSourceCount:
+    ConnectionCountSummary:
       type: object
       required:
-      - source_name
-      - count
+      - authentication_failed_count
+      - expired_count
+      - near_expiry_count
+      - requested_count
+      - total
       properties:
-        source_name:
-          type: string
-        count:
+        authentication_failed_count:
           type: integer
-    SecurityReportSummary:
-      type: object
-      description: List item — excludes the full report payload
-      required:
-      - review_id
-      - organization_id
-      - triggered_by
-      - status
-      - time_range_start
-      - time_range_end
-      - created_at
-      properties:
-        review_id:
-          type: string
-        organization_id:
-          type: string
-        triggered_by:
-          type: string
-        status:
-          $ref: '#/components/schemas/SecurityReviewStatus'
-        time_range_start:
+          description: Number of connections with failed authentication
+        expired_count:
           type: integer
-          format: int64
-        time_range_end:
+          description: Number of expired connections
+        near_expiry_count:
           type: integer
-          format: int64
-        generated_at:
+          description: Number of connections near expiry
+        requested_count:
           type: integer
-          format: int64
-        created_at:
+          description: Number of requested connections
+        total:
           type: integer
-          format: int64
-        updated_at:
-          type: integer
-          format: int64
-    ResponseTimePoint:
-      type: object
-      required:
-      - mtti_minutes
-      - mtta_minutes
-      properties:
-        mtti_minutes:
-          type: number
-          format: double
-        mtta_minutes:
-          type: number
-          format: double
-    FPBenignSummary:
-      type: object
-      required:
-      - fp_narrative
-      - benign_narrative
-      properties:
-        fp_narrative:
-          type: string
-        benign_narrative:
-          type: string
-    SecurityReviewDataSourceStatus:
-      type: object
-      required:
-      - alert_source
-      - status
-      properties:
-        alert_source:
-          type: string
-        status:
-          $ref: '#/components/schemas/DataSourceConnectionStatus'
-        note:
-          type: string
-    DataSourceHealthSummary:
-      type: object
-      required:
-      - provider
-      - provider_url
-      - connections_summary
-      properties:
-        provider:
-          type: string
-          description: Name of the provider/integration
-        provider_url:
-          type: string
-          description: URL to manage provider connections
-        connections_summary:
-          $ref: '#/components/schemas/ConnectionCountSummary'
-    SecurityReviewKPIs:
-      type: object
-      required:
-      - total_cases
-      - escalated_count
-      - false_positive_count
-      - benign_count
-      - malicious_count
-      - mtti
-      - mtta
-      properties:
-        total_cases:
-          type: integer
-        escalated_count:
-          type: integer
-        false_positive_count:
-          type: integer
-        benign_count:
-          type: integer
-        malicious_count:
-          type: integer
-        mtti:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-        mtta:
-          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: Total number of connections
     ResponseTimeMetric:
       type: object
       required:
@@ -619,34 +492,118 @@ components:
           additionalProperties:
             type: number
             format: float
-    ReportWatcher:
+    FPBenignSummary:
       type: object
-      description: A single report watcher and the report frequencies they are subscribed to
       required:
-      - email
-      - weekly
-      - monthly
+      - fp_narrative
+      - benign_narrative
       properties:
-        email:
+        fp_narrative:
           type: string
-          description: Watcher email address
-        weekly:
-          type: boolean
-          description: Whether this watcher receives the weekly security review report
-        monthly:
-          type: boolean
-          description: Whether this watcher receives the monthly security review report
-    UpdateSecurityReviewPeriodComparison:
+        benign_narrative:
+          type: string
+    ResponseTimePoint:
+      type: object
+      required:
+      - mtti_minutes
+      - mtta_minutes
+      properties:
+        mtti_minutes:
+          type: number
+          format: double
+        mtta_minutes:
+          type: number
+          format: double
+    UpdateSecurityReportRequest:
       type: object
       properties:
-        total_cases:
-          $ref: '#/components/schemas/PeriodMetric'
-        escalations:
-          $ref: '#/components/schemas/PeriodMetric'
-        fp_rate:
-          $ref: '#/components/schemas/PeriodMetric'
-        avg_mtti:
-          $ref: '#/components/schemas/PeriodMetric'
+        status:
+          $ref: '#/components/schemas/SecurityReviewStatus'
+        error_message:
+          type: string
+        report:
+          $ref: '#/components/schemas/UpdateSecurityReviewReport'
+    GetSecurityReportResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SecurityReport'
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    UpdateSecurityReviewDataSources:
+      type: object
+      properties:
+        top_alert_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertSourceCount'
+        top_alert_types_by_frequency:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeFrequency'
+    SecurityReviewSeverityMetrics:
+      type: object
+      required:
+      - critical_count
+      - high_count
+      - medium_count
+      - low_count
+      properties:
+        critical_count:
+          type: integer
+        high_count:
+          type: integer
+        medium_count:
+          type: integer
+        low_count:
+          type: integer
+    AlertSourceCount:
+      type: object
+      required:
+      - source_name
+      - count
+      properties:
+        source_name:
+          type: string
+        count:
+          type: integer
+    PeriodMetric:
+      type: object
+      required:
+      - current
+      - previous
+      - pct_change
+      properties:
+        current:
+          type: number
+          format: double
+        previous:
+          type: number
+          format: double
+        pct_change:
+          type: number
+          format: double
+    DataSourceConnectionStatus:
+      type: string
+      enum:
+      - connected
+      - not_connected
+      - partial
+      x-enum-varnames:
+      - ConnectedDataSourceStatus
+      - NotConnectedDataSourceStatus
+      - PartialDataSourceStatus
     SecurityReviewReport:
       type: object
       required:
@@ -708,6 +665,216 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/ResponseTimePoint'
           description: Map of date (YYYY-MM-DD) to MTTI/MTTA values
+    UpdateSecurityReviewKPIs:
+      type: object
+      properties:
+        total_cases:
+          type: integer
+        escalated_count:
+          type: integer
+        false_positive_count:
+          type: integer
+        benign_count:
+          type: integer
+        malicious_count:
+          type: integer
+        mtti:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+        mtta:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+    SecurityReviewPeriodComparison:
+      type: object
+      required:
+      - total_cases
+      - escalations
+      - fp_rate
+      - avg_mtti
+      properties:
+        total_cases:
+          $ref: '#/components/schemas/PeriodMetric'
+        escalations:
+          $ref: '#/components/schemas/PeriodMetric'
+        fp_rate:
+          $ref: '#/components/schemas/PeriodMetric'
+        avg_mtti:
+          $ref: '#/components/schemas/PeriodMetric'
+        prior_period_label:
+          type: string
+          description: Human-readable date range for the prior period (e.g. "Jan 1, 2025 – Jan 31, 2025")
+    SecurityReviewCaseDispositionMetrics:
+      type: object
+      required:
+      - false_positive_count
+      - benign_count
+      - malicious_count
+      - escalated_count
+      properties:
+        false_positive_count:
+          type: integer
+        benign_count:
+          type: integer
+        malicious_count:
+          type: integer
+        escalated_count:
+          type: integer
+    SecurityReportSummary:
+      type: object
+      description: List item — excludes the full report payload
+      required:
+      - review_id
+      - organization_id
+      - triggered_by
+      - status
+      - time_range_start
+      - time_range_end
+      - created_at
+      properties:
+        review_id:
+          type: string
+        organization_id:
+          type: string
+        triggered_by:
+          type: string
+        status:
+          $ref: '#/components/schemas/SecurityReviewStatus'
+        time_range_start:
+          type: integer
+          format: int64
+        time_range_end:
+          type: integer
+          format: int64
+        generated_at:
+          type: integer
+          format: int64
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64
+    AlertTypeFrequency:
+      type: object
+      required:
+      - alert_name
+      - alert_source
+      - case_count
+      properties:
+        alert_name:
+          type: string
+        alert_source:
+          type: string
+        case_count:
+          type: integer
+    SecurityReviewKPIs:
+      type: object
+      required:
+      - total_cases
+      - escalated_count
+      - false_positive_count
+      - benign_count
+      - malicious_count
+      - mtti
+      - mtta
+      properties:
+        total_cases:
+          type: integer
+        escalated_count:
+          type: integer
+        false_positive_count:
+          type: integer
+        benign_count:
+          type: integer
+        malicious_count:
+          type: integer
+        mtti:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+        mtta:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+    UpsertReportWatcherRequest:
+      type: object
+      description: Add or update a single watcher. Set weekly/monthly to control which report cadences the email is subscribed to. At least one of weekly or monthly must be true.
+      required:
+      - organization_id
+      - email
+      - weekly
+      - monthly
+      properties:
+        organization_id:
+          type: string
+          description: The organization the watcher belongs to
+        email:
+          type: string
+          description: Watcher email address
+        weekly:
+          type: boolean
+          description: Subscribe (true) or unsubscribe (false) this email from the weekly report
+        monthly:
+          type: boolean
+          description: Subscribe (true) or unsubscribe (false) this email from the monthly report
+    EmailSecurityReportRequest:
+      type: object
+      required:
+      - email_ids
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Subject of the email
+    GenerateSecurityReportRequest:
+      type: object
+      required:
+      - organization_id
+      - time_range_start
+      - time_range_end
+      properties:
+        organization_id:
+          type: string
+          description: Target customer org to generate the report for
+        time_range_start:
+          type: integer
+          format: int64
+          description: Start of the reporting period (Unix ms)
+        time_range_end:
+          type: integer
+          format: int64
+          description: End of the reporting period (Unix ms)
+    ListReportWatchersResponse:
+      type: object
+      required:
+      - message
+      - organization_id
+      - watchers
+      properties:
+        message:
+          type: string
+        organization_id:
+          type: string
+        watchers:
+          type: array
+          description: The de-duplicated set of watchers, each with their weekly/monthly subscription flags
+          items:
+            $ref: '#/components/schemas/ReportWatcher'
+    ReportWatcher:
+      type: object
+      description: A single report watcher and the report frequencies they are subscribed to
+      required:
+      - email
+      - weekly
+      - monthly
+      properties:
+        email:
+          type: string
+          description: Watcher email address
+        weekly:
+          type: boolean
+          description: Whether this watcher receives the weekly security review report
+        monthly:
+          type: boolean
+          description: Whether this watcher receives the monthly security review report
     ListSecurityReportsResponse:
       type: object
       required:
@@ -723,20 +890,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SecurityReportSummary'
-    SecurityReviewDataSources:
-      type: object
-      required:
-      - top_alert_sources
-      - top_alert_types_by_frequency
-      properties:
-        top_alert_sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertSourceCount'
-        top_alert_types_by_frequency:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeFrequency'
     BriefingSummary:
       type: object
       required:
@@ -790,46 +943,111 @@ components:
         footer_text:
           type: string
           description: Footer body text for the STATUS / NEXT STEP line.
-    AlertTypeFrequency:
+    UpdateSecurityReviewPeriodComparison:
       type: object
-      required:
-      - alert_name
-      - alert_source
-      - case_count
       properties:
-        alert_name:
-          type: string
-        alert_source:
-          type: string
-        case_count:
-          type: integer
-    SecurityReviewEscalation:
+        total_cases:
+          $ref: '#/components/schemas/PeriodMetric'
+        escalations:
+          $ref: '#/components/schemas/PeriodMetric'
+        fp_rate:
+          $ref: '#/components/schemas/PeriodMetric'
+        avg_mtti:
+          $ref: '#/components/schemas/PeriodMetric'
+    DeleteReportWatcherRequest:
       type: object
       required:
-      - description
+      - organization_id
+      - email
       properties:
-        description:
+        organization_id:
           type: string
-    GenerateSecurityReportResponse:
+          description: The organization the watcher belongs to
+        email:
+          type: string
+          description: Watcher email address to remove from all report frequencies
+    SecurityReviewDataSources:
       type: object
       required:
-      - message
+      - top_alert_sources
+      - top_alert_types_by_frequency
+      properties:
+        top_alert_sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertSourceCount'
+        top_alert_types_by_frequency:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeFrequency'
+    DataSourceHealthSummary:
+      type: object
+      required:
+      - provider
+      - provider_url
+      - connections_summary
+      properties:
+        provider:
+          type: string
+          description: Name of the provider/integration
+        provider_url:
+          type: string
+          description: URL to manage provider connections
+        connections_summary:
+          $ref: '#/components/schemas/ConnectionCountSummary'
+    SecurityReport:
+      type: object
+      required:
       - review_id
+      - organization_id
+      - triggered_by
+      - status
+      - time_range_start
+      - time_range_end
+      - generated_at
+      - created_at
+      - updated_at
       properties:
-        message:
-          type: string
         review_id:
           type: string
-    DataSourceConnectionStatus:
-      type: string
-      enum:
-      - connected
-      - not_connected
-      - partial
-      x-enum-varnames:
-      - ConnectedDataSourceStatus
-      - NotConnectedDataSourceStatus
-      - PartialDataSourceStatus
+        organization_id:
+          type: string
+        triggered_by:
+          type: string
+        status:
+          $ref: '#/components/schemas/SecurityReviewStatus'
+        time_range_start:
+          type: integer
+          format: int64
+        time_range_end:
+          type: integer
+          format: int64
+        generated_at:
+          type: integer
+          format: int64
+        error_message:
+          type: string
+        report:
+          $ref: '#/components/schemas/SecurityReviewReport'
+        created_at:
+          type: integer
+          format: int64
+        updated_at:
+          type: integer
+          format: int64
+    SecurityReviewImprovement:
+      type: object
+      required:
+      - title
+      - description
+      - icon_link
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        icon_link:
+          type: string
     UpdateSecurityReviewReport:
       type: object
       properties:
@@ -877,124 +1095,6 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/ResponseTimePoint'
           description: Map of date (YYYY-MM-DD) to MTTI/MTTA values
-    SecurityReviewSeverityMetrics:
-      type: object
-      required:
-      - critical_count
-      - high_count
-      - medium_count
-      - low_count
-      properties:
-        critical_count:
-          type: integer
-        high_count:
-          type: integer
-        medium_count:
-          type: integer
-        low_count:
-          type: integer
-    UpsertReportWatcherRequest:
-      type: object
-      description: Add or update a single watcher. Set weekly/monthly to control which report cadences the email is subscribed to. At least one of weekly or monthly must be true.
-      required:
-      - organization_id
-      - email
-      - weekly
-      - monthly
-      properties:
-        organization_id:
-          type: string
-          description: The organization the watcher belongs to
-        email:
-          type: string
-          description: Watcher email address
-        weekly:
-          type: boolean
-          description: Subscribe (true) or unsubscribe (false) this email from the weekly report
-        monthly:
-          type: boolean
-          description: Subscribe (true) or unsubscribe (false) this email from the monthly report
-    SecurityReviewPeriodComparison:
-      type: object
-      required:
-      - total_cases
-      - escalations
-      - fp_rate
-      - avg_mtti
-      properties:
-        total_cases:
-          $ref: '#/components/schemas/PeriodMetric'
-        escalations:
-          $ref: '#/components/schemas/PeriodMetric'
-        fp_rate:
-          $ref: '#/components/schemas/PeriodMetric'
-        avg_mtti:
-          $ref: '#/components/schemas/PeriodMetric'
-        prior_period_label:
-          type: string
-          description: Human-readable date range for the prior period (e.g. "Jan 1, 2025 – Jan 31, 2025")
-    DeleteReportWatcherRequest:
-      type: object
-      required:
-      - organization_id
-      - email
-      properties:
-        organization_id:
-          type: string
-          description: The organization the watcher belongs to
-        email:
-          type: string
-          description: Watcher email address to remove from all report frequencies
-    GenerateSecurityReportRequest:
-      type: object
-      required:
-      - organization_id
-      - time_range_start
-      - time_range_end
-      properties:
-        organization_id:
-          type: string
-          description: Target customer org to generate the report for
-        time_range_start:
-          type: integer
-          format: int64
-          description: Start of the reporting period (Unix ms)
-        time_range_end:
-          type: integer
-          format: int64
-          description: End of the reporting period (Unix ms)
-    ListReportWatchersResponse:
-      type: object
-      required:
-      - message
-      - organization_id
-      - watchers
-      properties:
-        message:
-          type: string
-        organization_id:
-          type: string
-        watchers:
-          type: array
-          description: The de-duplicated set of watchers, each with their weekly/monthly subscription flags
-          items:
-            $ref: '#/components/schemas/ReportWatcher'
-    PeriodMetric:
-      type: object
-      required:
-      - current
-      - previous
-      - pct_change
-      properties:
-        current:
-          type: number
-          format: double
-        previous:
-          type: number
-          format: double
-        pct_change:
-          type: number
-          format: double
     Error:
       type: object
       required:
@@ -1003,6 +1103,32 @@ components:
         message:
           type: string
           description: user friendly error message
+    SecurityReviewDataSourceStatus:
+      type: object
+      required:
+      - alert_source
+      - status
+      properties:
+        alert_source:
+          type: string
+        status:
+          $ref: '#/components/schemas/DataSourceConnectionStatus'
+        note:
+          type: string
+    SecurityReviewStatus:
+      type: string
+      enum:
+      - scheduled
+      - queued
+      - processing
+      - successful
+      - failed
+      x-enum-varnames:
+      - ScheduledSecurityReviewStatus
+      - QueuedSecurityReviewStatus
+      - ProcessingSecurityReviewStatus
+      - SuccessfulSecurityReviewStatus
+      - FailedSecurityReviewStatus
     ListSecurityReportsRequest:
       type: object
       properties:
@@ -1057,165 +1183,21 @@ components:
                 end:
                   type: integer
                   format: int64
-    GetSecurityReportResponse:
+    GenerateSecurityReportResponse:
       type: object
       required:
       - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/SecurityReport'
-    SecurityReviewCaseDispositionMetrics:
-      type: object
-      required:
-      - false_positive_count
-      - benign_count
-      - malicious_count
-      - escalated_count
-      properties:
-        false_positive_count:
-          type: integer
-        benign_count:
-          type: integer
-        malicious_count:
-          type: integer
-        escalated_count:
-          type: integer
-    EmailSecurityReportRequest:
-      type: object
-      required:
-      - email_ids
-      properties:
-        email_ids:
-          type: array
-          items:
-            type: string
-          description: List of email addresses to send the report to
-        subject:
-          type: string
-          description: Subject of the email
-    SecurityReviewStatus:
-      type: string
-      enum:
-      - scheduled
-      - queued
-      - processing
-      - successful
-      - failed
-      x-enum-varnames:
-      - ScheduledSecurityReviewStatus
-      - QueuedSecurityReviewStatus
-      - ProcessingSecurityReviewStatus
-      - SuccessfulSecurityReviewStatus
-      - FailedSecurityReviewStatus
-    Success:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly message
-    UpdateSecurityReviewKPIs:
-      type: object
-      properties:
-        total_cases:
-          type: integer
-        escalated_count:
-          type: integer
-        false_positive_count:
-          type: integer
-        benign_count:
-          type: integer
-        malicious_count:
-          type: integer
-        mtti:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-        mtta:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-    SecurityReport:
-      type: object
-      required:
       - review_id
-      - organization_id
-      - triggered_by
-      - status
-      - time_range_start
-      - time_range_end
-      - generated_at
-      - created_at
-      - updated_at
       properties:
+        message:
+          type: string
         review_id:
           type: string
-        organization_id:
-          type: string
-        triggered_by:
-          type: string
-        status:
-          $ref: '#/components/schemas/SecurityReviewStatus'
-        time_range_start:
-          type: integer
-          format: int64
-        time_range_end:
-          type: integer
-          format: int64
-        generated_at:
-          type: integer
-          format: int64
-        error_message:
-          type: string
-        report:
-          $ref: '#/components/schemas/SecurityReviewReport'
-        created_at:
-          type: integer
-          format: int64
-        updated_at:
-          type: integer
-          format: int64
-    UpdateSecurityReportRequest:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/SecurityReviewStatus'
-        error_message:
-          type: string
-        report:
-          $ref: '#/components/schemas/UpdateSecurityReviewReport'
-    ConnectionCountSummary:
-      type: object
-      required:
-      - authentication_failed_count
-      - expired_count
-      - near_expiry_count
-      - requested_count
-      - total
-      properties:
-        authentication_failed_count:
-          type: integer
-          description: Number of connections with failed authentication
-        expired_count:
-          type: integer
-          description: Number of expired connections
-        near_expiry_count:
-          type: integer
-          description: Number of connections near expiry
-        requested_count:
-          type: integer
-          description: Number of requested connections
-        total:
-          type: integer
-          description: Total number of connections
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:

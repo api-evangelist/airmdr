@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Case Manager Internal API
+  title: Case Manager Internal API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Case Manager Internal across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Case Manager Internal
 paths:
@@ -86,8 +81,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/reindex:
     post:
       tags:
@@ -134,8 +127,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/orgcode/migrate:
     post:
       tags:
@@ -175,8 +166,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/cache/purge:
     post:
       tags:
@@ -224,8 +213,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /internal/investigation_credits/charge:
     post:
       tags:
@@ -266,8 +253,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /internal/investigation_credits/refund:
     post:
       tags:
@@ -302,8 +287,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/reindex:
     post:
       tags:
@@ -367,8 +350,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /alerts/{alert_id}/mark_agent_investigated:
     patch:
       tags:
@@ -407,8 +388,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /investigation_quota:
     get:
       tags:
@@ -455,8 +434,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/delete_organization/{organization_code}:
     delete:
       tags:
@@ -500,10 +477,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
+    RefundInvestigationCreditsRequest:
+      type: object
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
     ChargeInvestigationCreditsRequest:
       type: object
       required:
@@ -524,16 +506,6 @@ components:
         idempotency_key:
           type: string
           description: unique per investigation attempt; dedupes retries/redeliveries
-    CaseReindexRequest:
-      type: object
-      required:
-      - case_uuids
-      properties:
-        case_uuids:
-          type: array
-          items:
-            type: string
-          description: The list of case uuids to reindex. If this non empty list is provided, only the cases in this list will be reindexed else all cases will be reindexed.
     RefundInvestigationCreditsResponse:
       type: object
       required:
@@ -549,23 +521,14 @@ components:
         message:
           type: string
           description: user friendly message
-    InvestigationQuotaResponse:
+    Error:
       type: object
       required:
-      - limit_set
+      - message
       properties:
-        limit_set:
-          type: boolean
-          description: Whether a weekly investigation limit is configured for this organization
-        weekly_limit:
-          type: integer
-          description: The configured weekly investigation limit (only present when limit_set is true)
-        investigations_used:
-          type: integer
-          description: Number of investigations consumed this week (only present when limit_set is true)
-        investigations_remaining:
-          type: integer
-          description: Number of investigations remaining this week (only present when limit_set is true)
+        message:
+          type: string
+          description: user friendly error message
     ChargeInvestigationCreditsResponse:
       type: object
       required:
@@ -596,32 +559,44 @@ components:
         balance_after:
           type: number
           format: double
-    Error:
+    CaseReindexRequest:
       type: object
       required:
-      - message
+      - case_uuids
       properties:
-        message:
-          type: string
-          description: user friendly error message
-    RefundInvestigationCreditsRequest:
+        case_uuids:
+          type: array
+          items:
+            type: string
+          description: The list of case uuids to reindex. If this non empty list is provided, only the cases in this list will be reindexed else all cases will be reindexed.
+    InvestigationQuotaResponse:
       type: object
       required:
-      - idempotency_key
+      - limit_set
       properties:
-        idempotency_key:
-          type: string
+        limit_set:
+          type: boolean
+          description: Whether a weekly investigation limit is configured for this organization
+        weekly_limit:
+          type: integer
+          description: The configured weekly investigation limit (only present when limit_set is true)
+        investigations_used:
+          type: integer
+          description: Number of investigations consumed this week (only present when limit_set is true)
+        investigations_remaining:
+          type: integer
+          description: Number of investigations remaining this week (only present when limit_set is true)
   parameters:
-    x-request-id:
-      name: X-Request-ID
-      in: header
-      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
     organization-id:
       name: Organization-ID
       in: header
       description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
     user-id:
@@ -635,9 +610,6 @@ components:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:

@@ -1,14 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Airmdr Case Manager API
+  title: Case Manager API
   version: 1.0.0
-  x-refined-note:
-  - x-generated-from differs across the merged source definitions and was not carried
-  description: 'Operations tagged Case Manager across 2 of this provider''s published API definitions: airmdr-case-manager-openapi.json, airmdr-case-manager-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: /airmdrapi
-- url: https://app.airmdr.com/airmdrapi
-  description: AirMDR API (relative /airmdrapi in the published spec, resolved against app.airmdr.com per docs.airmdr.com/api-reference/apitoken)
 tags:
 - name: Case Manager
 paths:
@@ -57,8 +52,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{case_uuid}:
     get:
       tags:
@@ -157,8 +150,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{case_uuid}/email:
     post:
       tags:
@@ -208,8 +199,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/id/{case_id}:
     get:
       tags:
@@ -260,8 +249,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/list:
     post:
       tags:
@@ -318,8 +305,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/bulk:
     delete:
       tags:
@@ -364,8 +349,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/case/bulk:
     delete:
       tags:
@@ -420,8 +403,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v2/case/bulk/hard_delete:
     delete:
       tags:
@@ -471,8 +452,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{case_identifier}/chat_session/{chat_session_id}/link:
     post:
       tags:
@@ -522,8 +501,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{case_identifier}/chat_session/{chat_session_id}/unlink:
     post:
       tags:
@@ -573,8 +550,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/chat_session/{chat_session_id}:
     get:
       tags:
@@ -620,8 +595,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{case_identifier}/cases/link:
     post:
       tags:
@@ -672,8 +645,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{primary_case_identifier}/secondary/case/{secondary_case_identifier}/unlink:
     post:
       tags:
@@ -723,8 +694,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/metrics:
     get:
       tags:
@@ -776,8 +745,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/analytics/metrics:
     get:
       tags:
@@ -851,8 +818,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/soc/metrics:
     get:
       tags:
@@ -926,8 +891,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/executive/metrics:
     get:
       tags:
@@ -1001,8 +964,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/metrics/llm/summary:
     get:
       tags:
@@ -1088,8 +1049,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/metrics/detailed:
     post:
       tags:
@@ -1150,8 +1109,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/{case_identifier}/score:
     get:
       tags:
@@ -1217,8 +1174,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /scoring-guidelines:
     post:
       tags:
@@ -1250,8 +1205,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /scoring-guidelines/{guideline_id}:
     get:
       tags:
@@ -1317,8 +1270,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/score/list:
     post:
       tags:
@@ -1360,8 +1311,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/score/bulk:
     post:
       tags:
@@ -1393,8 +1342,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /cost_trim_analysis:
     get:
       tags:
@@ -1524,8 +1471,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /investigation_tiers:
     get:
       tags:
@@ -1627,8 +1572,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /investigation_credits:
     get:
       tags:
@@ -1667,8 +1610,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /investigation_credits/usage:
     get:
       tags:
@@ -1719,8 +1660,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/soc/email:
     post:
       tags:
@@ -1771,8 +1710,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /case/analytics/email:
     post:
       tags:
@@ -1823,8 +1760,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v1/actions:
     post:
       tags:
@@ -1866,8 +1801,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
   /v1/actions/recently_completed:
     post:
       tags:
@@ -1909,26 +1842,350 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    servers:
-    - url: /airmdrapi
 components:
   schemas:
-    GenerateCaseScoreRequest:
+    CaseSummaryField:
       type: object
       properties:
-        new_scoring_guidelines:
-          $ref: '#/components/schemas/ScoringGuidelines'
-    SeverityMetrics:
+        executive_summary:
+          type: string
+        what_happened:
+          type: string
+        why_it_matters:
+          type: string
+        justification_for_decision:
+          type: string
+        who:
+          type: string
+        when:
+          type: string
+        reasons_for_concern:
+          type: string
+        reasons_for_close:
+          type: string
+        additional_context:
+          type: string
+        next_steps:
+          type: string
+        improvement_opportunities:
+          type: string
+        feedback:
+          type: string
+    ProviderSummary:
       type: object
       required:
-      - alert_count
+      - name
+      - display_name
+      - logo_url
+      - provider_id
       properties:
+        name:
+          type: string
+        display_name:
+          type: string
+        logo_url:
+          type: string
+        provider_id:
+          type: string
+    CaseActionsFilterAssigneeListItem:
+      type: object
+      required:
+      - id
+      - type
+      properties:
+        id:
+          type: string
+          description: UUID of the user or user group to match
+        type:
+          type: string
+          enum:
+          - user
+          - group
+          description: Whether id should be matched against users or user groups
+    CaseAnalyticsDashboardData:
+      type: object
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        network:
+          $ref: '#/components/schemas/NetworkWidgets'
+        users:
+          $ref: '#/components/schemas/UserWidgets'
+        hosts:
+          $ref: '#/components/schemas/HostWidgets'
+        detection:
+          $ref: '#/components/schemas/DetectionWidgets'
+        trends:
+          $ref: '#/components/schemas/TrendWidgets'
+        threat_categorization:
+          $ref: '#/components/schemas/ThreatCategorizationWidgets'
+        remediation:
+          $ref: '#/components/schemas/RemediationWidgets'
+        disposition_escalation:
+          $ref: '#/components/schemas/DispositionEscalationWidgets'
+    ResponseRemediationWidgets:
+      type: object
+      properties:
+        stalled_cases_count:
+          type: integer
+          description: Number of cases currently in status=10 (CustomerPending).
+        stalled_cases_by_category:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Stalled case count (status=10) grouped by case category.
+        customer_response_time:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Avg time from customer_pending_at to customer_responded_at. Requires two new timestamp fields on CaseTimeline: customer_pending_at (set on status→10) and customer_responded_at (set on first customer activity — comment, field change, or action update).'
+    UserDetail:
+      type: object
+      required:
+      - firstname
+      - user_uuid
+      - email
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        user_uuid:
+          type: string
+    OutlierCase:
+      type: object
+      required:
+      - case_id
+      - case_uuid
+      properties:
+        case_id:
+          type: string
+        case_uuid:
+          type: string
+        category:
+          type: string
         severity:
           type: integer
-        alert_count:
+        assignee_email:
+          type: string
+        investigation_time_seconds:
           type: integer
-          description: Number of alerts
-    CaseAnalyticsDashboardResponse:
+          description: Time from alert_acknowledged_at to investigation_completed_at in seconds.
+        close_time_seconds:
+          type: integer
+          description: Time from alert_raised_at to case_closed_at in seconds.
+    Case:
+      type: object
+      required:
+      - case_id
+      - case_uuid
+      - name
+      - status
+      - severity
+      - priority
+      - assignee
+      - reporter
+      - created_at
+      - modified_at
+      properties:
+        case_id:
+          type: string
+          description: Unique number respresenting case of an organization
+        case_uuid:
+          type: string
+          description: Unique identifier of case
+        name:
+          type: string
+          description: Title of the case
+        status:
+          $ref: '#/components/schemas/CaseStatus'
+        severity:
+          $ref: '#/components/schemas/CaseSeverity'
+        priority:
+          $ref: '#/components/schemas/CasePriority'
+        assignee:
+          $ref: '#/components/schemas/UserDetails'
+        reporter:
+          $ref: '#/components/schemas/UserDetails'
+        archived:
+          type: boolean
+          description: Flag indicating if the case has been archived or not
+        escalated_to_customer:
+          type: boolean
+        created_at:
+          type: integer
+          format: int64
+          description: Timestamp of creation of the case.
+        modified_at:
+          type: integer
+          format: int64
+          description: Timestamp of the last modification of the case.
+    MetricsAttributes:
+      required:
+      - mean_metric_total
+      - daily_mean_metrics
+      - mean_metrics_intervals
+      type: object
+      properties:
+        mean_metric_total:
+          type: number
+          description: Mean metric value for the total range
+        daily_mean_metrics:
+          type: object
+          additionalProperties:
+            type: number
+          description: Mean metric values for each day
+        mean_metrics_intervals:
+          type: object
+          additionalProperties:
+            type: number
+          description: Mean metric values for each interval
+    CaseActionsResponse:
+      type: object
+      required:
+      - message
+      - items
+      - total
+      properties:
+        message:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionListItem'
+          description: Paginated list of case actions
+        total:
+          type: integer
+          description: Total count of matching actions (for pagination)
+    QualityScoreDailyPoint:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        overall:
+          type: number
+          format: double
+          description: Average case_score across all cases on this day.
+        darryl_investigated:
+          type: number
+          format: double
+          description: Average case_score for Darryl-investigated cases on this day.
+        human_investigated:
+          type: number
+          format: double
+          description: Average case_score for human-investigated cases on this day.
+    QuestionsAnsweredByCategory:
+      type: object
+      description: Answered vs unanswered question split across the 3 question categories. Used for grouped bar chart.
+      properties:
+        investigation_questions:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.custom_questions[]
+        faqs:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.faqs[]
+        explore_deeper:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.explore_deeper_questions[]
+    CaseScoreSummary:
+      type: object
+      required:
+      - case_uuid
+      - case_id
+      - organization_id
+      - provider_id
+      - alert_id
+      - alert_type
+      - case_score
+      - raw_score
+      - case_score_created_at
+      - case_created_at
+      properties:
+        case_uuid:
+          type: string
+        case_id:
+          type: string
+        organization_id:
+          type: string
+        provider_id:
+          type: string
+        alert_id:
+          type: string
+        alert_type:
+          type: string
+        case_score:
+          type: number
+        raw_score:
+          type: number
+          format: double
+        case_score_created_at:
+          type: integer
+          format: int64
+        case_created_at:
+          type: integer
+          format: int64
+    CaseActionsRequest:
+      type: object
+      required:
+      - pagination
+      - sort
+      properties:
+        pagination:
+          type: object
+          required:
+          - page
+          - size
+          properties:
+            page:
+              type: integer
+              description: 0-indexed page number
+            size:
+              type: integer
+              description: Number of results per page
+        sort:
+          $ref: '#/components/schemas/CaseActionsSort'
+        filter:
+          $ref: '#/components/schemas/CaseActionsFilter'
+    CaseReviewMetrics:
+      type: object
+      properties:
+        case_coverage:
+          type: number
+          format: double
+        darryl_investigated_case_coverage:
+          type: number
+          format: double
+        human_investigated_case_coverage:
+          type: number
+          format: double
+        cases_to_be_reviewed:
+          type: integer
+          description: Number of cases to be reviewed
+        cases_reviewed:
+          type: integer
+          description: Number of cases reviewed
+        high_quality_cases:
+          type: integer
+          description: Number of high quality cases
+        medium_quality_cases:
+          type: integer
+          description: Number of medium quality cases
+        low_quality_cases:
+          type: integer
+          description: Number of low quality cases
+        case_quality:
+          type: number
+          format: double
+        darryl_investigated_case_quality:
+          type: number
+          format: double
+        human_investigated_case_quality:
+          type: number
+          format: double
+    GenerateBulkCaseScoresResponse:
       type: object
       required:
       - message
@@ -1937,8 +2194,64 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/CaseAnalyticsDashboardData'
-    CaseStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseScore'
+    CaseView:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - CustomerCaseView
+      - AnalystCaseView
+    SlaAdherenceResult:
+      type: object
+      required:
+      - total_cases
+      - met_count
+      - breach_count
+      - adherence_pct
+      properties:
+        total_cases:
+          type: integer
+        met_count:
+          type: integer
+          description: Cases where investigation_completed_metric <= target.
+        breach_count:
+          type: integer
+          description: Cases where investigation_completed_metric > target.
+        adherence_pct:
+          type: number
+          format: float
+          description: met_count / total_cases as a percentage.
+        avg_mtti_seconds:
+          type: integer
+          description: Average MTTI across all cases in this tier.
+    InvestigationTierListResponse:
+      type: object
+      required:
+      - tiers
+      properties:
+        tiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvestigationTierRow'
+    AnalystPerformance:
+      type: object
+      required:
+      - assignee_email
+      - case_count
+      properties:
+        assignee_email:
+          type: string
+        case_count:
+          type: integer
+          description: Number of cases assigned to this analyst in the window.
+        avg_mtti_seconds:
+          type: integer
+          description: Average MTTI in seconds for this analyst's cases (manual cases only).
+    CaseSeverity:
       type: integer
       enum:
       - 0
@@ -1946,118 +2259,24 @@ components:
       - 5
       - 10
       - 20
-      - 30
       x-enum-varnames:
-      - NewCaseStatus
-      - ProgressCaseStaus
-      - PendingCaseStaus
-      - WaitingForCustomerStatus
-      - ContainedCaseStaus
-      - ClosedCaseStaus
-    CaseListRequest:
-      type: object
-      required:
-      - requested_view
-      properties:
-        minimal:
-          type: boolean
-          description: Indicates if data is for minimum details or not
-        requested_view:
-          $ref: '#/components/schemas/CaseView'
-          description: Indicates which view is requested
-        filter:
-          $ref: '#/components/schemas/CaseFilter'
-        sort:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseSort'
-          description: list of sort fields in order
-    CaseListResponse:
-      type: object
-      required:
-      - message
-      - data
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Case'
-          description: list of minimal case objects
-        total:
-          type: integer
-    CaseFilter:
-      type: object
-      properties:
-        severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseSeverity'
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseStatus'
-        priority:
-          type: array
-          items:
-            $ref: '#/components/schemas/CasePriority'
-        case_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        reporter:
-          type: array
-          items:
-            type: string
-        assignee:
-          type: array
-          items:
-            type: string
-        from_modified_date:
-          type: integer
-          format: int64
-        to_modified_date:
-          type: integer
-          format: int64
-        global_search_query:
-          type: string
-          deprecated: true
-        queries:
-          type: array
-          description: list of queries to search for in all fields. A case will be listed if it matches any of the queries
-          items:
-            type: string
-        archived:
-          type: boolean
-          description: Flag indicating if archived cases has to be searched or not
-    TimeRange:
-      type: object
-      properties:
-        from_date:
-          type: integer
-          format: int64
-        to_date:
-          type: integer
-          format: int64
-    EntityCount:
-      type: object
-      required:
-      - name
-      - case_count
-      properties:
-        name:
-          type: string
-          description: Entity value (e.g. IP address, domain, username, hostname).
-        entity_type:
-          type: string
-          description: Entity type (ip, domain, user, service_account, host, file_hash, cloud_resource).
-        case_count:
-          type: integer
-          description: Number of distinct cases this entity appears in.
+      - InformationalCaseSeverity
+      - LowCaseSeverity
+      - MediumCaseSeverity
+      - HighCaseSeverity
+      - CriticalCaseSeverity
+    CaseDisposition:
+      type: integer
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      x-enum-varnames:
+      - Pending
+      - TruePositive
+      - BenignTruePositive
+      - FalsePositive
     ArchiveCasesRequest:
       type: object
       required:
@@ -2070,96 +2289,6 @@ components:
           description: list of case uuids to be archived
         performed_by_darryl:
           type: boolean
-    ProviderEscalationCount:
-      type: object
-      required:
-      - provider
-      - escalated_count
-      - not_escalated_count
-      - total
-      properties:
-        provider:
-          type: string
-          description: Detection source / provider name (security vendor). "Unknown" when the case has no provider.
-        display_name:
-          type: string
-          description: Human-readable provider name.
-        escalated_count:
-          type: integer
-          description: Cases from this provider with at least one escalation.
-        not_escalated_count:
-          type: integer
-          description: Benign cases from this provider (no escalation).
-        total:
-          type: integer
-          description: Total cases from this provider.
-    ProviderList:
-      type: object
-      required:
-      - provider
-      - alert_count
-      properties:
-        provider:
-          $ref: '#/components/schemas/ProviderSummary'
-        alert_count:
-          type: integer
-          description: Number of alerts
-    GetScoringGuidelinesResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/ScoringGuidelines'
-          description: scoring guidelines object
-    ConsistencyWidgets:
-      type: object
-      properties:
-        outlier_cases:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutlierCase'
-          description: Top slowest investigations by investigation_completed_metric, descending.
-    ArchiveCasesResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            type: string
-          description: UUIDs of the case archived
-    DetailedMetrics:
-      type: object
-      required:
-      - provider_metrics_list
-      - global_metrics
-      properties:
-        provider_metrics_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderMetrics'
-          description: Provider metrics list
-        alert_type_metrics_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeMetrics'
-          description: Alert type metrics list
-        global_metrics:
-          $ref: '#/components/schemas/GlobalMetrics'
-          description: Global metrics
-        daily_metrics_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyMetrics'
-          description: Daily metrics list
     CaseMetricsLLMSummary:
       type: object
       required:
@@ -2214,157 +2343,19 @@ components:
         footer_text:
           type: string
           description: Footer body text for the STATUS / NEXT STEP line.
-    ThroughputWidgets:
-      type: object
-      properties:
-        total_cases:
-          type: integer
-          description: Total cases created in the date window.
-        daily_case_volume:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyCount'
-          description: Case count per day in the window.
-        analyst_performance:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnalystPerformance'
-          description: Per-analyst case volume and avg MTTI (manual cases only).
-        peak_load_by_hour:
-          type: array
-          items:
-            $ref: '#/components/schemas/HourCount'
-          description: Case volume by hour of day (UTC) — peak load signal.
-        adr_triage_breakdown:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdrTriageCount'
-          description: Distribution of cases by automation tier (adr_triage).
-        status_breakdown:
-          type: object
-          additionalProperties:
-            type: integer
-          description: Case count grouped by status (status_id → count).
-    BulkDeleteCasesResponse:
+    DailyMetrics:
       type: object
       required:
-      - message
-      - data
+      - date
+      - provider_list
       properties:
-        message:
+        date:
           type: string
-        data:
+        provider_list:
           type: array
           items:
-            type: string
-          description: UUIDs of the case deleted
-    UserDetail:
-      type: object
-      required:
-      - firstname
-      - user_uuid
-      - email
-      properties:
-        firstname:
-          type: string
-        lastname:
-          type: string
-        email:
-          type: string
-        user_uuid:
-          type: string
-    CaseActionsFilter:
-      type: object
-      properties:
-        include_closed_cases:
-          type: boolean
-          default: false
-          description: Whether to include actions from closed cases
-        action_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/ActionSeverityLevel'
-          description: Filter by action severity levels
-        status:
-          type: array
-          items:
-            type: integer
-          description: Filter by action status values; defaults to [New, Pending, Customer Pending, Approved, Rejected]
-        status_v2:
-          type: array
-          items:
-            $ref: '#/components/schemas/ActionStatusV2'
-          description: Filter by action lifecycle status values (status_v2)
-        priority:
-          type: array
-          items:
-            type: string
-            enum:
-            - Containment
-            - Required
-            - Recommended
-          description: Filter by action priority values
-        case_ids:
-          type: array
-          items:
-            type: string
-          description: Filter to specific case IDs
-        case_modified_at:
-          $ref: '#/components/schemas/CaseActionsDateRange'
-          description: Filter by case modified_at range (epoch seconds)
-        assignee:
-          type: string
-          enum:
-          - my
-          - all
-          - list
-          default: my
-          description: Assignee scope — "my" for current user, "all" for everyone, "list" to specify assignee_list
-        assignee_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseActionsFilterAssigneeListItem'
-          description: List of assignees to match against; only used when assignee = "list"
-        organization_ids:
-          type: array
-          items:
-            type: string
-          description: Filter to specific organization IDs; intersected with the caller's accessible orgs
-        type:
-          type: array
-          items:
-            type: string
-            enum:
-            - approval
-            - customer_action
-            - answer_question
-          description: Filter by action type
-        search:
-          type: string
-          description: Free-text search term
-    SlaAdherenceResult:
-      type: object
-      required:
-      - total_cases
-      - met_count
-      - breach_count
-      - adherence_pct
-      properties:
-        total_cases:
-          type: integer
-        met_count:
-          type: integer
-          description: Cases where investigation_completed_metric <= target.
-        breach_count:
-          type: integer
-          description: Cases where investigation_completed_metric > target.
-        adherence_pct:
-          type: number
-          format: float
-          description: met_count / total_cases as a percentage.
-        avg_mtti_seconds:
-          type: integer
-          description: Average MTTI across all cases in this tier.
+            $ref: '#/components/schemas/ProviderList'
+          description: Provider list
     BusinessHoursBreakdown:
       type: object
       required:
@@ -2384,32 +2375,39 @@ components:
         ai_summary:
           type: string
           description: AI-generated natural-language summary of the business-hours breakdown. Populated separately; may be absent.
-    CreditUsageEntry:
+    KpiWidgets:
       type: object
       required:
-      - week_start
-      - amount
-      - reason
-      - created_at
+      - total_cases
+      - cases_escalated
+      - pending_case_actions
       properties:
-        week_start:
-          type: string
-        alert_id:
-          type: string
-        tier:
-          type: string
-        model:
-          type: string
-        amount:
-          type: number
-          format: double
-          description: negative for charges/forfeits, positive for refunds
-        reason:
-          type: string
-        created_at:
+        total_cases:
           type: integer
-          format: int64
-    GetCaseResponse:
+          description: Distinct cases created within the selected window.
+        cases_escalated:
+          type: integer
+          description: Cases with at least one escalation (escalation_type=Escalated).
+        pending_case_actions:
+          type: integer
+          description: Count of open case action items — matches the listCaseActionsV1 total (non-closed cases, non-empty actions, scoped to the window on modified_at).
+        mtti_seconds:
+          type: number
+          format: float
+          description: Mean time to investigate (investigation_completed_at - alert_acknowledged_at) in seconds, excluding cases flagged ignore_case_metric. Absent when no qualifying cases.
+    CaseSort:
+      type: object
+      required:
+      - field
+      - sort_order
+      properties:
+        field:
+          type: string
+          description: indicates which field will be used for sorting
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: indicates sort order - asc or desc
+    ArchiveCasesResponse:
       type: object
       required:
       - message
@@ -2418,62 +2416,286 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/CaseDetails'
-          description: updated case object
-    GlobalMetrics:
+          type: array
+          items:
+            type: string
+          description: UUIDs of the case archived
+    AdrTriageCount:
+      type: object
+      required:
+      - adr_triage
+      - count
+      properties:
+        adr_triage:
+          type: integer
+          description: 'Automation level: 0=NA, 1=None (manual), 5=Partial, 10=Full (automated).'
+        count:
+          type: integer
+        percentage:
+          type: number
+          format: float
+          description: Percentage of total cases in this tier.
+    InvestigationTierRow:
+      type: object
+      required:
+      - alert_provider
+      - alert_type
+      - volume
+      - default_tier
+      - investigation_tier
+      - overridden
+      properties:
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        volume:
+          type: integer
+          format: int64
+          description: number of alerts of this type over the cost-trim window (30d)
+        default_tier:
+          type: string
+          description: tier derived from efficacy by the cost-trim scheduler
+        investigation_tier:
+          type: string
+          description: effective tier (override if present, otherwise default_tier)
+        overridden:
+          type: boolean
+        efficacy:
+          type: number
+          format: double
+          description: escalations / alerts over the cost-trim window (0..1)
+        model:
+          type: string
+          description: model backing the effective tier
+        cost:
+          type: number
+          format: double
+          description: credit cost per investigation at the effective tier
+    AlertSource:
+      type: integer
+      enum:
+      - 0
+      x-enum-varnames:
+      - ManualAlertSource
+    CaseFilter:
+      type: object
+      properties:
+        severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseSeverity'
+        status:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseStatus'
+        priority:
+          type: array
+          items:
+            $ref: '#/components/schemas/CasePriority'
+        case_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        reporter:
+          type: array
+          items:
+            type: string
+        assignee:
+          type: array
+          items:
+            type: string
+        from_modified_date:
+          type: integer
+          format: int64
+        to_modified_date:
+          type: integer
+          format: int64
+        global_search_query:
+          type: string
+          deprecated: true
+        queries:
+          type: array
+          description: list of queries to search for in all fields. A case will be listed if it matches any of the queries
+          items:
+            type: string
+        archived:
+          type: boolean
+          description: Flag indicating if archived cases has to be searched or not
+    SocPerformanceDashboardResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SocPerformanceDashboardData'
+    MultiVectorHost:
+      type: object
+      required:
+      - name
+      - attack_types
+      properties:
+        name:
+          type: string
+          description: Hostname.
+        attack_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttackTypeCount'
+          description: Distinct alert types this host has been involved in, with case count per type.
+        case_count:
+          type: integer
+    SortOrder:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - Asc
+      - Desc
+    EmergingThreat:
+      type: object
+      required:
+      - category
+      - current_count
+      - prior_count
+      properties:
+        category:
+          type: string
+        current_count:
+          type: integer
+          description: Case count in the current window.
+        prior_count:
+          type: integer
+          description: Case count in the prior equal window.
+        growth_rate:
+          type: number
+          format: float
+          description: Growth as a ratio (current / prior). Null if prior_count is zero.
+    AlertCategory:
+      type: integer
+      enum:
+      - 0
+      x-enum-varnames:
+      - ManualAlertCategory
+    CreateScoringGuidelinesRequest:
+      type: object
+      required:
+      - guidelines_text
+      - scoring_criteria
+      properties:
+        is_organization_default:
+          type: boolean
+          description: If true, the scoring guidelines will be set as the default scoring guidelines for the organization.
+        name:
+          type: string
+        guidelines_text:
+          type: string
+        scoring_criteria:
+          type: object
+          description: map of scoring criteria
+          additionalProperties:
+            type: number
+            format: double
+    CaseListRequest:
+      type: object
+      required:
+      - requested_view
+      properties:
+        minimal:
+          type: boolean
+          description: Indicates if data is for minimum details or not
+        requested_view:
+          $ref: '#/components/schemas/CaseView'
+          description: Indicates which view is requested
+        filter:
+          $ref: '#/components/schemas/CaseFilter'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseSort'
+          description: list of sort fields in order
+    PercentileMetric:
+      type: object
+      properties:
+        p50_seconds:
+          type: integer
+          description: 50th percentile (median) value in seconds.
+        p95_seconds:
+          type: integer
+          description: 95th percentile value in seconds.
+        p99_seconds:
+          type: integer
+          description: 99th percentile value in seconds.
+    OperationalGapsWidgets:
+      type: object
+      properties:
+        missing_telemetry_by_alert_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingTelemetryCount'
+          description: Cases with non-empty confidence.missing_information, grouped by alert_type.
+        blocked_by_customer_by_category:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlockedByCategoryCount'
+          description: Cases with status=10 OR actions_required[status=2], grouped by category and severity tier.
+    SlaAdherenceTrendPoint:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        critical_incident_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Critical Incident Support (sev=15, target=2hr) on this day.
+        critical_alert_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Critical Alert Validation (sev=10, target=4hr) on this day.
+        non_critical_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Non-Critical Incident Support (sev≤5, target=8hr) on this day.
+    ProviderMetrics:
       allOf:
       - $ref: '#/components/schemas/Metrics'
       - type: object
         required:
-        - failed_alert_count
-        - successful_alert_sources
-        - failed_alert_sources
-        - successful_sources_without_alerts
+        - provider
         properties:
-          global_provider_metrics_list:
+          provider:
+            $ref: '#/components/schemas/ProviderSummary'
+          alert_type_metrics_list:
             type: array
             items:
-              $ref: '#/components/schemas/ProviderMetrics'
-            description: Provider metrics list
-          failed_alert_count:
-            type: integer
-            description: Number of failed alerts
-          successful_alert_sources:
-            type: array
-            items:
-              type: string
-            description: List of successful alert sources
-          failed_alert_sources:
-            type: array
-            items:
-              type: string
-            description: List of failed alert sources
-          successful_sources_without_alerts:
-            type: array
-            items:
-              type: string
-            description: List of successful sources without alerts
-    InvestigationCreditUsageResponse:
-      type: object
-      required:
-      - entries
-      - total_used
-      properties:
-        total_used:
-          type: number
-          format: double
-        entries:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreditUsageEntry'
-    Success:
+              $ref: '#/components/schemas/AlertTypeMetrics'
+            description: Alert type metrics list
+    ListCaseScoresResponse:
       type: object
       required:
       - message
+      - data
+      - total
       properties:
         message:
           type: string
-          description: user friendly message
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseScoreSummary'
+          description: List of case scores.
+        total:
+          type: integer
+          description: Total number of scores found.
     CostTrimOrgRow:
       allOf:
       - $ref: '#/components/schemas/CostTrimRollupBase'
@@ -2503,7 +2725,48 @@ components:
               N% (e.g. `trim_pct_5`, `trim_pct_10`, `trim_pct_25`).
 
               '
-    GenerateCaseScoreResponse:
+    AdrTriageDailyBreakdown:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        fully_automated:
+          type: integer
+        partially_automated:
+          type: integer
+        manual:
+          type: integer
+    BulkDeleteCasesRequest:
+      type: object
+      required:
+      - case_uuids
+      properties:
+        case_uuids:
+          type: array
+          items:
+            type: string
+    ScoreStatus:
+      type: string
+      enum:
+      - not_generated
+      - in_progress
+      - completed
+      x-enum-varnames:
+      - ScoreStatusNotGenerated
+      - ScoreStatusInProgress
+      - ScoreStatusCompleted
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
+    CaseAnalyticsDashboardResponse:
       type: object
       required:
       - message
@@ -2512,20 +2775,484 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/CaseScore'
-          description: case score object
-    CaseSort:
+          $ref: '#/components/schemas/CaseAnalyticsDashboardData'
+    Metrics:
+      allOf:
+      - $ref: '#/components/schemas/CaseReviewMetrics'
+      - type: object
+        properties:
+          darryl_reviewed_case_metrics:
+            $ref: '#/components/schemas/CaseReviewMetrics'
+            description: Darryl reviewed case metrics
+          human_reviewed_case_metrics:
+            $ref: '#/components/schemas/CaseReviewMetrics'
+            description: Human reviewed case metrics
+          darryl_investigated_cases:
+            type: integer
+            description: Number of cases investigated by darryl
+          human_investigated_cases:
+            type: integer
+            description: Number of cases investigated by human
+          alert_count:
+            type: integer
+            description: Number of alerts
+          alert_type_count:
+            type: integer
+            description: Number of alert types
+    AttackTypeCount:
+      type: object
+      required:
+      - type
+      - count
+      properties:
+        type:
+          type: string
+          description: Alert type name.
+        count:
+          type: integer
+          description: Number of cases involving this alert type for the given entity.
+    CaseStatus:
+      type: integer
+      enum:
+      - 0
+      - 1
+      - 5
+      - 10
+      - 20
+      - 30
+      x-enum-varnames:
+      - NewCaseStatus
+      - ProgressCaseStaus
+      - PendingCaseStaus
+      - WaitingForCustomerStatus
+      - ContainedCaseStaus
+      - ClosedCaseStaus
+    ThreatCategorizationWidgets:
+      type: object
+      properties:
+        cases_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count grouped by category field.
+        high_severity_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count for severity in [10,15] (High, Critical) grouped by category.
+        emerging_threats:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmergingThreat'
+          description: Categories with significant growth vs the prior period.
+    OrganizationMetrics:
+      allOf:
+      - $ref: '#/components/schemas/DetailedMetrics'
+      - type: object
+        required:
+        - organization_id
+        properties:
+          organization_id:
+            type: string
+            description: Organization ID
+    DetailedMetrics:
+      type: object
+      required:
+      - provider_metrics_list
+      - global_metrics
+      properties:
+        provider_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderMetrics'
+          description: Provider metrics list
+        alert_type_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeMetrics'
+          description: Alert type metrics list
+        global_metrics:
+          $ref: '#/components/schemas/GlobalMetrics'
+          description: Global metrics
+        daily_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyMetrics'
+          description: Daily metrics list
+    ConsistencyWidgets:
+      type: object
+      properties:
+        outlier_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutlierCase'
+          description: Top slowest investigations by investigation_completed_metric, descending.
+    CaseActionCount:
+      type: object
+      required:
+      - case_id
+      - count
+      properties:
+        case_id:
+          type: string
+        count:
+          type: integer
+          description: Number of actions matching the filter for this case.
+    CaseMetricsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseMetrics'
+          description: case metrics object
+    CaseActionsSort:
       type: object
       required:
       - field
-      - sort_order
+      - order
       properties:
         field:
           type: string
-          description: indicates which field will be used for sorting
-        sort_order:
+          enum:
+          - action_severity
+          - title
+          - case_id
+          - case_modified_at
+          - status
+          - assignee
+          - required
+          - priority
+          - organization_code
+          description: Field to sort results by
+        order:
           $ref: '#/components/schemas/SortOrder'
-          description: indicates sort order - asc or desc
+          description: Sort direction
+    ProviderEscalationCount:
+      type: object
+      required:
+      - provider
+      - escalated_count
+      - not_escalated_count
+      - total
+      properties:
+        provider:
+          type: string
+          description: Detection source / provider name (security vendor). "Unknown" when the case has no provider.
+        display_name:
+          type: string
+          description: Human-readable provider name.
+        escalated_count:
+          type: integer
+          description: Cases from this provider with at least one escalation.
+        not_escalated_count:
+          type: integer
+          description: Benign cases from this provider (no escalation).
+        total:
+          type: integer
+          description: Total cases from this provider.
+    ChatSessionDetail:
+      type: object
+      required:
+      - chat_session_id
+      - title
+      - owner_details
+      - created_at
+      - deleted
+      properties:
+        chat_session_id:
+          type: string
+        title:
+          type: string
+        owner_details:
+          $ref: '#/components/schemas/UserDetail'
+        created_at:
+          type: integer
+          format: int64
+        deleted:
+          type: boolean
+          description: Flag indicating if session has been deleted or not
+    CostTrimTotals:
+      type: object
+      required:
+      - alerts
+      - investigated
+      - escalations
+      - efficacy
+      properties:
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        escalations:
+          type: integer
+          format: int64
+          description: Count of alerts whose linked case was escalated to the customer.
+        efficacy:
+          type: number
+          format: double
+          description: Total escalations divided by total alerts.
+    HourCount:
+      type: object
+      required:
+      - hour
+      - count
+      properties:
+        hour:
+          type: integer
+          description: Hour of day in UTC (0–23).
+        count:
+          type: integer
+          description: Number of cases created in this hour across all days in the window.
+    CostTrimEscalationsByTypeRow:
+      type: object
+      required:
+      - alert_type
+      - escalations
+      properties:
+        alert_type:
+          type: string
+        escalations:
+          type: integer
+          format: int64
+    ResponseTimePercentiles:
+      type: object
+      properties:
+        mtta:
+          $ref: '#/components/schemas/PercentileMetric'
+        mtti:
+          $ref: '#/components/schemas/PercentileMetric'
+        mttc:
+          $ref: '#/components/schemas/PercentileMetric'
+        mtt_close:
+          $ref: '#/components/schemas/PercentileMetric'
+    GetDetailedMetricsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AggregatedMetrics'
+    SocEmailRequest:
+      type: object
+      required:
+      - email_ids
+      - subject
+      - filter
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+        filter:
+          $ref: '#/components/schemas/SocEmailRequestFilter'
+          description: Filter parameters for the report
+    GetCaseResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseDetails'
+          description: updated case object
+    ActionExecutionDetails:
+      type: object
+      properties:
+        execution_id:
+          type: string
+          description: ID of the execution triggered against knowledge-management for this action
+        execution_status:
+          type: string
+          description: Last known execution status, as reported by knowledge-management's GetExecutionLogAPI
+        started_by:
+          type: string
+          description: ID of the user who started the execution
+        started_at:
+          type: integer
+          format: int64
+          description: Timestamp the execution was started; used to bound how long the execution is polled before it is force-resolved as failed
+    RemediationWidgets:
+      type: object
+      properties:
+        unresolved_actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionCount'
+          description: Cases ranked by count of actions with status in [0,1,2] (New, Pending, Customer Pending).
+        customer_action_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionCount'
+          description: Cases ranked by count of actions with status=2 (Customer Pending).
+    CaseListResponse:
+      type: object
+      required:
+      - message
+      - data
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Case'
+          description: list of minimal case objects
+        total:
+          type: integer
+    UpdateScoringGuidelinesRequest:
+      type: object
+      required:
+      - guidelines_text
+      - scoring_criteria
+      properties:
+        name:
+          type: string
+        is_organization_default:
+          type: boolean
+          description: If true, the scoring guidelines will be set as the default scoring guidelines for the organization.
+        guidelines_text:
+          type: string
+        scoring_criteria:
+          type: object
+          description: map of scoring criteria
+          additionalProperties:
+            type: number
+            format: double
+    UpdateInvestigationTiersRequest:
+      type: object
+      required:
+      - organization_id
+      - tiers
+      properties:
+        organization_id:
+          type: string
+        tiers:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/UpdateInvestigationTierItem'
+    DispositionEscalationWidgets:
+      type: object
+      properties:
+        disposition_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: For each disposition, count of cases with and without customer communication (escalated_to=0).
+        escalation_breakdown:
+          $ref: '#/components/schemas/EscalationBreakdown'
+          description: Case counts split by whether they have at least one customer escalation.
+        escalations_by_provider:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEscalationCount'
+          description: Escalated vs benign (not escalated) case counts grouped by security vendor (detection source / provider).
+    InvestigationCreditUsageResponse:
+      type: object
+      required:
+      - entries
+      - total_used
+      properties:
+        total_used:
+          type: number
+          format: double
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditUsageEntry'
+    EmailCaseDetailsRequest:
+      type: object
+      required:
+      - to_addresses
+      properties:
+        to_addresses:
+          type: array
+          items:
+            type: string
+          description: list of emails to send the case details to
+        subject:
+          type: string
+          description: subject of the email
+        html_content:
+          type: string
+          description: html content for the email body
+        message:
+          type: string
+          description: message to be sent in email body along with html content
+        include_hidden_findings:
+          type: boolean
+          description: if true, hidden findings will be included in the email
+        view_id:
+          type: string
+          description: id of the saved case view whose section layout should drive the emailed case details (v2 only). Resolved against the requestor's organization. When omitted, falls back to the default saved view of the organization the case belongs to.
+    CostTrimOrgTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - organization_uuid
+        - alert_type
+        properties:
+          organization_uuid:
+            type: string
+          organization_code:
+            type: string
+          alert_type:
+            type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    SeverityMetrics:
+      type: object
+      required:
+      - alert_count
+      properties:
+        severity:
+          type: integer
+        alert_count:
+          type: integer
+          description: Number of alerts
+    CaseAnalyticsEmailRequestFilter:
+      type: object
+      required:
+      - created_at_from
+      - created_at_to
+      properties:
+        org_id:
+          type: string
+          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
+        created_at_from:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (start of date range)
+        created_at_to:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (end of date range)
+        metadata:
+          type: object
+          description: Optional metadata for report customization
     DetectionWidgets:
       type: object
       properties:
@@ -2554,160 +3281,6 @@ components:
           items:
             $ref: '#/components/schemas/AlertTypeCount'
           description: Top 10 alert types ranked by case count within the requested date range.
-    InvestigationCreditsResponse:
-      type: object
-      required:
-      - limit_set
-      properties:
-        limit_set:
-          type: boolean
-          description: false when the organization has no credit allocation (unlimited)
-        week_start:
-          type: string
-          description: Monday of the current week (UTC), "YYYY-MM-DD"
-        weekly_allocation:
-          type: number
-          format: double
-        rolled_over:
-          type: number
-          format: double
-        credits_available:
-          type: number
-          format: double
-        credits_used:
-          type: number
-          format: double
-    EntityCountWithDays:
-      allOf:
-      - $ref: '#/components/schemas/EntityCount'
-      - type: object
-        required:
-        - days
-        properties:
-          days:
-            type: integer
-            description: Number of distinct days this entity appears in cases.
-    AdrTriageDailyBreakdown:
-      type: object
-      required:
-      - date
-      properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        fully_automated:
-          type: integer
-        partially_automated:
-          type: integer
-        manual:
-          type: integer
-    CasePriority:
-      type: integer
-      enum:
-      - 0
-      - 10
-      - 20
-      - 30
-      x-enum-varnames:
-      - LowCasePriority
-      - MediumCasePriority
-      - HighCasePriority
-      - CriticalCasePriority
-    AlertTypeCount:
-      type: object
-      required:
-      - alert_type
-      - total
-      properties:
-        alert_type:
-          type: string
-        total:
-          type: integer
-          description: Total cases for this alert type.
-        malicious:
-          type: integer
-          description: Cases with disposition=10 (Malicious).
-        false_positive:
-          type: integer
-          description: Cases with disposition in [1,5] (NoThreatFound + NonMaliciousPositive).
-    DailyCount:
-      type: object
-      required:
-      - date
-      - count
-      properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        count:
-          type: integer
-    CostTrimRollupBase:
-      type: object
-      required:
-      - alerts
-      - investigated
-      - escalations
-      - efficacy
-      properties:
-        alerts:
-          type: integer
-          format: int64
-        investigated:
-          type: integer
-          format: int64
-        linked_case_count:
-          type: integer
-          format: int64
-        escalations:
-          type: integer
-          format: int64
-          description: Count of alerts whose linked case was escalated to the customer.
-        escalated_to_analyst:
-          type: integer
-          format: int64
-        efficacy:
-          type: number
-          format: double
-    EscalationBreakdown:
-      type: object
-      required:
-      - escalated_count
-      - not_escalated_count
-      - total
-      properties:
-        escalated_count:
-          type: integer
-          description: Number of cases with at least one escalation in the escalations[] array.
-        not_escalated_count:
-          type: integer
-          description: Number of cases with no escalations.
-        total:
-          type: integer
-          description: Total case count (escalated_count + not_escalated_count).
-        ai_summary:
-          type: string
-          description: AI-generated natural-language summary of the escalation breakdown. Populated separately; may be absent.
-    SocPerformanceDashboardData:
-      type: object
-      properties:
-        kpi:
-          $ref: '#/components/schemas/KpiWidgets'
-        speed_sla:
-          $ref: '#/components/schemas/SpeedSlaWidgets'
-        throughput:
-          $ref: '#/components/schemas/ThroughputWidgets'
-        investigation_quality:
-          $ref: '#/components/schemas/InvestigationQualityWidgets'
-        response_remediation:
-          $ref: '#/components/schemas/ResponseRemediationWidgets'
-        consistency:
-          $ref: '#/components/schemas/ConsistencyWidgets'
-        customer_experience:
-          $ref: '#/components/schemas/CustomerExperienceWidgets'
-        automation:
-          $ref: '#/components/schemas/AutomationWidgets'
-        operational_gaps:
-          $ref: '#/components/schemas/OperationalGapsWidgets'
     HostWidgets:
       type: object
       properties:
@@ -2726,628 +3299,6 @@ components:
           items:
             $ref: '#/components/schemas/MultiVectorHost'
           description: Hosts involved in more than one distinct attack type.
-    AdrTriageCount:
-      type: object
-      required:
-      - adr_triage
-      - count
-      properties:
-        adr_triage:
-          type: integer
-          description: 'Automation level: 0=NA, 1=None (manual), 5=Partial, 10=Full (automated).'
-        count:
-          type: integer
-        percentage:
-          type: number
-          format: float
-          description: Percentage of total cases in this tier.
-    OperationalGapsWidgets:
-      type: object
-      properties:
-        missing_telemetry_by_alert_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/MissingTelemetryCount'
-          description: Cases with non-empty confidence.missing_information, grouped by alert_type.
-        blocked_by_customer_by_category:
-          type: array
-          items:
-            $ref: '#/components/schemas/BlockedByCategoryCount'
-          description: Cases with status=10 OR actions_required[status=2], grouped by category and severity tier.
-    CostTrimTotals:
-      type: object
-      required:
-      - alerts
-      - investigated
-      - escalations
-      - efficacy
-      properties:
-        alerts:
-          type: integer
-          format: int64
-        investigated:
-          type: integer
-          format: int64
-        escalations:
-          type: integer
-          format: int64
-          description: Count of alerts whose linked case was escalated to the customer.
-        efficacy:
-          type: number
-          format: double
-          description: Total escalations divided by total alerts.
-    BulkDeleteCasesRequest:
-      type: object
-      required:
-      - case_uuids
-      properties:
-        case_uuids:
-          type: array
-          items:
-            type: string
-    CaseSeverity:
-      type: integer
-      enum:
-      - 0
-      - 1
-      - 5
-      - 10
-      - 20
-      x-enum-varnames:
-      - InformationalCaseSeverity
-      - LowCaseSeverity
-      - MediumCaseSeverity
-      - HighCaseSeverity
-      - CriticalCaseSeverity
-    SocPerformanceDashboardResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/SocPerformanceDashboardData'
-    UpdateInvestigationTiersRequest:
-      type: object
-      required:
-      - organization_id
-      - tiers
-      properties:
-        organization_id:
-          type: string
-        tiers:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/UpdateInvestigationTierItem'
-    HourCount:
-      type: object
-      required:
-      - hour
-      - count
-      properties:
-        hour:
-          type: integer
-          description: Hour of day in UTC (0–23).
-        count:
-          type: integer
-          description: Number of cases created in this hour across all days in the window.
-    CreateCaseResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/CaseDetails'
-          description: created case object
-    MttiComparisonPoint:
-      type: object
-      required:
-      - x
-      - y
-      properties:
-        x:
-          type: number
-          format: float
-          description: Average investigation time in minutes.
-        y:
-          type: number
-          format: float
-          description: Time difference (avg_mtti - x) in minutes.
-    CaseDisposition:
-      type: integer
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      x-enum-varnames:
-      - Pending
-      - TruePositive
-      - BenignTruePositive
-      - FalsePositive
-    CaseActionsRequest:
-      type: object
-      required:
-      - pagination
-      - sort
-      properties:
-        pagination:
-          type: object
-          required:
-          - page
-          - size
-          properties:
-            page:
-              type: integer
-              description: 0-indexed page number
-            size:
-              type: integer
-              description: Number of results per page
-        sort:
-          $ref: '#/components/schemas/CaseActionsSort'
-        filter:
-          $ref: '#/components/schemas/CaseActionsFilter'
-    PercentileMetric:
-      type: object
-      properties:
-        p50_seconds:
-          type: integer
-          description: 50th percentile (median) value in seconds.
-        p95_seconds:
-          type: integer
-          description: 95th percentile value in seconds.
-        p99_seconds:
-          type: integer
-          description: 99th percentile value in seconds.
-    CaseActionListItem:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier of the action
-        title:
-          type: string
-          description: Action title (markdown text)
-        status:
-          type: integer
-          description: Action status value
-        status_label:
-          type: string
-          description: Human-readable label for the status
-        action_severity:
-          $ref: '#/components/schemas/ActionSeverityLevel'
-        assignee:
-          $ref: '#/components/schemas/UserDetails'
-        assignee_v2:
-          $ref: '#/components/schemas/AssigneeDetails'
-          description: AssigneeDetails for the action; populated alongside assignee during migration
-        case_id:
-          type: string
-          description: Human-readable case identifier
-        case_uuid:
-          type: string
-          description: UUID of the parent case
-        organization_id:
-          type: string
-          description: UUID of the organization the parent case belongs to
-        organization_code:
-          type: string
-          description: Code of the organization the parent case belongs to
-        case_modified_at:
-          type: integer
-          format: int64
-          description: Unix epoch seconds when the parent case was last modified
-        created_at:
-          type: integer
-          format: int64
-          description: Unix epoch seconds when the action was created
-        modified_at:
-          type: integer
-          format: int64
-          description: Unix epoch seconds when the action was last modified
-        completed_at:
-          type: integer
-          format: int64
-          description: Unix epoch seconds when the action was completed or marked will-not-do; 0 if not terminal
-        required:
-          type: boolean
-          description: Whether this action is required
-        description:
-          type: string
-          description: Description of the action required
-        session_id:
-          type: string
-          description: Chat session ID associated with the action
-        type:
-          type: string
-          enum:
-          - approval
-          - customer_action
-          - answer_question
-          description: Type of action; null is treated as customer_action
-        blocking_reason:
-          type: string
-          description: Reason this action is blocking the case; only set when type is customer_action
-        blocking_fact_id:
-          type: string
-          description: ID of the fact this action is blocking; only set when type is customer_action
-        playbook_id:
-          type: string
-          description: ID of the playbook associated with this action; only set when type is approval
-        priority:
-          type: string
-          enum:
-          - Containment
-          - Required
-          - Recommended
-          description: Priority of the action; when set on create/update, the required flag is derived from it (Containment/Required -> true, Recommended -> false)
-        evidences:
-          type: array
-          items:
-            type: string
-          description: Free-form evidence text snippets associated with the action
-        status_v2:
-          $ref: '#/components/schemas/ActionStatusV2'
-          description: Lifecycle status of the action, kept in sync with status. If both status and status_v2 are set on write, status_v2 takes priority and status is derived from it. For type approval/answer_question, only completed/will_not_do may be set directly; customer_action allows all values.
-        execution_details:
-          $ref: '#/components/schemas/ActionExecutionDetails'
-          description: Details of the playbook execution triggered externally for this action; only set when type is approval. Polled until the execution reaches a terminal state, at which point status_v2/type are updated accordingly.
-        is_agentic_case:
-          type: boolean
-          description: Whether the parent case was created by agentic investigation
-    CostTrimProviderRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - alert_provider
-        properties:
-          alert_provider:
-            type: string
-    UserDetails:
-      type: object
-      properties:
-        firstname:
-          type: string
-        lastname:
-          type: string
-        user_uuid:
-          type: string
-        performed_by_darryl:
-          type: boolean
-    CaseAnalyticsDashboardData:
-      type: object
-      properties:
-        kpi:
-          $ref: '#/components/schemas/KpiWidgets'
-        network:
-          $ref: '#/components/schemas/NetworkWidgets'
-        users:
-          $ref: '#/components/schemas/UserWidgets'
-        hosts:
-          $ref: '#/components/schemas/HostWidgets'
-        detection:
-          $ref: '#/components/schemas/DetectionWidgets'
-        trends:
-          $ref: '#/components/schemas/TrendWidgets'
-        threat_categorization:
-          $ref: '#/components/schemas/ThreatCategorizationWidgets'
-        remediation:
-          $ref: '#/components/schemas/RemediationWidgets'
-        disposition_escalation:
-          $ref: '#/components/schemas/DispositionEscalationWidgets'
-    RemediationWidgets:
-      type: object
-      properties:
-        unresolved_actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseActionCount'
-          description: Cases ranked by count of actions with status in [0,1,2] (New, Pending, Customer Pending).
-        customer_action_cases:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseActionCount'
-          description: Cases ranked by count of actions with status=2 (Customer Pending).
-    SpeedSlaWidgets:
-      type: object
-      properties:
-        mtta:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-          description: 'Mean Time to Acknowledge: avg(alert_acknowledged_at - alert_raised_at).'
-        mtti:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-          description: 'Mean Time to Investigate: avg(investigation_completed_at - alert_acknowledged_at).'
-        mttc:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-          description: 'Mean Time to Contain: avg(case_contained_at - alert_raised_at).'
-        mtt_close:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-          description: 'Mean Time to Close: avg(case_closed_at - alert_raised_at).'
-        sla_config:
-          $ref: '#/components/schemas/SlaConfig'
-          description: SLA targets echoed in response for UI display.
-        critical_incident_adherence:
-          $ref: '#/components/schemas/SlaAdherenceResult'
-          description: SLA adherence for Critical Incident Support (sev=15, target=2hr).
-        critical_alert_adherence:
-          $ref: '#/components/schemas/SlaAdherenceResult'
-          description: SLA adherence for Critical Alert Validation (sev=10, target=4hr).
-        non_critical_adherence:
-          $ref: '#/components/schemas/SlaAdherenceResult'
-          description: SLA adherence for Non-Critical Incident Support (sev≤5, target=8hr).
-        sla_adherence_trend:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlaAdherenceTrendPoint'
-          description: Daily SLA adherence % for all 3 tiers — three line charts over the date window.
-        response_time_percentiles:
-          $ref: '#/components/schemas/ResponseTimePercentiles'
-          description: P50/P95/P99 for each timing metric across closed cases in the window.
-    CaseScore:
-      type: object
-      required:
-      - score
-      - raw_score
-      - summary
-      - raw_evaluation
-      - referenced_scoring_guidelines
-      properties:
-        score:
-          type: number
-          format: double
-        raw_score:
-          type: number
-          format: double
-        summary:
-          type: string
-        raw_evaluation:
-          type: array
-          items:
-            type: object
-        referenced_scoring_guidelines:
-          $ref: '#/components/schemas/ScoringGuidelines'
-          description: list of referenced scoring guidelines
-        score_status:
-          $ref: '#/components/schemas/ScoreStatus'
-          description: status of the score
-    DailyMetrics:
-      type: object
-      required:
-      - date
-      - provider_list
-      properties:
-        date:
-          type: string
-        provider_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderList'
-          description: Provider list
-    OrganizationMetrics:
-      allOf:
-      - $ref: '#/components/schemas/DetailedMetrics'
-      - type: object
-        required:
-        - organization_id
-        properties:
-          organization_id:
-            type: string
-            description: Organization ID
-    QuestionsAnsweredByOutcome:
-      type: object
-      required:
-      - disposition
-      - answered_count
-      properties:
-        disposition:
-          type: integer
-          description: 'Case disposition: 0=Pending, 1=NoThreatFound, 5=NonMaliciousPositive, 10=Malicious.'
-        label:
-          type: string
-          description: Human-readable outcome label (Malicious, Benign, Suspicious, etc.).
-        answered_count:
-          type: integer
-          description: Total explore_deeper_questions answered (status != Available, status != Data Needed) across cases with this disposition.
-    UserWidgets:
-      type: object
-      properties:
-        repeat_targeted_users:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Users (type=user or service_account) appearing in more than one case.
-        users_in_malicious_activity:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Users appearing in malicious cases (disposition=10).
-        users_high_false_positives:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Users most frequently appearing in non-malicious cases (disposition in [1,5]).
-        multi_vector_targeted_users:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiVectorUser'
-          description: Users involved in more than one distinct attack type.
-    AnalystPerformance:
-      type: object
-      required:
-      - assignee_email
-      - case_count
-      properties:
-        assignee_email:
-          type: string
-        case_count:
-          type: integer
-          description: Number of cases assigned to this analyst in the window.
-        avg_mtti_seconds:
-          type: integer
-          description: Average MTTI in seconds for this analyst's cases (manual cases only).
-    CreateScoringGuidelinesResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/ScoringGuidelines'
-          description: scoring guidelines object
-    UpdateScoringGuidelinesRequest:
-      type: object
-      required:
-      - guidelines_text
-      - scoring_criteria
-      properties:
-        name:
-          type: string
-        is_organization_default:
-          type: boolean
-          description: If true, the scoring guidelines will be set as the default scoring guidelines for the organization.
-        guidelines_text:
-          type: string
-        scoring_criteria:
-          type: object
-          description: map of scoring criteria
-          additionalProperties:
-            type: number
-            format: double
-    ExecutiveDashboardResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/ExecutiveDashboardData'
-    ScoreStatus:
-      type: string
-      enum:
-      - not_generated
-      - in_progress
-      - completed
-      x-enum-varnames:
-      - ScoreStatusNotGenerated
-      - ScoreStatusInProgress
-      - ScoreStatusCompleted
-    CaseMetrics:
-      type: object
-      required:
-      - total_cases
-      - mean_time_to_ack
-      - mean_time_to_contain
-      - mean_time_to_close
-      - handled_by_darryl
-      - sub_category_count_darryl
-      - status_count
-      - severity_count
-      - escalated_to_customer_count
-      - case_count_per_day
-      properties:
-        total_cases:
-          type: integer
-          description: total cases covered in analysis
-        mean_time_to_ack:
-          $ref: '#/components/schemas/MetricsAttributes'
-          description: mtta metrics
-        mean_time_to_investigate:
-          $ref: '#/components/schemas/MetricsAttributes'
-          description: mtti metrics
-        mean_time_to_contain:
-          $ref: '#/components/schemas/MetricsAttributes'
-          description: mttr metrics
-        mean_time_to_close:
-          $ref: '#/components/schemas/MetricsAttributes'
-          description: mttc metrics
-        handled_by_darryl:
-          type: integer
-          description: cases handled by darryl out of all cases
-        sub_category_count_darryl:
-          type: object
-          additionalProperties:
-            type: integer
-          description: Top-10 sub cateogries by count for cases handled by darryl
-        status_count:
-          type: object
-          additionalProperties:
-            type: integer
-          description: count of cases for each status type
-        severity_count:
-          type: object
-          additionalProperties:
-            type: integer
-          description: count of cases for each severity type
-        escalated_to_customer_count:
-          type: integer
-          description: number of cases escalated to customer
-        case_count_per_day:
-          type: object
-          additionalProperties:
-            type: integer
-            format: int64
-          description: count of cases for each severity type
-    ProviderSummary:
-      type: object
-      required:
-      - name
-      - display_name
-      - logo_url
-      - provider_id
-      properties:
-        name:
-          type: string
-        display_name:
-          type: string
-        logo_url:
-          type: string
-        provider_id:
-          type: string
-    CostTrimOrgTypeRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - organization_uuid
-        - alert_type
-        properties:
-          organization_uuid:
-            type: string
-          organization_code:
-            type: string
-          alert_type:
-            type: string
-    KpiWidgets:
-      type: object
-      required:
-      - total_cases
-      - cases_escalated
-      - pending_case_actions
-      properties:
-        total_cases:
-          type: integer
-          description: Distinct cases created within the selected window.
-        cases_escalated:
-          type: integer
-          description: Cases with at least one escalation (escalation_type=Escalated).
-        pending_case_actions:
-          type: integer
-          description: Count of open case action items — matches the listCaseActionsV1 total (non-closed cases, non-empty actions, scoped to the window on modified_at).
-        mtti_seconds:
-          type: number
-          format: float
-          description: Mean time to investigate (investigation_completed_at - alert_acknowledged_at) in seconds, excluding cases flagged ignore_case_metric. Absent when no qualifying cases.
     ExecutiveDashboardData:
       type: object
       description: Curated executive-view widgets. KPI card + escalation, detection, trend, and threat widgets reused from the analytics/SOC dashboards, plus recent malicious cases and MITRE category volume.
@@ -3404,388 +3355,6 @@ components:
           items:
             $ref: '#/components/schemas/EmergingThreat'
           description: Case volume per threat category, current window vs the prior equal window.
-    SocEmailRequestFilter:
-      type: object
-      required:
-      - created_at_from
-      - created_at_to
-      properties:
-        org_id:
-          type: string
-          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
-        created_at_from:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (start of date range)
-        created_at_to:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (end of date range)
-        metadata:
-          type: object
-          description: Optional metadata for report customization
-    CaseActionsFilterAssigneeListItem:
-      type: object
-      required:
-      - id
-      - type
-      properties:
-        id:
-          type: string
-          description: UUID of the user or user group to match
-        type:
-          type: string
-          enum:
-          - user
-          - group
-          description: Whether id should be matched against users or user groups
-    OutlierCase:
-      type: object
-      required:
-      - case_id
-      - case_uuid
-      properties:
-        case_id:
-          type: string
-        case_uuid:
-          type: string
-        category:
-          type: string
-        severity:
-          type: integer
-        assignee_email:
-          type: string
-        investigation_time_seconds:
-          type: integer
-          description: Time from alert_acknowledged_at to investigation_completed_at in seconds.
-        close_time_seconds:
-          type: integer
-          description: Time from alert_raised_at to case_closed_at in seconds.
-    CaseMetricsSummaryResponse:
-      type: object
-      required:
-      - message
-      - summary
-      properties:
-        message:
-          type: string
-          description: Message indicating the status of the summary generation.
-        summary:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseMetricsLLMSummary'
-          description: A summary of the case metrics in natural language generated by Darryl using the available case data and metrics. This summary can be used to quickly understand the overall status and health of the case.
-    AlertCategory:
-      type: integer
-      enum:
-      - 0
-      x-enum-varnames:
-      - ManualAlertCategory
-    CaseReviewMetrics:
-      type: object
-      properties:
-        case_coverage:
-          type: number
-          format: double
-        darryl_investigated_case_coverage:
-          type: number
-          format: double
-        human_investigated_case_coverage:
-          type: number
-          format: double
-        cases_to_be_reviewed:
-          type: integer
-          description: Number of cases to be reviewed
-        cases_reviewed:
-          type: integer
-          description: Number of cases reviewed
-        high_quality_cases:
-          type: integer
-          description: Number of high quality cases
-        medium_quality_cases:
-          type: integer
-          description: Number of medium quality cases
-        low_quality_cases:
-          type: integer
-          description: Number of low quality cases
-        case_quality:
-          type: number
-          format: double
-        darryl_investigated_case_quality:
-          type: number
-          format: double
-        human_investigated_case_quality:
-          type: number
-          format: double
-    CaseActionCount:
-      type: object
-      required:
-      - case_id
-      - count
-      properties:
-        case_id:
-          type: string
-        count:
-          type: integer
-          description: Number of actions matching the filter for this case.
-    ScoringGuidelines:
-      type: object
-      required:
-      - id
-      - scoring_criteria
-      - guidelines_text
-      properties:
-        id:
-          type: string
-        is_organization_default:
-          type: boolean
-          description: If true, the scoring guidelines will be set as the default scoring guidelines for the organization.
-        organization_id:
-          type: string
-          description: Organization id of the organization the scoring guidelines belongs to.
-        is_global_default:
-          type: boolean
-          description: If true, the scoring guidelines will be set as the default scoring guidelines for all organizations.
-        name:
-          type: string
-        version:
-          type: integer
-        guidelines_text:
-          type: string
-        scoring_criteria:
-          type: object
-          description: map of scoring criteria
-          additionalProperties:
-            type: number
-            format: double
-    AlertSource:
-      type: integer
-      enum:
-      - 0
-      x-enum-varnames:
-      - ManualAlertSource
-    EmailCaseDetailsResponse:
-      type: object
-      required:
-      - message
-      - failed_deliveries
-      properties:
-        message:
-          type: string
-        failed_deliveries:
-          type: array
-          items:
-            type: string
-          description: list of emails the case details could not be sent to
-    AlertTypeMetrics:
-      allOf:
-      - $ref: '#/components/schemas/Metrics'
-      - type: object
-        required:
-        - provider
-        - alert_type
-        properties:
-          provider:
-            $ref: '#/components/schemas/ProviderSummary'
-          alert_type:
-            type: string
-          severity_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/SeverityMetrics'
-              description: Severity metrics list
-    ResponseRemediationWidgets:
-      type: object
-      properties:
-        stalled_cases_count:
-          type: integer
-          description: Number of cases currently in status=10 (CustomerPending).
-        stalled_cases_by_category:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Stalled case count (status=10) grouped by case category.
-        customer_response_time:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-          description: 'Avg time from customer_pending_at to customer_responded_at. Requires two new timestamp fields on CaseTimeline: customer_pending_at (set on status→10) and customer_responded_at (set on first customer activity — comment, field change, or action update).'
-    AssigneeDetails:
-      type: object
-      required:
-      - assignee_id
-      - assignee_type
-      properties:
-        firstname:
-          type: string
-        lastname:
-          type: string
-        email:
-          type: string
-        assignee_id:
-          type: string
-        user_uuid:
-          type: string
-        assignee_type:
-          type: string
-        performed_by_darryl:
-          type: boolean
-    CommunicationBySeverity:
-      type: object
-      required:
-      - severity
-      - with_communication
-      - without_communication
-      properties:
-        severity:
-          type: integer
-        severity_label:
-          type: string
-        with_communication:
-          type: integer
-        without_communication:
-          type: integer
-    ThreatCategorizationWidgets:
-      type: object
-      properties:
-        cases_by_threat_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Case count grouped by category field.
-        high_severity_by_threat_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Case count for severity in [10,15] (High, Critical) grouped by category.
-        emerging_threats:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmergingThreat'
-          description: Categories with significant growth vs the prior period.
-    TrendWidgets:
-      type: object
-      properties:
-        cases_over_time:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyCount'
-          description: Daily case volume within the requested date range.
-        cases_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeverityCount'
-          description: Case count broken down by severity level.
-        business_hours_breakdown:
-          $ref: '#/components/schemas/BusinessHoursBreakdown'
-          description: Case volume split by business hours (Mon–Fri 09:00–17:00 UTC) vs after-hours & weekends.
-    ActionStatusV2:
-      type: string
-      enum:
-      - open
-      - in_progress
-      - blocked
-      - completed
-      - will_not_do
-      description: 'Lifecycle status of an action, kept in sync with status. Mapping from status: 0/New -> open, 1/Pending -> in_progress, 2/Customer Pending -> blocked, 3/Approved -> in_progress, 4/Rejected -> will_not_do, 5/Completed -> completed.'
-    CostTrimSnapshotRow:
-      type: object
-      required:
-      - organization_uuid
-      - alert_provider
-      - alert_type
-      - alerts
-      - investigated
-      - escalated_to_customer
-      properties:
-        organization_uuid:
-          type: string
-        organization_code:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        window_start:
-          type: integer
-          format: int64
-        window_end:
-          type: integer
-          format: int64
-        computed_at:
-          type: integer
-          format: int64
-        alerts:
-          type: integer
-          format: int64
-        investigated:
-          type: integer
-          format: int64
-        linked_case_count:
-          type: integer
-          format: int64
-        escalated_to_customer:
-          type: integer
-          format: int64
-        escalated_to_analyst:
-          type: integer
-          format: int64
-        first_seen_at:
-          type: integer
-          format: int64
-        last_seen_at:
-          type: integer
-          format: int64
-    CaseScoreSummary:
-      type: object
-      required:
-      - case_uuid
-      - case_id
-      - organization_id
-      - provider_id
-      - alert_id
-      - alert_type
-      - case_score
-      - raw_score
-      - case_score_created_at
-      - case_created_at
-      properties:
-        case_uuid:
-          type: string
-        case_id:
-          type: string
-        organization_id:
-          type: string
-        provider_id:
-          type: string
-        alert_id:
-          type: string
-        alert_type:
-          type: string
-        case_score:
-          type: number
-        raw_score:
-          type: number
-          format: double
-        case_score_created_at:
-          type: integer
-          format: int64
-        case_created_at:
-          type: integer
-          format: int64
-    QuestionsAnsweredSplit:
-      type: object
-      required:
-      - answered
-      - unanswered
-      - total
-      properties:
-        answered:
-          type: integer
-          description: Questions where status is not Available or Data Needed.
-        unanswered:
-          type: integer
-          description: Questions where status is Available or Data Needed.
-        total:
-          type: integer
     SlaConfig:
       type: object
       description: 'Three SLA tiers. Critical Incident Support (sev=15): 2hr MTTI for true incidents (malware, lateral movement). Critical Alert Validation (sev=10): 4hr MTTI for critical alert detection and customer notification. Non-Critical (sev≤5): 8hr MTTI for incidents with mitigations in place.'
@@ -3802,626 +3371,34 @@ components:
           type: integer
           default: 28800
           description: MTTI target for non-critical severity (sev≤5) incidents — 8 hr.
-    CaseAnalyticsEmailResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: Status message confirming email was queued
-    AutomationWidgets:
+    NetworkWidgets:
       type: object
       properties:
-        time_saved_chart:
+        top_attacking_ips:
           type: array
           items:
-            $ref: '#/components/schemas/MttiComparisonPoint'
-          description: Line chart data showing time difference (avg_mtti - x) for investigation durations from min to max in 1-minute increments.
-        adr_triage_trend:
+            $ref: '#/components/schemas/EntityCount'
+          description: Top IPs linked to malicious cases (disposition=10), ranked by case count.
+        persistent_ips:
           type: array
           items:
-            $ref: '#/components/schemas/AdrTriageDailyBreakdown'
-          description: Daily automation tier breakdown for trend chart.
-    CostTrimAnalysisResponse:
-      type: object
-      required:
-      - view
-      - stale
-      - rows
-      - totals
-      properties:
-        computed_at:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds) when the newest matching snapshot row was computed.
-        window_start:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds) for the start of the snapshot window.
-        window_end:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds) for the end of the snapshot window.
-        view:
-          type: string
-          description: The roll-up shape applied to `rows`.
-        stale:
-          type: boolean
-          description: True when the newest snapshot is older than the configured freshness window.
-        rows:
-          description: 'Roll-up rows. Shape depends on the `view` query param — see the
-
-            view-specific row schemas (`CostTrimSnapshotRow`,
-
-            `CostTrimOrgRow`, etc.) for the possible shapes.
-
-            '
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimSnapshotRow'
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimOrgRow'
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimOrgTypeRow'
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimProviderTypeRow'
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimProviderRow'
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimAlertTypeRow'
-          - type: array
-            items:
-              $ref: '#/components/schemas/CostTrimEscalationsByTypeRow'
-        totals:
-          $ref: '#/components/schemas/CostTrimTotals'
-    SocEmailRequest:
-      type: object
-      required:
-      - email_ids
-      - subject
-      - filter
-      properties:
-        email_ids:
+            $ref: '#/components/schemas/EntityCountWithDays'
+          description: IPs appearing in more than one case, ranked by case count.
+        internal_ips:
           type: array
           items:
-            type: string
-          description: List of email addresses to send the report to
-        subject:
-          type: string
-          description: Email subject line. If empty, a default subject will be generated.
-        filter:
-          $ref: '#/components/schemas/SocEmailRequestFilter'
-          description: Filter parameters for the report
-    RecentMaliciousCase:
-      type: object
-      required:
-      - case_id
-      - name
-      - disposition
-      - severity
-      - created_at
-      properties:
-        case_id:
-          type: string
-        case_uuid:
-          type: string
-        name:
-          type: string
-          description: Case name.
-        disposition:
-          type: integer
-          description: Disposition value (2 or 10 = malicious).
-        severity:
-          type: integer
-          description: Severity value.
-        created_at:
-          type: integer
-          format: int64
-          description: Case creation time as Unix timestamp (seconds).
-        provider:
-          type: string
-          description: Detection source / provider name.
-        provider_display_name:
-          type: string
-          description: Human-readable provider name.
-        category:
-          type: string
-          description: Threat category.
-    GenerateBulkCaseScoresResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
+            $ref: '#/components/schemas/EntityCount'
+          description: RFC1918 IPs generating the most cases.
+        top_attacking_domains:
           type: array
           items:
-            $ref: '#/components/schemas/CaseScore'
-    CostTrimAlertTypeRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - alert_type
-        properties:
-          alert_type:
-            type: string
-    DispositionEscalationWidgets:
-      type: object
-      properties:
-        disposition_breakdown:
+            $ref: '#/components/schemas/EntityCount'
+          description: Top domains linked to malicious cases (disposition=10), ranked by case count.
+        common_iocs:
           type: array
           items:
-            $ref: '#/components/schemas/CommunicationByDisposition'
-          description: For each disposition, count of cases with and without customer communication (escalated_to=0).
-        escalation_breakdown:
-          $ref: '#/components/schemas/EscalationBreakdown'
-          description: Case counts split by whether they have at least one customer escalation.
-        escalations_by_provider:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderEscalationCount'
-          description: Escalated vs benign (not escalated) case counts grouped by security vendor (detection source / provider).
-    CaseAnalyticsEmailRequestFilter:
-      type: object
-      required:
-      - created_at_from
-      - created_at_to
-      properties:
-        org_id:
-          type: string
-          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
-        created_at_from:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (start of date range)
-        created_at_to:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (end of date range)
-        metadata:
-          type: object
-          description: Optional metadata for report customization
-    AttackTypeCount:
-      type: object
-      required:
-      - type
-      - count
-      properties:
-        type:
-          type: string
-          description: Alert type name.
-        count:
-          type: integer
-          description: Number of cases involving this alert type for the given entity.
-    CostTrimProviderTypeRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - alert_provider
-        - alert_type
-        properties:
-          alert_provider:
-            type: string
-          alert_type:
-            type: string
-    MultiVectorHost:
-      type: object
-      required:
-      - name
-      - attack_types
-      properties:
-        name:
-          type: string
-          description: Hostname.
-        attack_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AttackTypeCount'
-          description: Distinct alert types this host has been involved in, with case count per type.
-        case_count:
-          type: integer
-    SortOrder:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - Asc
-      - Desc
-    GetCaseScoreResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/CaseScore'
-          description: case score object
-    CreateCaseRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Title to be set for the case
-        organization_id:
-          type: string
-          description: Identifier (uuid or org code) of the organization associated with the case
-        type:
-          $ref: '#/components/schemas/CaseType'
-        status:
-          $ref: '#/components/schemas/CaseStatus'
-        severity:
-          $ref: '#/components/schemas/CaseSeverity'
-        priority:
-          $ref: '#/components/schemas/CasePriority'
-        assignee:
-          type: string
-          description: Uuid of the assigned user
-        assignee_email:
-          type: string
-          description: Email of the assigned user
-        performed_by_darryl:
-          type: boolean
-        alert_source:
-          $ref: '#/components/schemas/AlertSource'
-        alert_category:
-          $ref: '#/components/schemas/AlertCategory'
-        alert_created_at:
-          type: integer
-          description: Creation time of alert in seconds/epoch time.
-        disposition:
-          $ref: '#/components/schemas/CaseDisposition'
-        escalated_to_customer:
-          type: boolean
-        case_summary_fields:
-          $ref: '#/components/schemas/CaseSummaryField'
-          description: Case summary object
-        linked_sessions:
-          type: array
-          items:
-            type: string
-          description: Linked sessions with the case
-        linked_alerts:
-          type: array
-          items:
-            type: string
-          description: Linked alerts with the case
-        categories:
-          type: array
-          items:
-            type: string
-          description: Values indicating the categories assigned to case.
-        sub_categories:
-          type: array
-          items:
-            type: string
-          description: Values indicating the sub categories assigned to case.
-    MetricsAttributes:
-      required:
-      - mean_metric_total
-      - daily_mean_metrics
-      - mean_metrics_intervals
-      type: object
-      properties:
-        mean_metric_total:
-          type: number
-          description: Mean metric value for the total range
-        daily_mean_metrics:
-          type: object
-          additionalProperties:
-            type: number
-          description: Mean metric values for each day
-        mean_metrics_intervals:
-          type: object
-          additionalProperties:
-            type: number
-          description: Mean metric values for each interval
-    SocEmailResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: Status message confirming email was queued
-    GetDetailedMetricsRequest:
-      type: object
-      properties:
-        global_metrics_organization_filter:
-          type: array
-          items:
-            type: string
-          description: Organization IDs for which the global metrics should be fetched
-        alert_type_metrics_organization_filter:
-          type: array
-          items:
-            type: string
-          description: Organization IDs for which the alert type metrics should be fetched
-    MultiVectorUser:
-      type: object
-      required:
-      - name
-      - attack_types
-      properties:
-        name:
-          type: string
-          description: Username or service account name.
-        attack_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AttackTypeCount'
-          description: Distinct alert types this user has been involved in, with case count per type.
-        case_count:
-          type: integer
-    BlockedByCategoryCount:
-      type: object
-      required:
-      - category
-      - total
-      properties:
-        category:
-          type: string
-        critical_high_count:
-          type: integer
-          description: Blocked cases with severity in [10, 15] (High, Critical).
-        medium_count:
-          type: integer
-          description: Blocked cases with severity=5 (Medium).
-        low_info_count:
-          type: integer
-          description: Blocked cases with severity in [0, 1, 2] (Unassigned, Low, Informational).
-        total:
-          type: integer
-          description: Total blocked cases in this category.
-    ListCaseScoresRequest:
-      type: object
-      properties:
-        accessible_organization_ids:
-          type: array
-          items:
-            type: string
-          description: List of organization IDs for which scores are needed.
-        date_range:
-          $ref: '#/components/schemas/TimeRange'
-          description: Date range for which scores are needed.
-    CaseActionsSort:
-      type: object
-      required:
-      - field
-      - order
-      properties:
-        field:
-          type: string
-          enum:
-          - action_severity
-          - title
-          - case_id
-          - case_modified_at
-          - status
-          - assignee
-          - required
-          - priority
-          - organization_code
-          description: Field to sort results by
-        order:
-          $ref: '#/components/schemas/SortOrder'
-          description: Sort direction
-    AppendMode:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - NewLine
-      - Space
-    CustomerExperienceWidgets:
-      type: object
-      properties:
-        cases_with_communication_count:
-          type: integer
-          description: Cases with at least one escalation entry where escalated_to=0 (EscalatedToCustomer). Escalation is the confirmed trigger for customer notification tracking.
-        escalation_breakdown:
-          $ref: '#/components/schemas/EscalationBreakdown'
-          description: Overall breakdown of escalated vs non-escalated cases.
-        communication_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommunicationBySeverity'
-          description: For each severity, count of cases with and without customer communication.
-        communication_by_disposition:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommunicationByDisposition'
-          description: For each disposition, count of cases with and without customer communication.
-    CommunicationByDisposition:
-      type: object
-      required:
-      - disposition
-      - with_communication
-      - without_communication
-      properties:
-        disposition:
-          type: integer
-        disposition_label:
-          type: string
-        with_communication:
-          type: integer
-        without_communication:
-          type: integer
-    Case:
-      type: object
-      required:
-      - case_id
-      - case_uuid
-      - name
-      - status
-      - severity
-      - priority
-      - assignee
-      - reporter
-      - created_at
-      - modified_at
-      properties:
-        case_id:
-          type: string
-          description: Unique number respresenting case of an organization
-        case_uuid:
-          type: string
-          description: Unique identifier of case
-        name:
-          type: string
-          description: Title of the case
-        status:
-          $ref: '#/components/schemas/CaseStatus'
-        severity:
-          $ref: '#/components/schemas/CaseSeverity'
-        priority:
-          $ref: '#/components/schemas/CasePriority'
-        assignee:
-          $ref: '#/components/schemas/UserDetails'
-        reporter:
-          $ref: '#/components/schemas/UserDetails'
-        archived:
-          type: boolean
-          description: Flag indicating if the case has been archived or not
-        escalated_to_customer:
-          type: boolean
-        created_at:
-          type: integer
-          format: int64
-          description: Timestamp of creation of the case.
-        modified_at:
-          type: integer
-          format: int64
-          description: Timestamp of the last modification of the case.
-    EmailCaseDetailsRequest:
-      type: object
-      required:
-      - to_addresses
-      properties:
-        to_addresses:
-          type: array
-          items:
-            type: string
-          description: list of emails to send the case details to
-        subject:
-          type: string
-          description: subject of the email
-        html_content:
-          type: string
-          description: html content for the email body
-        message:
-          type: string
-          description: message to be sent in email body along with html content
-        include_hidden_findings:
-          type: boolean
-          description: if true, hidden findings will be included in the email
-        view_id:
-          type: string
-          description: id of the saved case view whose section layout should drive the emailed case details (v2 only). Resolved against the requestor's organization. When omitted, falls back to the default saved view of the organization the case belongs to.
-    UpdateCaseRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Title to be set for the case
-        status:
-          $ref: '#/components/schemas/CaseStatus'
-        severity:
-          $ref: '#/components/schemas/CaseSeverity'
-        priority:
-          $ref: '#/components/schemas/CasePriority'
-        assignee:
-          type: string
-          description: Uuid of the assigned user
-        assignee_email:
-          type: string
-          description: Email of the assigned user
-        disposition:
-          $ref: '#/components/schemas/CaseDisposition'
-        archived:
-          type: boolean
-          description: Unarchive case if it's archived. (no change if its true)
-        escalated_to_customer:
-          type: boolean
-        performed_by_darryl:
-          type: boolean
-        case_summary_fields:
-          $ref: '#/components/schemas/CaseSummaryField'
-          description: Case summary object
-        replace_case_summary:
-          type: boolean
-          description: If this field is true, case summary will be replace. Otherwise, it will append to previously existing value.
-        append_mode:
-          description: Specify how to append data to existing one. Use 0 for new line, 1 for space.
-          $ref: '#/components/schemas/AppendMode'
-        categories:
-          type: array
-          items:
-            type: string
-          description: Values indicating the categories assigned to case. List wil be replaced.
-        sub_categories:
-          type: array
-          items:
-            type: string
-          description: Values indicating the sub categories assigned to case. List wil be replaced.
-    UpdateCaseResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/CaseDetails'
-          description: updated case object
-    ChatSessionDetail:
-      type: object
-      required:
-      - chat_session_id
-      - title
-      - owner_details
-      - created_at
-      - deleted
-      properties:
-        chat_session_id:
-          type: string
-        title:
-          type: string
-        owner_details:
-          $ref: '#/components/schemas/UserDetail'
-        created_at:
-          type: integer
-          format: int64
-        deleted:
-          type: boolean
-          description: Flag indicating if session has been deleted or not
-    CategoryCount:
-      type: object
-      required:
-      - category
-      - count
-      properties:
-        category:
-          type: string
-        count:
-          type: integer
+            $ref: '#/components/schemas/EntityCount'
+          description: All entity types seen across multiple cases, ranked by case count.
     ResponseTimeMetric:
       type: object
       required:
@@ -4444,372 +3421,90 @@ components:
           additionalProperties:
             type: number
             format: float
-    CaseView:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - CustomerCaseView
-      - AnalystCaseView
-    CostTrimEscalationsByTypeRow:
+    CustomerExperienceWidgets:
       type: object
-      required:
-      - alert_type
-      - escalations
       properties:
-        alert_type:
-          type: string
-        escalations:
+        cases_with_communication_count:
           type: integer
-          format: int64
-    CaseActionsResponse:
-      type: object
-      required:
-      - message
-      - items
-      - total
-      properties:
-        message:
-          type: string
-        items:
+          description: Cases with at least one escalation entry where escalated_to=0 (EscalatedToCustomer). Escalation is the confirmed trigger for customer notification tracking.
+        escalation_breakdown:
+          $ref: '#/components/schemas/EscalationBreakdown'
+          description: Overall breakdown of escalated vs non-escalated cases.
+        communication_by_severity:
           type: array
           items:
-            $ref: '#/components/schemas/CaseActionListItem'
-          description: Paginated list of case actions
-        total:
-          type: integer
-          description: Total count of matching actions (for pagination)
-    CaseType:
-      type: integer
-      enum:
-      - 0
-      - 5
-      x-enum-varnames:
-      - BasicCaseType
-      - V2CaseType
-    CaseAnalyticsEmailRequest:
-      type: object
-      required:
-      - email_ids
-      - subject
-      - filter
-      properties:
-        email_ids:
+            $ref: '#/components/schemas/CommunicationBySeverity'
+          description: For each severity, count of cases with and without customer communication.
+        communication_by_disposition:
           type: array
           items:
-            type: string
-          description: List of email addresses to send the report to
-        subject:
-          type: string
-          description: Email subject line. If empty, a default subject will be generated.
-        filter:
-          $ref: '#/components/schemas/CaseAnalyticsEmailRequestFilter'
-          description: Filter parameters for the report
-    CreateScoringGuidelinesRequest:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: For each disposition, count of cases with and without customer communication.
+    CaseMetrics:
       type: object
       required:
-      - guidelines_text
-      - scoring_criteria
+      - total_cases
+      - mean_time_to_ack
+      - mean_time_to_contain
+      - mean_time_to_close
+      - handled_by_darryl
+      - sub_category_count_darryl
+      - status_count
+      - severity_count
+      - escalated_to_customer_count
+      - case_count_per_day
       properties:
-        is_organization_default:
-          type: boolean
-          description: If true, the scoring guidelines will be set as the default scoring guidelines for the organization.
-        name:
-          type: string
-        guidelines_text:
-          type: string
-        scoring_criteria:
+        total_cases:
+          type: integer
+          description: total cases covered in analysis
+        mean_time_to_ack:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mtta metrics
+        mean_time_to_investigate:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mtti metrics
+        mean_time_to_contain:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mttr metrics
+        mean_time_to_close:
+          $ref: '#/components/schemas/MetricsAttributes'
+          description: mttc metrics
+        handled_by_darryl:
+          type: integer
+          description: cases handled by darryl out of all cases
+        sub_category_count_darryl:
           type: object
-          description: map of scoring criteria
           additionalProperties:
-            type: number
-            format: double
-    ListCaseScoresResponse:
-      type: object
-      required:
-      - message
-      - data
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseScoreSummary'
-          description: List of case scores.
-        total:
+            type: integer
+          description: Top-10 sub cateogries by count for cases handled by darryl
+        status_count:
+          type: object
+          additionalProperties:
+            type: integer
+          description: count of cases for each status type
+        severity_count:
+          type: object
+          additionalProperties:
+            type: integer
+          description: count of cases for each severity type
+        escalated_to_customer_count:
           type: integer
-          description: Total number of scores found.
-    GetDetailedMetricsResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/AggregatedMetrics'
-    InvestigationTierListResponse:
-      type: object
-      required:
-      - tiers
-      properties:
-        tiers:
-          type: array
-          items:
-            $ref: '#/components/schemas/InvestigationTierRow'
-    MissingTelemetryCount:
-      type: object
-      required:
-      - alert_type
-      - case_count
-      properties:
-        alert_type:
-          type: string
-        case_count:
-          type: integer
-          description: Cases where confidence.missing_information is non-empty.
-    SlaAdherenceTrendPoint:
-      type: object
-      required:
-      - date
-      properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        critical_incident_pct:
-          type: number
-          format: float
-          description: SLA adherence % for Critical Incident Support (sev=15, target=2hr) on this day.
-        critical_alert_pct:
-          type: number
-          format: float
-          description: SLA adherence % for Critical Alert Validation (sev=10, target=4hr) on this day.
-        non_critical_pct:
-          type: number
-          format: float
-          description: SLA adherence % for Non-Critical Incident Support (sev≤5, target=8hr) on this day.
-    UpdateInvestigationTierItem:
-      type: object
-      required:
-      - alert_provider
-      - alert_type
-      - investigation_tier
-      properties:
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        investigation_tier:
-          type: string
-          enum:
-          - L1
-          - L2
-          - L3
-    EmergingThreat:
-      type: object
-      required:
-      - category
-      - current_count
-      - prior_count
-      properties:
-        category:
-          type: string
-        current_count:
-          type: integer
-          description: Case count in the current window.
-        prior_count:
-          type: integer
-          description: Case count in the prior equal window.
-        growth_rate:
-          type: number
-          format: float
-          description: Growth as a ratio (current / prior). Null if prior_count is zero.
-    ProviderMetrics:
+          description: number of cases escalated to customer
+        case_count_per_day:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+          description: count of cases for each severity type
+    CostTrimProviderRow:
       allOf:
-      - $ref: '#/components/schemas/Metrics'
+      - $ref: '#/components/schemas/CostTrimRollupBase'
       - type: object
         required:
-        - provider
+        - alert_provider
         properties:
-          provider:
-            $ref: '#/components/schemas/ProviderSummary'
-          alert_type_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/AlertTypeMetrics'
-            description: Alert type metrics list
-    CaseSummaryField:
-      type: object
-      properties:
-        executive_summary:
-          type: string
-        what_happened:
-          type: string
-        why_it_matters:
-          type: string
-        justification_for_decision:
-          type: string
-        who:
-          type: string
-        when:
-          type: string
-        reasons_for_concern:
-          type: string
-        reasons_for_close:
-          type: string
-        additional_context:
-          type: string
-        next_steps:
-          type: string
-        improvement_opportunities:
-          type: string
-        feedback:
-          type: string
-    CaseLinkRequest:
-      type: object
-      required:
-      - case_uuids
-      properties:
-        case_uuids:
-          type: array
-          items:
+          alert_provider:
             type: string
-    ReworkDailyPoint:
-      type: object
-      required:
-      - date
-      - rework_count
-      - rework_rate
-      properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        rework_count:
-          type: integer
-          description: Number of reinvestigated cases on this day.
-        rework_rate:
-          type: number
-          format: float
-          description: rework_count / total_cases_that_day as a percentage.
-        avg_rework_seconds:
-          type: integer
-          description: Average time from case_closed_at to reinvestigated_at for reinvestigated cases on this day.
-    InvestigationQualityWidgets:
-      type: object
-      properties:
-        questions_per_category:
-          $ref: '#/components/schemas/QuestionsAnsweredByCategory'
-          description: Answered vs unanswered question counts across 3 categories. Grouped bar chart.
-        escalations_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeverityCount'
-          description: Escalated case count grouped by severity.
-        rework_daily:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReworkDailyPoint'
-          description: Daily reinvestigation count, rate, and avg time to rework.
-        quality_score_daily:
-          type: array
-          items:
-            $ref: '#/components/schemas/QualityScoreDailyPoint'
-          description: Daily avg quality score — three line charts (overall, Darryl, human).
-        questions_answered_by_outcome:
-          type: array
-          items:
-            $ref: '#/components/schemas/QuestionsAnsweredByOutcome'
-          description: Count of answered explore_deeper_questions grouped by case disposition (outcome).
-    SeverityCount:
-      type: object
-      required:
-      - severity
-      - severity_label
-      - count
-      properties:
-        severity:
-          type: integer
-          description: Severity value (0=Unassigned, 1=Low, 2=Informational, 5=Medium, 10=High, 15=Critical).
-        severity_label:
-          type: string
-          description: Human-readable severity label.
-        count:
-          type: integer
-          description: Number of cases with this severity.
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    GenerateBulkCaseScoresRequest:
-      type: object
-      required:
-      - case_uuids
-      properties:
-        case_uuids:
-          type: array
-          items:
-            type: string
-          description: List of case UUIDs for which scores are needed.
-    ActionExecutionDetails:
-      type: object
-      properties:
-        execution_id:
-          type: string
-          description: ID of the execution triggered against knowledge-management for this action
-        execution_status:
-          type: string
-          description: Last known execution status, as reported by knowledge-management's GetExecutionLogAPI
-        started_by:
-          type: string
-          description: ID of the user who started the execution
-        started_at:
-          type: integer
-          format: int64
-          description: Timestamp the execution was started; used to bound how long the execution is polled before it is force-resolved as failed
-    QuestionsAnsweredByCategory:
-      type: object
-      description: Answered vs unanswered question split across the 3 question categories. Used for grouped bar chart.
-      properties:
-        investigation_questions:
-          $ref: '#/components/schemas/QuestionsAnsweredSplit'
-          description: case_detail_fields.custom_questions[]
-        faqs:
-          $ref: '#/components/schemas/QuestionsAnsweredSplit'
-          description: case_detail_fields.faqs[]
-        explore_deeper:
-          $ref: '#/components/schemas/QuestionsAnsweredSplit'
-          description: case_detail_fields.explore_deeper_questions[]
-    Metrics:
-      allOf:
-      - $ref: '#/components/schemas/CaseReviewMetrics'
-      - type: object
-        properties:
-          darryl_reviewed_case_metrics:
-            $ref: '#/components/schemas/CaseReviewMetrics'
-            description: Darryl reviewed case metrics
-          human_reviewed_case_metrics:
-            $ref: '#/components/schemas/CaseReviewMetrics'
-            description: Human reviewed case metrics
-          darryl_investigated_cases:
-            type: integer
-            description: Number of cases investigated by darryl
-          human_investigated_cases:
-            type: integer
-            description: Number of cases investigated by human
-          alert_count:
-            type: integer
-            description: Number of alerts
-          alert_type_count:
-            type: integer
-            description: Number of alert types
     CaseDetails:
       type: object
       required:
@@ -4908,125 +3603,456 @@ components:
         case_link:
           type: string
           description: link to the case manager
-    CaseActionsDateRange:
-      type: object
-      properties:
-        start:
-          type: integer
-          format: int64
-          description: Start of range (unix epoch seconds, inclusive)
-        end:
-          type: integer
-          format: int64
-          description: End of range (unix epoch seconds, inclusive)
-    NetworkWidgets:
-      type: object
-      properties:
-        top_attacking_ips:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Top IPs linked to malicious cases (disposition=10), ranked by case count.
-        persistent_ips:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCountWithDays'
-          description: IPs appearing in more than one case, ranked by case count.
-        internal_ips:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: RFC1918 IPs generating the most cases.
-        top_attacking_domains:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Top domains linked to malicious cases (disposition=10), ranked by case count.
-        common_iocs:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: All entity types seen across multiple cases, ranked by case count.
-    InvestigationTierRow:
+    MissingTelemetryCount:
       type: object
       required:
-      - alert_provider
       - alert_type
-      - volume
-      - default_tier
-      - investigation_tier
-      - overridden
+      - case_count
       properties:
-        alert_provider:
-          type: string
         alert_type:
           type: string
-        volume:
+        case_count:
           type: integer
-          format: int64
-          description: number of alerts of this type over the cost-trim window (30d)
-        default_tier:
-          type: string
-          description: tier derived from efficacy by the cost-trim scheduler
-        investigation_tier:
-          type: string
-          description: effective tier (override if present, otherwise default_tier)
-        overridden:
-          type: boolean
-        efficacy:
-          type: number
-          format: double
-          description: escalations / alerts over the cost-trim window (0..1)
-        model:
-          type: string
-          description: model backing the effective tier
-        cost:
-          type: number
-          format: double
-          description: credit cost per investigation at the effective tier
-    QualityScoreDailyPoint:
+          description: Cases where confidence.missing_information is non-empty.
+    ListCaseScoresRequest:
+      type: object
+      properties:
+        accessible_organization_ids:
+          type: array
+          items:
+            type: string
+          description: List of organization IDs for which scores are needed.
+        date_range:
+          $ref: '#/components/schemas/TimeRange'
+          description: Date range for which scores are needed.
+    InvestigationQualityWidgets:
+      type: object
+      properties:
+        questions_per_category:
+          $ref: '#/components/schemas/QuestionsAnsweredByCategory'
+          description: Answered vs unanswered question counts across 3 categories. Grouped bar chart.
+        escalations_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Escalated case count grouped by severity.
+        rework_daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReworkDailyPoint'
+          description: Daily reinvestigation count, rate, and avg time to rework.
+        quality_score_daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityScoreDailyPoint'
+          description: Daily avg quality score — three line charts (overall, Darryl, human).
+        questions_answered_by_outcome:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionsAnsweredByOutcome'
+          description: Count of answered explore_deeper_questions grouped by case disposition (outcome).
+    CreateCaseResponse:
       type: object
       required:
-      - date
+      - message
+      - data
       properties:
-        date:
+        message:
           type: string
-          description: Date in YYYY-MM-DD format.
-        overall:
-          type: number
-          format: double
-          description: Average case_score across all cases on this day.
-        darryl_investigated:
-          type: number
-          format: double
-          description: Average case_score for Darryl-investigated cases on this day.
-        human_investigated:
-          type: number
-          format: double
-          description: Average case_score for human-investigated cases on this day.
-    ResponseTimePercentiles:
+        data:
+          $ref: '#/components/schemas/CaseDetails'
+          description: created case object
+    GetCaseScoreResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseScore'
+          description: case score object
+    TrendWidgets:
       type: object
       properties:
-        mtta:
-          $ref: '#/components/schemas/PercentileMetric'
-        mtti:
-          $ref: '#/components/schemas/PercentileMetric'
-        mttc:
-          $ref: '#/components/schemas/PercentileMetric'
-        mtt_close:
-          $ref: '#/components/schemas/PercentileMetric'
-    AggregatedMetrics:
+        cases_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily case volume within the requested date range.
+        cases_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Case count broken down by severity level.
+        business_hours_breakdown:
+          $ref: '#/components/schemas/BusinessHoursBreakdown'
+          description: Case volume split by business hours (Mon–Fri 09:00–17:00 UTC) vs after-hours & weekends.
+    CaseActionListItem:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier of the action
+        title:
+          type: string
+          description: Action title (markdown text)
+        status:
+          type: integer
+          description: Action status value
+        status_label:
+          type: string
+          description: Human-readable label for the status
+        action_severity:
+          $ref: '#/components/schemas/ActionSeverityLevel'
+        assignee:
+          $ref: '#/components/schemas/UserDetails'
+        assignee_v2:
+          $ref: '#/components/schemas/AssigneeDetails'
+          description: AssigneeDetails for the action; populated alongside assignee during migration
+        case_id:
+          type: string
+          description: Human-readable case identifier
+        case_uuid:
+          type: string
+          description: UUID of the parent case
+        organization_id:
+          type: string
+          description: UUID of the organization the parent case belongs to
+        organization_code:
+          type: string
+          description: Code of the organization the parent case belongs to
+        case_modified_at:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the parent case was last modified
+        created_at:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the action was created
+        modified_at:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the action was last modified
+        completed_at:
+          type: integer
+          format: int64
+          description: Unix epoch seconds when the action was completed or marked will-not-do; 0 if not terminal
+        required:
+          type: boolean
+          description: Whether this action is required
+        description:
+          type: string
+          description: Description of the action required
+        session_id:
+          type: string
+          description: Chat session ID associated with the action
+        type:
+          type: string
+          enum:
+          - approval
+          - customer_action
+          - answer_question
+          description: Type of action; null is treated as customer_action
+        blocking_reason:
+          type: string
+          description: Reason this action is blocking the case; only set when type is customer_action
+        blocking_fact_id:
+          type: string
+          description: ID of the fact this action is blocking; only set when type is customer_action
+        playbook_id:
+          type: string
+          description: ID of the playbook associated with this action; only set when type is approval
+        priority:
+          type: string
+          enum:
+          - Containment
+          - Required
+          - Recommended
+          description: Priority of the action; when set on create/update, the required flag is derived from it (Containment/Required -> true, Recommended -> false)
+        evidences:
+          type: array
+          items:
+            type: string
+          description: Free-form evidence text snippets associated with the action
+        status_v2:
+          $ref: '#/components/schemas/ActionStatusV2'
+          description: Lifecycle status of the action, kept in sync with status. If both status and status_v2 are set on write, status_v2 takes priority and status is derived from it. For type approval/answer_question, only completed/will_not_do may be set directly; customer_action allows all values.
+        execution_details:
+          $ref: '#/components/schemas/ActionExecutionDetails'
+          description: Details of the playbook execution triggered externally for this action; only set when type is approval. Polled until the execution reaches a terminal state, at which point status_v2/type are updated accordingly.
+        is_agentic_case:
+          type: boolean
+          description: Whether the parent case was created by agentic investigation
+    EntityCountWithDays:
       allOf:
-      - $ref: '#/components/schemas/DetailedMetrics'
+      - $ref: '#/components/schemas/EntityCount'
       - type: object
         required:
-        - organization_metrics_list
+        - days
         properties:
-          organization_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/OrganizationMetrics'
-              description: Organization metrics list
+          days:
+            type: integer
+            description: Number of distinct days this entity appears in cases.
+    CaseScore:
+      type: object
+      required:
+      - score
+      - raw_score
+      - summary
+      - raw_evaluation
+      - referenced_scoring_guidelines
+      properties:
+        score:
+          type: number
+          format: double
+        raw_score:
+          type: number
+          format: double
+        summary:
+          type: string
+        raw_evaluation:
+          type: array
+          items:
+            type: object
+        referenced_scoring_guidelines:
+          $ref: '#/components/schemas/ScoringGuidelines'
+          description: list of referenced scoring guidelines
+        score_status:
+          $ref: '#/components/schemas/ScoreStatus'
+          description: status of the score
+    SocEmailResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming email was queued
+    CommunicationBySeverity:
+      type: object
+      required:
+      - severity
+      - with_communication
+      - without_communication
+      properties:
+        severity:
+          type: integer
+        severity_label:
+          type: string
+        with_communication:
+          type: integer
+        without_communication:
+          type: integer
+    SocPerformanceDashboardData:
+      type: object
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        speed_sla:
+          $ref: '#/components/schemas/SpeedSlaWidgets'
+        throughput:
+          $ref: '#/components/schemas/ThroughputWidgets'
+        investigation_quality:
+          $ref: '#/components/schemas/InvestigationQualityWidgets'
+        response_remediation:
+          $ref: '#/components/schemas/ResponseRemediationWidgets'
+        consistency:
+          $ref: '#/components/schemas/ConsistencyWidgets'
+        customer_experience:
+          $ref: '#/components/schemas/CustomerExperienceWidgets'
+        automation:
+          $ref: '#/components/schemas/AutomationWidgets'
+        operational_gaps:
+          $ref: '#/components/schemas/OperationalGapsWidgets'
+    UserWidgets:
+      type: object
+      properties:
+        repeat_targeted_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users (type=user or service_account) appearing in more than one case.
+        users_in_malicious_activity:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users appearing in malicious cases (disposition=10).
+        users_high_false_positives:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users most frequently appearing in non-malicious cases (disposition in [1,5]).
+        multi_vector_targeted_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiVectorUser'
+          description: Users involved in more than one distinct attack type.
+    GenerateBulkCaseScoresRequest:
+      type: object
+      required:
+      - case_uuids
+      properties:
+        case_uuids:
+          type: array
+          items:
+            type: string
+          description: List of case UUIDs for which scores are needed.
+    CostTrimAlertTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_type
+        properties:
+          alert_type:
+            type: string
+    MttiComparisonPoint:
+      type: object
+      required:
+      - x
+      - y
+      properties:
+        x:
+          type: number
+          format: float
+          description: Average investigation time in minutes.
+        y:
+          type: number
+          format: float
+          description: Time difference (avg_mtti - x) in minutes.
+    QuestionsAnsweredByOutcome:
+      type: object
+      required:
+      - disposition
+      - answered_count
+      properties:
+        disposition:
+          type: integer
+          description: 'Case disposition: 0=Pending, 1=NoThreatFound, 5=NonMaliciousPositive, 10=Malicious.'
+        label:
+          type: string
+          description: Human-readable outcome label (Malicious, Benign, Suspicious, etc.).
+        answered_count:
+          type: integer
+          description: Total explore_deeper_questions answered (status != Available, status != Data Needed) across cases with this disposition.
+    CaseMetricsSummaryResponse:
+      type: object
+      required:
+      - message
+      - summary
+      properties:
+        message:
+          type: string
+          description: Message indicating the status of the summary generation.
+        summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseMetricsLLMSummary'
+          description: A summary of the case metrics in natural language generated by Darryl using the available case data and metrics. This summary can be used to quickly understand the overall status and health of the case.
+    SeverityCount:
+      type: object
+      required:
+      - severity
+      - severity_label
+      - count
+      properties:
+        severity:
+          type: integer
+          description: Severity value (0=Unassigned, 1=Low, 2=Informational, 5=Medium, 10=High, 15=Critical).
+        severity_label:
+          type: string
+          description: Human-readable severity label.
+        count:
+          type: integer
+          description: Number of cases with this severity.
+    TimeRange:
+      type: object
+      properties:
+        from_date:
+          type: integer
+          format: int64
+        to_date:
+          type: integer
+          format: int64
+    CaseAnalyticsEmailRequest:
+      type: object
+      required:
+      - email_ids
+      - subject
+      - filter
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+        filter:
+          $ref: '#/components/schemas/CaseAnalyticsEmailRequestFilter'
+          description: Filter parameters for the report
+    CaseType:
+      type: integer
+      enum:
+      - 0
+      - 5
+      x-enum-varnames:
+      - BasicCaseType
+      - V2CaseType
+    GenerateCaseScoreResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseScore'
+          description: case score object
+    BlockedByCategoryCount:
+      type: object
+      required:
+      - category
+      - total
+      properties:
+        category:
+          type: string
+        critical_high_count:
+          type: integer
+          description: Blocked cases with severity in [10, 15] (High, Critical).
+        medium_count:
+          type: integer
+          description: Blocked cases with severity=5 (Medium).
+        low_info_count:
+          type: integer
+          description: Blocked cases with severity in [0, 1, 2] (Unassigned, Low, Informational).
+        total:
+          type: integer
+          description: Total blocked cases in this category.
+    AssigneeDetails:
+      type: object
+      required:
+      - assignee_id
+      - assignee_type
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        assignee_id:
+          type: string
+        user_uuid:
+          type: string
+        assignee_type:
+          type: string
+        performed_by_darryl:
+          type: boolean
     ActionSeverityLevel:
       type: string
       enum:
@@ -5039,7 +4065,377 @@ components:
       - HighActionSeverity
       - MediumActionSeverity
       - LowActionSeverity
-    CaseMetricsResponse:
+    SpeedSlaWidgets:
+      type: object
+      properties:
+        mtta:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Acknowledge: avg(alert_acknowledged_at - alert_raised_at).'
+        mtti:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Investigate: avg(investigation_completed_at - alert_acknowledged_at).'
+        mttc:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Contain: avg(case_contained_at - alert_raised_at).'
+        mtt_close:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Mean Time to Close: avg(case_closed_at - alert_raised_at).'
+        sla_config:
+          $ref: '#/components/schemas/SlaConfig'
+          description: SLA targets echoed in response for UI display.
+        critical_incident_adherence:
+          $ref: '#/components/schemas/SlaAdherenceResult'
+          description: SLA adherence for Critical Incident Support (sev=15, target=2hr).
+        critical_alert_adherence:
+          $ref: '#/components/schemas/SlaAdherenceResult'
+          description: SLA adherence for Critical Alert Validation (sev=10, target=4hr).
+        non_critical_adherence:
+          $ref: '#/components/schemas/SlaAdherenceResult'
+          description: SLA adherence for Non-Critical Incident Support (sev≤5, target=8hr).
+        sla_adherence_trend:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlaAdherenceTrendPoint'
+          description: Daily SLA adherence % for all 3 tiers — three line charts over the date window.
+        response_time_percentiles:
+          $ref: '#/components/schemas/ResponseTimePercentiles'
+          description: P50/P95/P99 for each timing metric across closed cases in the window.
+    CreateCaseRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Title to be set for the case
+        organization_id:
+          type: string
+          description: Identifier (uuid or org code) of the organization associated with the case
+        type:
+          $ref: '#/components/schemas/CaseType'
+        status:
+          $ref: '#/components/schemas/CaseStatus'
+        severity:
+          $ref: '#/components/schemas/CaseSeverity'
+        priority:
+          $ref: '#/components/schemas/CasePriority'
+        assignee:
+          type: string
+          description: Uuid of the assigned user
+        assignee_email:
+          type: string
+          description: Email of the assigned user
+        performed_by_darryl:
+          type: boolean
+        alert_source:
+          $ref: '#/components/schemas/AlertSource'
+        alert_category:
+          $ref: '#/components/schemas/AlertCategory'
+        alert_created_at:
+          type: integer
+          description: Creation time of alert in seconds/epoch time.
+        disposition:
+          $ref: '#/components/schemas/CaseDisposition'
+        escalated_to_customer:
+          type: boolean
+        case_summary_fields:
+          $ref: '#/components/schemas/CaseSummaryField'
+          description: Case summary object
+        linked_sessions:
+          type: array
+          items:
+            type: string
+          description: Linked sessions with the case
+        linked_alerts:
+          type: array
+          items:
+            type: string
+          description: Linked alerts with the case
+        categories:
+          type: array
+          items:
+            type: string
+          description: Values indicating the categories assigned to case.
+        sub_categories:
+          type: array
+          items:
+            type: string
+          description: Values indicating the sub categories assigned to case.
+    SocEmailRequestFilter:
+      type: object
+      required:
+      - created_at_from
+      - created_at_to
+      properties:
+        org_id:
+          type: string
+          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
+        created_at_from:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (start of date range)
+        created_at_to:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (end of date range)
+        metadata:
+          type: object
+          description: Optional metadata for report customization
+    AlertTypeCount:
+      type: object
+      required:
+      - alert_type
+      - total
+      properties:
+        alert_type:
+          type: string
+        total:
+          type: integer
+          description: Total cases for this alert type.
+        malicious:
+          type: integer
+          description: Cases with disposition=10 (Malicious).
+        false_positive:
+          type: integer
+          description: Cases with disposition in [1,5] (NoThreatFound + NonMaliciousPositive).
+    UpdateCaseRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Title to be set for the case
+        status:
+          $ref: '#/components/schemas/CaseStatus'
+        severity:
+          $ref: '#/components/schemas/CaseSeverity'
+        priority:
+          $ref: '#/components/schemas/CasePriority'
+        assignee:
+          type: string
+          description: Uuid of the assigned user
+        assignee_email:
+          type: string
+          description: Email of the assigned user
+        disposition:
+          $ref: '#/components/schemas/CaseDisposition'
+        archived:
+          type: boolean
+          description: Unarchive case if it's archived. (no change if its true)
+        escalated_to_customer:
+          type: boolean
+        performed_by_darryl:
+          type: boolean
+        case_summary_fields:
+          $ref: '#/components/schemas/CaseSummaryField'
+          description: Case summary object
+        replace_case_summary:
+          type: boolean
+          description: If this field is true, case summary will be replace. Otherwise, it will append to previously existing value.
+        append_mode:
+          description: Specify how to append data to existing one. Use 0 for new line, 1 for space.
+          $ref: '#/components/schemas/AppendMode'
+        categories:
+          type: array
+          items:
+            type: string
+          description: Values indicating the categories assigned to case. List wil be replaced.
+        sub_categories:
+          type: array
+          items:
+            type: string
+          description: Values indicating the sub categories assigned to case. List wil be replaced.
+    EmailCaseDetailsResponse:
+      type: object
+      required:
+      - message
+      - failed_deliveries
+      properties:
+        message:
+          type: string
+        failed_deliveries:
+          type: array
+          items:
+            type: string
+          description: list of emails the case details could not be sent to
+    MultiVectorUser:
+      type: object
+      required:
+      - name
+      - attack_types
+      properties:
+        name:
+          type: string
+          description: Username or service account name.
+        attack_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttackTypeCount'
+          description: Distinct alert types this user has been involved in, with case count per type.
+        case_count:
+          type: integer
+    CaseActionsFilter:
+      type: object
+      properties:
+        include_closed_cases:
+          type: boolean
+          default: false
+          description: Whether to include actions from closed cases
+        action_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionSeverityLevel'
+          description: Filter by action severity levels
+        status:
+          type: array
+          items:
+            type: integer
+          description: Filter by action status values; defaults to [New, Pending, Customer Pending, Approved, Rejected]
+        status_v2:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionStatusV2'
+          description: Filter by action lifecycle status values (status_v2)
+        priority:
+          type: array
+          items:
+            type: string
+            enum:
+            - Containment
+            - Required
+            - Recommended
+          description: Filter by action priority values
+        case_ids:
+          type: array
+          items:
+            type: string
+          description: Filter to specific case IDs
+        case_modified_at:
+          $ref: '#/components/schemas/CaseActionsDateRange'
+          description: Filter by case modified_at range (epoch seconds)
+        assignee:
+          type: string
+          enum:
+          - my
+          - all
+          - list
+          default: my
+          description: Assignee scope — "my" for current user, "all" for everyone, "list" to specify assignee_list
+        assignee_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionsFilterAssigneeListItem'
+          description: List of assignees to match against; only used when assignee = "list"
+        organization_ids:
+          type: array
+          items:
+            type: string
+          description: Filter to specific organization IDs; intersected with the caller's accessible orgs
+        type:
+          type: array
+          items:
+            type: string
+            enum:
+            - approval
+            - customer_action
+            - answer_question
+          description: Filter by action type
+        search:
+          type: string
+          description: Free-text search term
+    GlobalMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - failed_alert_count
+        - successful_alert_sources
+        - failed_alert_sources
+        - successful_sources_without_alerts
+        properties:
+          global_provider_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProviderMetrics'
+            description: Provider metrics list
+          failed_alert_count:
+            type: integer
+            description: Number of failed alerts
+          successful_alert_sources:
+            type: array
+            items:
+              type: string
+            description: List of successful alert sources
+          failed_alert_sources:
+            type: array
+            items:
+              type: string
+            description: List of failed alert sources
+          successful_sources_without_alerts:
+            type: array
+            items:
+              type: string
+            description: List of successful sources without alerts
+    CategoryCount:
+      type: object
+      required:
+      - category
+      - count
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+    EntityCount:
+      type: object
+      required:
+      - name
+      - case_count
+      properties:
+        name:
+          type: string
+          description: Entity value (e.g. IP address, domain, username, hostname).
+        entity_type:
+          type: string
+          description: Entity type (ip, domain, user, service_account, host, file_hash, cloud_resource).
+        case_count:
+          type: integer
+          description: Number of distinct cases this entity appears in.
+    RecentMaliciousCase:
+      type: object
+      required:
+      - case_id
+      - name
+      - disposition
+      - severity
+      - created_at
+      properties:
+        case_id:
+          type: string
+        case_uuid:
+          type: string
+        name:
+          type: string
+          description: Case name.
+        disposition:
+          type: integer
+          description: Disposition value (2 or 10 = malicious).
+        severity:
+          type: integer
+          description: Severity value.
+        created_at:
+          type: integer
+          format: int64
+          description: Case creation time as Unix timestamp (seconds).
+        provider:
+          type: string
+          description: Detection source / provider name.
+        provider_display_name:
+          type: string
+          description: Human-readable provider name.
+        category:
+          type: string
+          description: Threat category.
+    BulkDeleteCasesResponse:
       type: object
       required:
       - message
@@ -5048,19 +4444,548 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/CaseMetrics'
-          description: case metrics object
+          type: array
+          items:
+            type: string
+          description: UUIDs of the case deleted
+    UpdateCaseResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseDetails'
+          description: updated case object
+    CreateScoringGuidelinesResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ScoringGuidelines'
+          description: scoring guidelines object
+    GetScoringGuidelinesResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ScoringGuidelines'
+          description: scoring guidelines object
+    CaseAnalyticsEmailResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming email was queued
+    AutomationWidgets:
+      type: object
+      properties:
+        time_saved_chart:
+          type: array
+          items:
+            $ref: '#/components/schemas/MttiComparisonPoint'
+          description: Line chart data showing time difference (avg_mtti - x) for investigation durations from min to max in 1-minute increments.
+        adr_triage_trend:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdrTriageDailyBreakdown'
+          description: Daily automation tier breakdown for trend chart.
+    QuestionsAnsweredSplit:
+      type: object
+      required:
+      - answered
+      - unanswered
+      - total
+      properties:
+        answered:
+          type: integer
+          description: Questions where status is not Available or Data Needed.
+        unanswered:
+          type: integer
+          description: Questions where status is Available or Data Needed.
+        total:
+          type: integer
+    GenerateCaseScoreRequest:
+      type: object
+      properties:
+        new_scoring_guidelines:
+          $ref: '#/components/schemas/ScoringGuidelines'
+    InvestigationCreditsResponse:
+      type: object
+      required:
+      - limit_set
+      properties:
+        limit_set:
+          type: boolean
+          description: false when the organization has no credit allocation (unlimited)
+        week_start:
+          type: string
+          description: Monday of the current week (UTC), "YYYY-MM-DD"
+        weekly_allocation:
+          type: number
+          format: double
+        rolled_over:
+          type: number
+          format: double
+        credits_available:
+          type: number
+          format: double
+        credits_used:
+          type: number
+          format: double
+    ActionStatusV2:
+      type: string
+      enum:
+      - open
+      - in_progress
+      - blocked
+      - completed
+      - will_not_do
+      description: 'Lifecycle status of an action, kept in sync with status. Mapping from status: 0/New -> open, 1/Pending -> in_progress, 2/Customer Pending -> blocked, 3/Approved -> in_progress, 4/Rejected -> will_not_do, 5/Completed -> completed.'
+    ThroughputWidgets:
+      type: object
+      properties:
+        total_cases:
+          type: integer
+          description: Total cases created in the date window.
+        daily_case_volume:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Case count per day in the window.
+        analyst_performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalystPerformance'
+          description: Per-analyst case volume and avg MTTI (manual cases only).
+        peak_load_by_hour:
+          type: array
+          items:
+            $ref: '#/components/schemas/HourCount'
+          description: Case volume by hour of day (UTC) — peak load signal.
+        adr_triage_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdrTriageCount'
+          description: Distribution of cases by automation tier (adr_triage).
+        status_breakdown:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Case count grouped by status (status_id → count).
+    CostTrimProviderTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_provider
+        - alert_type
+        properties:
+          alert_provider:
+            type: string
+          alert_type:
+            type: string
+    DailyCount:
+      type: object
+      required:
+      - date
+      - count
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        count:
+          type: integer
+    ProviderList:
+      type: object
+      required:
+      - provider
+      - alert_count
+      properties:
+        provider:
+          $ref: '#/components/schemas/ProviderSummary'
+        alert_count:
+          type: integer
+          description: Number of alerts
+    ExecutiveDashboardResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ExecutiveDashboardData'
+    CostTrimRollupBase:
+      type: object
+      required:
+      - alerts
+      - investigated
+      - escalations
+      - efficacy
+      properties:
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        linked_case_count:
+          type: integer
+          format: int64
+        escalations:
+          type: integer
+          format: int64
+          description: Count of alerts whose linked case was escalated to the customer.
+        escalated_to_analyst:
+          type: integer
+          format: int64
+        efficacy:
+          type: number
+          format: double
+    CommunicationByDisposition:
+      type: object
+      required:
+      - disposition
+      - with_communication
+      - without_communication
+      properties:
+        disposition:
+          type: integer
+        disposition_label:
+          type: string
+        with_communication:
+          type: integer
+        without_communication:
+          type: integer
+    CreditUsageEntry:
+      type: object
+      required:
+      - week_start
+      - amount
+      - reason
+      - created_at
+      properties:
+        week_start:
+          type: string
+        alert_id:
+          type: string
+        tier:
+          type: string
+        model:
+          type: string
+        amount:
+          type: number
+          format: double
+          description: negative for charges/forfeits, positive for refunds
+        reason:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+    CaseLinkRequest:
+      type: object
+      required:
+      - case_uuids
+      properties:
+        case_uuids:
+          type: array
+          items:
+            type: string
+    AppendMode:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - NewLine
+      - Space
+    CaseActionsDateRange:
+      type: object
+      properties:
+        start:
+          type: integer
+          format: int64
+          description: Start of range (unix epoch seconds, inclusive)
+        end:
+          type: integer
+          format: int64
+          description: End of range (unix epoch seconds, inclusive)
+    ScoringGuidelines:
+      type: object
+      required:
+      - id
+      - scoring_criteria
+      - guidelines_text
+      properties:
+        id:
+          type: string
+        is_organization_default:
+          type: boolean
+          description: If true, the scoring guidelines will be set as the default scoring guidelines for the organization.
+        organization_id:
+          type: string
+          description: Organization id of the organization the scoring guidelines belongs to.
+        is_global_default:
+          type: boolean
+          description: If true, the scoring guidelines will be set as the default scoring guidelines for all organizations.
+        name:
+          type: string
+        version:
+          type: integer
+        guidelines_text:
+          type: string
+        scoring_criteria:
+          type: object
+          description: map of scoring criteria
+          additionalProperties:
+            type: number
+            format: double
+    AggregatedMetrics:
+      allOf:
+      - $ref: '#/components/schemas/DetailedMetrics'
+      - type: object
+        required:
+        - organization_metrics_list
+        properties:
+          organization_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrganizationMetrics'
+              description: Organization metrics list
+    UpdateInvestigationTierItem:
+      type: object
+      required:
+      - alert_provider
+      - alert_type
+      - investigation_tier
+      properties:
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        investigation_tier:
+          type: string
+          enum:
+          - L1
+          - L2
+          - L3
+    AlertTypeMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - provider
+        - alert_type
+        properties:
+          provider:
+            $ref: '#/components/schemas/ProviderSummary'
+          alert_type:
+            type: string
+          severity_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/SeverityMetrics'
+              description: Severity metrics list
+    GetDetailedMetricsRequest:
+      type: object
+      properties:
+        global_metrics_organization_filter:
+          type: array
+          items:
+            type: string
+          description: Organization IDs for which the global metrics should be fetched
+        alert_type_metrics_organization_filter:
+          type: array
+          items:
+            type: string
+          description: Organization IDs for which the alert type metrics should be fetched
+    CostTrimAnalysisResponse:
+      type: object
+      required:
+      - view
+      - stale
+      - rows
+      - totals
+      properties:
+        computed_at:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) when the newest matching snapshot row was computed.
+        window_start:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) for the start of the snapshot window.
+        window_end:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds) for the end of the snapshot window.
+        view:
+          type: string
+          description: The roll-up shape applied to `rows`.
+        stale:
+          type: boolean
+          description: True when the newest snapshot is older than the configured freshness window.
+        rows:
+          description: 'Roll-up rows. Shape depends on the `view` query param — see the
+
+            view-specific row schemas (`CostTrimSnapshotRow`,
+
+            `CostTrimOrgRow`, etc.) for the possible shapes.
+
+            '
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimSnapshotRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimOrgRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimOrgTypeRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimProviderTypeRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimProviderRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimAlertTypeRow'
+          - type: array
+            items:
+              $ref: '#/components/schemas/CostTrimEscalationsByTypeRow'
+        totals:
+          $ref: '#/components/schemas/CostTrimTotals'
+    CostTrimSnapshotRow:
+      type: object
+      required:
+      - organization_uuid
+      - alert_provider
+      - alert_type
+      - alerts
+      - investigated
+      - escalated_to_customer
+      properties:
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        window_start:
+          type: integer
+          format: int64
+        window_end:
+          type: integer
+          format: int64
+        computed_at:
+          type: integer
+          format: int64
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        linked_case_count:
+          type: integer
+          format: int64
+        escalated_to_customer:
+          type: integer
+          format: int64
+        escalated_to_analyst:
+          type: integer
+          format: int64
+        first_seen_at:
+          type: integer
+          format: int64
+        last_seen_at:
+          type: integer
+          format: int64
+    ReworkDailyPoint:
+      type: object
+      required:
+      - date
+      - rework_count
+      - rework_rate
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        rework_count:
+          type: integer
+          description: Number of reinvestigated cases on this day.
+        rework_rate:
+          type: number
+          format: float
+          description: rework_count / total_cases_that_day as a percentage.
+        avg_rework_seconds:
+          type: integer
+          description: Average time from case_closed_at to reinvestigated_at for reinvestigated cases on this day.
+    CasePriority:
+      type: integer
+      enum:
+      - 0
+      - 10
+      - 20
+      - 30
+      x-enum-varnames:
+      - LowCasePriority
+      - MediumCasePriority
+      - HighCasePriority
+      - CriticalCasePriority
+    EscalationBreakdown:
+      type: object
+      required:
+      - escalated_count
+      - not_escalated_count
+      - total
+      properties:
+        escalated_count:
+          type: integer
+          description: Number of cases with at least one escalation in the escalations[] array.
+        not_escalated_count:
+          type: integer
+          description: Number of cases with no escalations.
+        total:
+          type: integer
+          description: Total case count (escalated_count + not_escalated_count).
+        ai_summary:
+          type: string
+          description: AI-generated natural-language summary of the escalation breakdown. Populated separately; may be absent.
+    UserDetails:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        user_uuid:
+          type: string
+        performed_by_darryl:
+          type: boolean
   parameters:
     organization-id:
       name: Organization-ID
       in: header
       description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    user-id:
-      name: User-ID
-      in: header
-      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
     x-request-id:
@@ -5069,14 +4994,17 @@ components:
       description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
   securitySchemes:
     SessionCookie:
       type: apiKey
       in: cookie
       name: Session
-x-refined-from:
-- airmdr-case-manager-openapi.json
-- airmdr-case-manager-openapi.yml
 x-tagGroups:
 - name: Included APIs
   tags:
