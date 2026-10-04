@@ -184,6 +184,8 @@ apis:
   humanURL: https://app.airmdr.com/docs/api/case_manager.html
   baseURL: https://app.airmdr.com/airmdrapi
   tags:
+  - Dashboards
+  tags_raw:
   - Dashboard
   properties:
   - type: OpenAPI
@@ -346,6 +348,8 @@ apis:
   humanURL: https://app.airmdr.com/docs/api/case_manager.html
   baseURL: https://app.airmdr.com/airmdrapi
   tags:
+  - Sessions
+  tags_raw:
   - Session
   properties:
   - type: OpenAPI
@@ -364,6 +368,8 @@ apis:
   humanURL: https://app.airmdr.com/docs/api/case_manager.html
   baseURL: https://app.airmdr.com/airmdrapi
   tags:
+  - Tokens
+  tags_raw:
   - Token
   properties:
   - type: OpenAPI
@@ -418,6 +424,8 @@ apis:
   humanURL: https://app.airmdr.com/docs/api/case_manager.html
   baseURL: https://app.airmdr.com/airmdrapi
   tags:
+  - UserGroup
+  tags_raw:
   - User Group
   properties:
   - type: OpenAPI
@@ -436,6 +444,8 @@ apis:
   humanURL: https://app.airmdr.com/docs/api/case_manager.html
   baseURL: https://app.airmdr.com/airmdrapi
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -454,6 +464,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/airmdr-capability-edges.yml
+  name: AirMDR Business Capability Map
 - type: DomainSecurity
   url: security/airmdr-domain-security.yml
 - type: Authentication
