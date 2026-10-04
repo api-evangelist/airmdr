@@ -226,12 +226,25 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    GetLoginUrlRequest:
+    LoginUserResponse:
       type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginUserData'
+    LoginRequest:
+      type: object
+      required:
+      - email
+      - password
       properties:
         email:
           type: string
-        redirect_url:
+        password:
           type: string
     UserRole:
       type: string
@@ -244,132 +257,6 @@ components:
       - UserRoleUser
       - UserRoleAdmin
       - UserRoleSuperAdmin
-    LoginUserResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/LoginUserData'
-    AuthenticateUserData:
-      type: object
-      required:
-      - session_id
-      - user_id
-      - organization_id
-      - organization_hosturl
-      - active_organization_id
-      - email
-      properties:
-        session_id:
-          type: string
-        user_id:
-          type: string
-        organization_id:
-          type: string
-        organization_hosturl:
-          type: string
-        active_organization_id:
-          type: string
-        email:
-          type: string
-        organization_code:
-          type: string
-        token_id:
-          type: string
-          description: UUID of the API token used to authenticate, when the request is authenticated via an API token. Empty for interactive login sessions.
-        token_name:
-          type: string
-          description: Human-readable name of the API token used to authenticate. Empty for interactive login sessions.
-    AuthenticateUserResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/AuthenticateUserData'
-    UpdateSessionResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-    UpdateSessionRequest:
-      type: object
-      required:
-      - active_organization_id
-      properties:
-        active_organization_id:
-          type: string
-    AirMDRFeature:
-      type: object
-      required:
-      - feature_id
-      - name
-      properties:
-        feature_id:
-          type: string
-          description: The id of the feature
-        name:
-          type: string
-          description: The name of the feature
-        description:
-          type: string
-          description: The description of the feature
-    GetLoginUrlResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/LoginUrl'
-    LoginRequest:
-      type: object
-      required:
-      - email
-      - password
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-    UserStatus:
-      type: string
-      description: user account status
-      enum:
-      - active
-      - pending
-      - disabled
-      - deleted
-      - password_reset_required
-      x-enum-varnames:
-      - UserStatusActive
-      - UserStatusPending
-      - UserStatusDisabled
-      - UserStatusDeleted
-      - UserStatusPasswordResetRequired
-    Permission:
-      type: object
-      required:
-      - permission_id
-      - name
-      properties:
-        permission_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
     LoginUser:
       type: object
       required:
@@ -416,6 +303,75 @@ components:
         is_internal:
           type: boolean
           description: Whether user belongs to airmdr organization or not
+    AuthenticateRequest:
+      type: object
+      required:
+      - session_token
+      properties:
+        session_token:
+          type: string
+        metadata:
+          type: object
+    AuthenticateUserData:
+      type: object
+      required:
+      - session_id
+      - user_id
+      - organization_id
+      - organization_hosturl
+      - active_organization_id
+      - email
+      properties:
+        session_id:
+          type: string
+        user_id:
+          type: string
+        organization_id:
+          type: string
+        organization_hosturl:
+          type: string
+        active_organization_id:
+          type: string
+        email:
+          type: string
+        organization_code:
+          type: string
+        token_id:
+          type: string
+          description: UUID of the API token used to authenticate, when the request is authenticated via an API token. Empty for interactive login sessions.
+        token_name:
+          type: string
+          description: Human-readable name of the API token used to authenticate. Empty for interactive login sessions.
+    GetLoginUrlResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginUrl'
+    Permission:
+      type: object
+      required:
+      - permission_id
+      - name
+      properties:
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     LoginMethod:
       type: string
       enum:
@@ -424,6 +380,72 @@ components:
       x-enum-varnames:
       - LoginMethodPassword
       - LoginMethodSSO
+    AuthenticateUserResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AuthenticateUserData'
+    UpdateSessionRequest:
+      type: object
+      required:
+      - active_organization_id
+      properties:
+        active_organization_id:
+          type: string
+    UserStatus:
+      type: string
+      description: user account status
+      enum:
+      - active
+      - pending
+      - disabled
+      - deleted
+      - password_reset_required
+      x-enum-varnames:
+      - UserStatusActive
+      - UserStatusPending
+      - UserStatusDisabled
+      - UserStatusDeleted
+      - UserStatusPasswordResetRequired
+    AirMDRFeature:
+      type: object
+      required:
+      - feature_id
+      - name
+      properties:
+        feature_id:
+          type: string
+          description: The id of the feature
+        name:
+          type: string
+          description: The name of the feature
+        description:
+          type: string
+          description: The description of the feature
+    UpdateSessionResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    LoginUserData:
+      type: object
+      required:
+      - session_token
+      - user
+      properties:
+        session_token:
+          type: string
+        active_organization_id:
+          type: string
+        user:
+          $ref: '#/components/schemas/LoginUser'
     LoginUrl:
       type: object
       required:
@@ -442,26 +464,6 @@ components:
         logo_url:
           type: string
           description: The url of the logo of the user's organization
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    LoginUserData:
-      type: object
-      required:
-      - session_token
-      - user
-      properties:
-        session_token:
-          type: string
-        active_organization_id:
-          type: string
-        user:
-          $ref: '#/components/schemas/LoginUser'
     OrganizationMinimal:
       type: object
       required:
@@ -485,15 +487,13 @@ components:
         sso_enabled:
           type: boolean
           description: flag indicating whether sso is enabled for the organization
-    AuthenticateRequest:
+    GetLoginUrlRequest:
       type: object
-      required:
-      - session_token
       properties:
-        session_token:
+        email:
           type: string
-        metadata:
-          type: object
+        redirect_url:
+          type: string
   securitySchemes:
     SessionCookie:
       type: apiKey

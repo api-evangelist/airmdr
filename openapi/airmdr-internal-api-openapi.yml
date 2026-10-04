@@ -395,119 +395,26 @@ paths:
                     type: string
 components:
   schemas:
-    UploadFileResponse:
+    ProviderInvestigationConfig:
       type: object
       required:
-      - data
-      - message
+      - provider
+      - investigation_type
       properties:
-        message:
+        provider:
           type: string
-        data:
-          $ref: '#/components/schemas/FileDetails'
-    CaseFeature:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-    OrganizationInvestigationConfiguration:
-      type:
-      - object
-      - 'null'
-      description: investigation configuration for the organization
-      required:
-      - use_shared_playbooks
-      properties:
-        use_shared_playbooks:
-          type: boolean
-        weekly_investigation_limit:
-          type:
-          - integer
-          - 'null'
-          description: maximum number of investigations allowed per week
-        enforce_weekly_investigation_limit:
-          type:
-          - boolean
-          - 'null'
-          description: 'whether the weekly investigation limit is enforced as a hard cutoff. Decouples setting the budget number (weekly_investigation_limit) from the blind count-cutoff: when false, the limit is informational (used for reporting/projection) and investigations are not blocked when it is exceeded. Defaults to false for new orgs.'
-        weekly_credit_allocation:
-          type:
-          - integer
-          - 'null'
-          description: default weekly investigation-credit allocation for the organization
-        credit_source:
-          $ref: '#/components/schemas/CreditSource'
-          description: where the organization's investigation credits are drawn from. "own" (default) uses this org's own weekly_credit_allocation. "parent" draws from the nearest ancestor org that owns a credit pool, in which case weekly_credit_allocation is treated as this org's optional sub-cap within that shared pool.
+          description: provider name
         investigation_type:
-          $ref: '#/components/schemas/OrgInvestigationType'
-          description: default investigation type for the organization
-          default: playbook
-        provider_configs:
+          $ref: '#/components/schemas/ProviderInvestigationType'
+          description: investigation type for this provider; default inherits from the org
+          default: default
+        alert_type_configs:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/ProviderInvestigationConfig'
-          description: per-provider investigation type overrides
-        blocked_llm_providers:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: list of LLM providers blocked from being used in agentic investigation
-    OrganizationMetabaseConfiguration:
-      type:
-      - object
-      - 'null'
-      required:
-      - enabled
-      - dashboards
-      properties:
-        enabled:
-          type: boolean
-          description: whether metabase is enabled for the organization
-        dashboards:
-          type: array
-          items:
-            $ref: '#/components/schemas/MetabaseDashboard'
-          description: list of dashboards enabled
-    EntityAccess:
-      type: object
-      required:
-      - scope
-      - org_hierarchy
-      - organization_ids
-      properties:
-        scope:
-          type: integer
-        org_hierarchy:
-          $ref: '#/components/schemas/OrganizationHierarchy'
-        organization_ids:
-          type: array
-          items:
-            type: string
-        metadata:
-          type: object
-    FileDetails:
-      type: object
-      required:
-      - file_url
-      properties:
-        file_url:
-          type: string
-    GetOrganizationInternalResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/OrganizationWithConfigurationInternal'
+            $ref: '#/components/schemas/AlertTypeInvestigationConfig'
+          description: per-alert-type overrides; alert types not listed use the provider investigation_type
     UserRole:
       type: string
       description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
@@ -519,456 +426,6 @@ components:
       - UserRoleUser
       - UserRoleAdmin
       - UserRoleSuperAdmin
-    Adornments:
-      type: object
-      required:
-      - type
-      - src
-      - size
-      properties:
-        type:
-          type: string
-        src:
-          type: string
-        size:
-          type: string
-    PermissionAccess:
-      type: object
-      required:
-      - access_type
-      - entities
-      properties:
-        access_type:
-          $ref: '#/components/schemas/AccessType'
-        entities:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityAccess'
-    OrganizationWithConfiguration:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Organization'
-      - properties:
-          configuration:
-            $ref: '#/components/schemas/OrganizationConfiguration'
-    VisibilitySetting:
-      type: string
-      enum:
-      - full_access
-      - no_access
-      - org_context_access
-      - usage_access
-      x-enum-varnames:
-      - VisibilityFullAccess
-      - VisibilityNoAccess
-      - VisibilityOrgContextAccess
-      - VisibilityUsageAccess
-    UserGroupMinimal:
-      type: object
-      required:
-      - user_group_id
-      - name
-      - type
-      properties:
-        user_group_id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-    CaseCategory:
-      type: object
-      required:
-      - category_name
-      properties:
-        category_name:
-          type: string
-        sub_categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseSubCategory'
-    PriorityConfig:
-      type: object
-      required:
-      - need_attention_statuses
-      - active_statuses
-      - closed_statuses
-      properties:
-        need_attention_statuses:
-          description: list of statuses that will be shown in Need attention tab
-          type: array
-          items:
-            type: integer
-        active_statuses:
-          description: list of statuses that will be shown in Active tab
-          type: array
-          items:
-            type: integer
-        closed_statuses:
-          description: list of statuses that will be shown in Closed tab
-          type: array
-          items:
-            type: integer
-    CaseSubCategory:
-      type: object
-      required:
-      - sub_category_name
-      properties:
-        sub_category_name:
-          type: string
-    OrgInvestigationType:
-      type: string
-      enum:
-      - agentic
-      - agentic_preview
-      - playbook
-      description: 'Investigation type for the organization. agentic: agentic investigation only, creates case. agentic_preview: both agentic and playbook run; playbook creates case. playbook: playbook investigation only.
-
-        '
-    AirMDRFeature:
-      type: object
-      required:
-      - feature_id
-      - name
-      properties:
-        feature_id:
-          type: string
-          description: The id of the feature
-        name:
-          type: string
-          description: The name of the feature
-        description:
-          type: string
-          description: The description of the feature
-    ConfigSource:
-      type: string
-      enum:
-      - parent
-      - new
-      x-enum-varnames:
-      - ConfigSourceParent
-      - ConfigSourceNew
-    AccessType:
-      type: string
-      enum:
-      - Create
-      - Update
-      - Delete
-      - BulkUpdate
-      - BulkDelete
-      x-enum-varnames:
-      - AccessTypeCreate
-      - AccessTypeUpdate
-      - AccessTypeDelete
-      - AccessTypeBulkUpdate
-      - AccessTypeBulkDelete
-    DisabledPermission:
-      type: object
-      required:
-      - feature
-      - access_list
-      properties:
-        feature:
-          type: string
-        access_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionAccess'
-    OrganizationSSOConfiguration:
-      type:
-      - object
-      - 'null'
-      description: sso configuration set for the organization
-      required:
-      - sso_config_source
-      properties:
-        sso_config_source:
-          $ref: '#/components/schemas/SSOConfigSource'
-        identity_provider_name:
-          type: string
-          description: the name of the identity provider
-        entity_id:
-          type: string
-          description: the entity id or the issuer id
-        certificate:
-          type: string
-          description: public certificate of the identity provider
-        sso_url:
-          type: string
-          description: the sso url of the identity provider
-        logout_url:
-          type: string
-          description: the logout url of the identity provider
-    OrgVisibility:
-      type: object
-      description: Organization-level visibility settings
-      required:
-      - org_data
-      properties:
-        org_data:
-          $ref: '#/components/schemas/VisibilitySetting'
-          description: Other organization data visibility
-    UserStatus:
-      type: string
-      description: user account status
-      enum:
-      - active
-      - pending
-      - disabled
-      - deleted
-      - password_reset_required
-      x-enum-varnames:
-      - UserStatusActive
-      - UserStatusPending
-      - UserStatusDisabled
-      - UserStatusDeleted
-      - UserStatusPasswordResetRequired
-    Permission:
-      type: object
-      required:
-      - permission_id
-      - name
-      properties:
-        permission_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    ProviderInvestigationType:
-      type: string
-      enum:
-      - agentic
-      - agentic_preview
-      - playbook
-      - default
-      description: 'Investigation type for a provider or alert type. default: inherit from the parent level (provider inherits org; alert type inherits provider).
-
-        '
-    FilterOrganizationRBACRequest:
-      type: object
-      required:
-      - feature
-      properties:
-        feature:
-          type: string
-          description: Feature for which accessible or ancestors will be fetched.
-        include_configuration:
-          type: boolean
-          description: If true, configuration for organizations will be included in the response. Default value is false.
-          default: false
-        include_organizations_with_no_access:
-          type: boolean
-          description: If true, organizations with no access will be included in the response. Default value is false.
-          default: false
-    OrganizationCaseConfiguration:
-      type: object
-      description: case configuration set for the organization
-      properties:
-        case_categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseCategory'
-        severity_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumOption'
-        disposition_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumOption'
-        status_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumOption'
-        finding_risk_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumOption'
-        action_status_options:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumOption'
-        disabled_features:
-          type: array
-          description: list of case features disabled for the organization
-          items:
-            $ref: '#/components/schemas/CaseFeature'
-        case_priority_config:
-          $ref: '#/components/schemas/CasePriorityConfig'
-          description: describe how cases will be divided in Need attention, Closed and Active tabs for the organization
-        case_closed_statuses:
-          type: array
-          items:
-            type: integer
-          description: list of statuses that will be shown in Closed tab
-        reply_to_email:
-          type: string
-          description: Email address to set as reply-to header in the emails sent by the organization
-    ParentVisibility:
-      type: object
-      description: What parents are allowed to see
-      required:
-      - user_mgmt
-      - org_data
-      properties:
-        user_mgmt:
-          $ref: '#/components/schemas/VisibilitySetting'
-          description: User management visibility for parent organizations
-        org_data:
-          $ref: '#/components/schemas/VisibilitySetting'
-          description: Other organization data visibility for parent organizations
-    FilterOrganizationListResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationWithConfiguration'
-    OrganizationDarrylConfiguration:
-      type:
-      - object
-      - 'null'
-      required:
-      - darryl_config_source
-      properties:
-        logo_url:
-          type: string
-          description: alternate logo url for darryl
-        darryl_config_source:
-          $ref: '#/components/schemas/ConfigSource'
-        name:
-          type: string
-          description: alternate name for darryl
-        color:
-          type: string
-    OrganizationHierarchy:
-      type: string
-      enum:
-      - parent_orgs
-      - child_orgs
-      - user_org
-      - all_orgs
-      - except_entity_orgs
-      x-enum-varnames:
-      - OrganizationHierarchyParentOrgs
-      - OrganizationHierarchyChildOrgs
-      - OrganizationHierarchyUserOrg
-      - OrganizationHierarchyAllOrgs
-      - OrganizationHierarchyExceptEntityOrgs
-    CreditSource:
-      type: string
-      enum:
-      - own
-      - parent
-      description: 'Where an organization''s investigation credits are drawn from. own: use this org''s own weekly_credit_allocation (default, independent budget). parent: draw from the nearest ancestor org that owns a credit pool; this org''s weekly_credit_allocation is then treated as an optional per-child sub-cap within that shared pool.
-
-        '
-    OrganizationWithConfigurationInternal:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Organization'
-      - properties:
-          deleted:
-            type: boolean
-            description: flag indicating whether the organization is deleted
-          configuration:
-            $ref: '#/components/schemas/OrganizationConfiguration'
-    ChildVisibility:
-      type: object
-      description: What child orgs are allowed to see
-      required:
-      - org_data
-      properties:
-        org_data:
-          $ref: '#/components/schemas/VisibilitySetting'
-          description: Other organization data visibility for child organizations
-    FetchUserResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/User'
-    AlertTypeInvestigationConfig:
-      type: object
-      required:
-      - alert_type
-      - investigation_type
-      properties:
-        alert_type:
-          type: string
-          description: alert type identifier
-        investigation_type:
-          $ref: '#/components/schemas/ProviderInvestigationType'
-          description: investigation type for this alert type; default inherits from the provider
-          default: default
-    EnumOption:
-      type: object
-      required:
-      - key
-      - label
-      properties:
-        key:
-          type: number
-        label:
-          type: string
-        style_config:
-          $ref: '#/components/schemas/StyleConfig'
-    OrganizationConfiguration:
-      type: object
-      properties:
-        case_configuration:
-          $ref: '#/components/schemas/OrganizationCaseConfiguration'
-        sso_configuration:
-          $ref: '#/components/schemas/OrganizationSSOConfiguration'
-        darryl_configuration:
-          $ref: '#/components/schemas/OrganizationDarrylConfiguration'
-        metabase_configuration:
-          $ref: '#/components/schemas/OrganizationMetabaseConfiguration'
-        rbac_configuration:
-          $ref: '#/components/schemas/OrganizationRBACConfiguration'
-        investigation_configuration:
-          $ref: '#/components/schemas/OrganizationInvestigationConfiguration'
-    SSOConfigSource:
-      type: string
-      enum:
-      - parent
-      - new
-      x-enum-varnames:
-      - SSOConfigSourceParent
-      - SSOConfigSourceNew
-    403Error:
-      type: object
-      properties:
-        message:
-          type: string
-          const: User does not have permission to perform this action
-    FetchDisabledPermissionsResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          type: object
-          required:
-          - disabled_permissions
-          properties:
-            disabled_permissions:
-              type: array
-              items:
-                $ref: '#/components/schemas/DisabledPermission'
     Organization:
       type: object
       required:
@@ -1051,89 +508,56 @@ components:
           type: integer
           format: int64
           description: modified time of organization
-    StyleConfig:
+    CreditSource:
+      type: string
+      enum:
+      - own
+      - parent
+      description: 'Where an organization''s investigation credits are drawn from. own: use this org''s own weekly_credit_allocation (default, independent budget). parent: draw from the nearest ancestor org that owns a credit pool; this org''s weekly_credit_allocation is then treated as an optional per-child sub-cap within that shared pool.
+
+        '
+    ChildVisibility:
       type: object
+      description: What child orgs are allowed to see
+      required:
+      - org_data
       properties:
-        bg_color:
-          type: string
-        font_color:
-          type: string
-        font_size:
-          type: string
-        border:
-          type: string
-        border_radius:
-          type: string
-        size:
-          type: string
-        start_adornments:
-          $ref: '#/components/schemas/Adornments'
-        end_adornments:
-          $ref: '#/components/schemas/Adornments'
-        text_class:
-          type: string
-        show_clock_icon:
-          type: boolean
-        wrapper_class:
-          type: string
-        show_modified_at_time:
-          type: boolean
-        tooltip_title:
-          type: string
-        icon_src:
-          type: string
-        icon_color:
-          type: string
-    ProviderInvestigationConfig:
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility for child organizations
+    CaseFeature:
       type: object
       required:
-      - provider
-      - investigation_type
-      properties:
-        provider:
-          type: string
-          description: provider name
-        investigation_type:
-          $ref: '#/components/schemas/ProviderInvestigationType'
-          description: investigation type for this provider; default inherits from the org
-          default: default
-        alert_type_configs:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AlertTypeInvestigationConfig'
-          description: per-alert-type overrides; alert types not listed use the provider investigation_type
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    CasePriorityConfig:
-      type: object
-      required:
-      - analyst_priority_config
-      - customer_priority_config
-      description: describe how cases will be divided in Need attention, Closed and Active tabs for the organization
-      properties:
-        analyst_priority_config:
-          $ref: '#/components/schemas/PriorityConfig'
-          description: describe how current organization cases will be divided
-        customer_priority_config:
-          $ref: '#/components/schemas/PriorityConfig'
-          description: describe how child organization cases will be divided
-    MetabaseDashboard:
-      type: object
-      required:
-      - id
       - name
       properties:
-        id:
+        name:
+          type: string
+    OrganizationHierarchy:
+      type: string
+      enum:
+      - parent_orgs
+      - child_orgs
+      - user_org
+      - all_orgs
+      - except_entity_orgs
+      x-enum-varnames:
+      - OrganizationHierarchyParentOrgs
+      - OrganizationHierarchyChildOrgs
+      - OrganizationHierarchyUserOrg
+      - OrganizationHierarchyAllOrgs
+      - OrganizationHierarchyExceptEntityOrgs
+    UserGroupMinimal:
+      type: object
+      required:
+      - user_group_id
+      - name
+      - type
+      properties:
+        user_group_id:
           type: string
         name:
+          type: string
+        type:
           type: string
     OrganizationRBACConfiguration:
       type:
@@ -1154,29 +578,76 @@ components:
           $ref: '#/components/schemas/ChildVisibility'
         org_visibility:
           $ref: '#/components/schemas/OrgVisibility'
-    OrganizationMinimal:
+    FileDetails:
       type: object
       required:
-      - organization_id
-      - name
-      - code
-      - sso_enabled
+      - file_url
       properties:
-        organization_id:
+        file_url:
           type: string
-          description: unique id of the organization
+    ParentVisibility:
+      type: object
+      description: What parents are allowed to see
+      required:
+      - user_mgmt
+      - org_data
+      properties:
+        user_mgmt:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: User management visibility for parent organizations
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility for parent organizations
+    FetchDisabledPermissionsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          required:
+          - disabled_permissions
+          properties:
+            disabled_permissions:
+              type: array
+              items:
+                $ref: '#/components/schemas/DisabledPermission'
+    DisabledPermission:
+      type: object
+      required:
+      - feature
+      - access_list
+      properties:
+        feature:
+          type: string
+        access_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionAccess'
+    CaseCategory:
+      type: object
+      required:
+      - category_name
+      properties:
+        category_name:
+          type: string
+        sub_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseSubCategory'
+    MetabaseDashboard:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
         name:
           type: string
-          description: name of the organization
-        code:
-          type: string
-          description: code of the organization
-        logo_url:
-          type: string
-          description: url of the organization's logo
-        sso_enabled:
-          type: boolean
-          description: flag indicating whether sso is enabled for the organization
     User:
       type: object
       required:
@@ -1229,7 +700,542 @@ components:
         is_internal:
           type: boolean
           description: Whether user belongs to airmdr organization or not
+    FetchUserResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/User'
+    ConfigSource:
+      type: string
+      enum:
+      - parent
+      - new
+      x-enum-varnames:
+      - ConfigSourceParent
+      - ConfigSourceNew
+    Permission:
+      type: object
+      required:
+      - permission_id
+      - name
+      properties:
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    AlertTypeInvestigationConfig:
+      type: object
+      required:
+      - alert_type
+      - investigation_type
+      properties:
+        alert_type:
+          type: string
+          description: alert type identifier
+        investigation_type:
+          $ref: '#/components/schemas/ProviderInvestigationType'
+          description: investigation type for this alert type; default inherits from the provider
+          default: default
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    EnumOption:
+      type: object
+      required:
+      - key
+      - label
+      properties:
+        key:
+          type: number
+        label:
+          type: string
+        style_config:
+          $ref: '#/components/schemas/StyleConfig'
+    OrgInvestigationType:
+      type: string
+      enum:
+      - agentic
+      - agentic_preview
+      - playbook
+      description: 'Investigation type for the organization. agentic: agentic investigation only, creates case. agentic_preview: both agentic and playbook run; playbook creates case. playbook: playbook investigation only.
+
+        '
+    CaseSubCategory:
+      type: object
+      required:
+      - sub_category_name
+      properties:
+        sub_category_name:
+          type: string
+    OrganizationWithConfigurationInternal:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Organization'
+      - properties:
+          deleted:
+            type: boolean
+            description: flag indicating whether the organization is deleted
+          configuration:
+            $ref: '#/components/schemas/OrganizationConfiguration'
+    UploadFileResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/FileDetails'
+    StyleConfig:
+      type: object
+      properties:
+        bg_color:
+          type: string
+        font_color:
+          type: string
+        font_size:
+          type: string
+        border:
+          type: string
+        border_radius:
+          type: string
+        size:
+          type: string
+        start_adornments:
+          $ref: '#/components/schemas/Adornments'
+        end_adornments:
+          $ref: '#/components/schemas/Adornments'
+        text_class:
+          type: string
+        show_clock_icon:
+          type: boolean
+        wrapper_class:
+          type: string
+        show_modified_at_time:
+          type: boolean
+        tooltip_title:
+          type: string
+        icon_src:
+          type: string
+        icon_color:
+          type: string
+    CasePriorityConfig:
+      type: object
+      required:
+      - analyst_priority_config
+      - customer_priority_config
+      description: describe how cases will be divided in Need attention, Closed and Active tabs for the organization
+      properties:
+        analyst_priority_config:
+          $ref: '#/components/schemas/PriorityConfig'
+          description: describe how current organization cases will be divided
+        customer_priority_config:
+          $ref: '#/components/schemas/PriorityConfig'
+          description: describe how child organization cases will be divided
+    Adornments:
+      type: object
+      required:
+      - type
+      - src
+      - size
+      properties:
+        type:
+          type: string
+        src:
+          type: string
+        size:
+          type: string
+    OrganizationInvestigationConfiguration:
+      type:
+      - object
+      - 'null'
+      description: investigation configuration for the organization
+      required:
+      - use_shared_playbooks
+      properties:
+        use_shared_playbooks:
+          type: boolean
+        weekly_investigation_limit:
+          type:
+          - integer
+          - 'null'
+          description: maximum number of investigations allowed per week
+        enforce_weekly_investigation_limit:
+          type:
+          - boolean
+          - 'null'
+          description: 'whether the weekly investigation limit is enforced as a hard cutoff. Decouples setting the budget number (weekly_investigation_limit) from the blind count-cutoff: when false, the limit is informational (used for reporting/projection) and investigations are not blocked when it is exceeded. Defaults to false for new orgs.'
+        weekly_credit_allocation:
+          type:
+          - integer
+          - 'null'
+          description: default weekly investigation-credit allocation for the organization
+        credit_source:
+          $ref: '#/components/schemas/CreditSource'
+          description: where the organization's investigation credits are drawn from. "own" (default) uses this org's own weekly_credit_allocation. "parent" draws from the nearest ancestor org that owns a credit pool, in which case weekly_credit_allocation is treated as this org's optional sub-cap within that shared pool.
+        investigation_type:
+          $ref: '#/components/schemas/OrgInvestigationType'
+          description: default investigation type for the organization
+          default: playbook
+        provider_configs:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ProviderInvestigationConfig'
+          description: per-provider investigation type overrides
+        blocked_llm_providers:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: list of LLM providers blocked from being used in agentic investigation
+    SSOConfigSource:
+      type: string
+      enum:
+      - parent
+      - new
+      x-enum-varnames:
+      - SSOConfigSourceParent
+      - SSOConfigSourceNew
+    OrganizationWithConfiguration:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Organization'
+      - properties:
+          configuration:
+            $ref: '#/components/schemas/OrganizationConfiguration'
+    UserStatus:
+      type: string
+      description: user account status
+      enum:
+      - active
+      - pending
+      - disabled
+      - deleted
+      - password_reset_required
+      x-enum-varnames:
+      - UserStatusActive
+      - UserStatusPending
+      - UserStatusDisabled
+      - UserStatusDeleted
+      - UserStatusPasswordResetRequired
+    OrganizationMetabaseConfiguration:
+      type:
+      - object
+      - 'null'
+      required:
+      - enabled
+      - dashboards
+      properties:
+        enabled:
+          type: boolean
+          description: whether metabase is enabled for the organization
+        dashboards:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetabaseDashboard'
+          description: list of dashboards enabled
+    OrganizationSSOConfiguration:
+      type:
+      - object
+      - 'null'
+      description: sso configuration set for the organization
+      required:
+      - sso_config_source
+      properties:
+        sso_config_source:
+          $ref: '#/components/schemas/SSOConfigSource'
+        identity_provider_name:
+          type: string
+          description: the name of the identity provider
+        entity_id:
+          type: string
+          description: the entity id or the issuer id
+        certificate:
+          type: string
+          description: public certificate of the identity provider
+        sso_url:
+          type: string
+          description: the sso url of the identity provider
+        logout_url:
+          type: string
+          description: the logout url of the identity provider
+    FilterOrganizationListResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationWithConfiguration'
+    GetOrganizationInternalResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/OrganizationWithConfigurationInternal'
+    PriorityConfig:
+      type: object
+      required:
+      - need_attention_statuses
+      - active_statuses
+      - closed_statuses
+      properties:
+        need_attention_statuses:
+          description: list of statuses that will be shown in Need attention tab
+          type: array
+          items:
+            type: integer
+        active_statuses:
+          description: list of statuses that will be shown in Active tab
+          type: array
+          items:
+            type: integer
+        closed_statuses:
+          description: list of statuses that will be shown in Closed tab
+          type: array
+          items:
+            type: integer
+    FilterOrganizationRBACRequest:
+      type: object
+      required:
+      - feature
+      properties:
+        feature:
+          type: string
+          description: Feature for which accessible or ancestors will be fetched.
+        include_configuration:
+          type: boolean
+          description: If true, configuration for organizations will be included in the response. Default value is false.
+          default: false
+        include_organizations_with_no_access:
+          type: boolean
+          description: If true, organizations with no access will be included in the response. Default value is false.
+          default: false
+    EntityAccess:
+      type: object
+      required:
+      - scope
+      - org_hierarchy
+      - organization_ids
+      properties:
+        scope:
+          type: integer
+        org_hierarchy:
+          $ref: '#/components/schemas/OrganizationHierarchy'
+        organization_ids:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+    AirMDRFeature:
+      type: object
+      required:
+      - feature_id
+      - name
+      properties:
+        feature_id:
+          type: string
+          description: The id of the feature
+        name:
+          type: string
+          description: The name of the feature
+        description:
+          type: string
+          description: The description of the feature
+    VisibilitySetting:
+      type: string
+      enum:
+      - full_access
+      - no_access
+      - org_context_access
+      - usage_access
+      x-enum-varnames:
+      - VisibilityFullAccess
+      - VisibilityNoAccess
+      - VisibilityOrgContextAccess
+      - VisibilityUsageAccess
+    OrganizationDarrylConfiguration:
+      type:
+      - object
+      - 'null'
+      required:
+      - darryl_config_source
+      properties:
+        logo_url:
+          type: string
+          description: alternate logo url for darryl
+        darryl_config_source:
+          $ref: '#/components/schemas/ConfigSource'
+        name:
+          type: string
+          description: alternate name for darryl
+        color:
+          type: string
+    AccessType:
+      type: string
+      enum:
+      - Create
+      - Update
+      - Delete
+      - BulkUpdate
+      - BulkDelete
+      x-enum-varnames:
+      - AccessTypeCreate
+      - AccessTypeUpdate
+      - AccessTypeDelete
+      - AccessTypeBulkUpdate
+      - AccessTypeBulkDelete
+    OrgVisibility:
+      type: object
+      description: Organization-level visibility settings
+      required:
+      - org_data
+      properties:
+        org_data:
+          $ref: '#/components/schemas/VisibilitySetting'
+          description: Other organization data visibility
+    403Error:
+      type: object
+      properties:
+        message:
+          type: string
+          const: User does not have permission to perform this action
+    OrganizationConfiguration:
+      type: object
+      properties:
+        case_configuration:
+          $ref: '#/components/schemas/OrganizationCaseConfiguration'
+        sso_configuration:
+          $ref: '#/components/schemas/OrganizationSSOConfiguration'
+        darryl_configuration:
+          $ref: '#/components/schemas/OrganizationDarrylConfiguration'
+        metabase_configuration:
+          $ref: '#/components/schemas/OrganizationMetabaseConfiguration'
+        rbac_configuration:
+          $ref: '#/components/schemas/OrganizationRBACConfiguration'
+        investigation_configuration:
+          $ref: '#/components/schemas/OrganizationInvestigationConfiguration'
+    OrganizationCaseConfiguration:
+      type: object
+      description: case configuration set for the organization
+      properties:
+        case_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseCategory'
+        severity_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumOption'
+        disposition_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumOption'
+        status_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumOption'
+        finding_risk_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumOption'
+        action_status_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumOption'
+        disabled_features:
+          type: array
+          description: list of case features disabled for the organization
+          items:
+            $ref: '#/components/schemas/CaseFeature'
+        case_priority_config:
+          $ref: '#/components/schemas/CasePriorityConfig'
+          description: describe how cases will be divided in Need attention, Closed and Active tabs for the organization
+        case_closed_statuses:
+          type: array
+          items:
+            type: integer
+          description: list of statuses that will be shown in Closed tab
+        reply_to_email:
+          type: string
+          description: Email address to set as reply-to header in the emails sent by the organization
+    ProviderInvestigationType:
+      type: string
+      enum:
+      - agentic
+      - agentic_preview
+      - playbook
+      - default
+      description: 'Investigation type for a provider or alert type. default: inherit from the parent level (provider inherits org; alert type inherits provider).
+
+        '
+    PermissionAccess:
+      type: object
+      required:
+      - access_type
+      - entities
+      properties:
+        access_type:
+          $ref: '#/components/schemas/AccessType'
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityAccess'
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
   parameters:
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
     x-request-id:
       name: X-Request-ID
       in: header
@@ -1240,12 +1246,6 @@ components:
       name: User-ID
       in: header
       description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    organization-id:
-      name: Organization-ID
-      in: header
-      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
   securitySchemes:

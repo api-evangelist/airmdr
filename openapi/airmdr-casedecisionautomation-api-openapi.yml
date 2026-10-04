@@ -200,6 +200,79 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    ConcernedIOC:
+      type: object
+      required:
+      - ioc_type
+      - ioc_key
+      properties:
+        ioc_type:
+          type: string
+        ioc_key:
+          type: string
+    CreateCaseExecutionMetricsRequest:
+      type: object
+      required:
+      - execution_id
+      - ioc_score
+      properties:
+        execution_id:
+          type: string
+        ioc_score:
+          $ref: '#/components/schemas/IOCScore'
+        ioc_features:
+          type: object
+    GetCaseExecutionMetricsResponse:
+      type: object
+      required:
+      - execution_id
+      - ioc_data
+      properties:
+        execution_id:
+          type: string
+        ioc_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IOCData'
+    IOCScore:
+      type: object
+      required:
+      - ioc_type
+      - ioc_key
+      properties:
+        ioc_type:
+          type: string
+        ioc_key:
+          type: string
+        score:
+          type: integer
+        indicators:
+          type: string
+    IOCData:
+      type: object
+      required:
+      - ioc_id
+      - ioc_score
+      properties:
+        ioc_id:
+          type: string
+        ioc_score:
+          $ref: '#/components/schemas/IOCScore'
+        ioc_features:
+          type: object
+    RiskAssessment:
+      type: object
+      required:
+      - score
+      - severity
+      - summary
+      properties:
+        score:
+          type: integer
+        severity:
+          type: string
+        summary:
+          type: string
     GetCaseDecisionMetrics:
       type: object
       required:
@@ -230,42 +303,27 @@ components:
           format: int64
         user_modified:
           type: boolean
-    ConcernedIOC:
+    UpdateCaseDecisionMetricsRequest:
+      type: object
+      properties:
+        execution_id:
+          type: array
+          items:
+            type: string
+        risk_assessment:
+          $ref: '#/components/schemas/RiskAssessment'
+        concerned_iocs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConcernedIOC'
+    Error:
       type: object
       required:
-      - ioc_type
-      - ioc_key
+      - message
       properties:
-        ioc_type:
+        message:
           type: string
-        ioc_key:
-          type: string
-    IOCData:
-      type: object
-      required:
-      - ioc_id
-      - ioc_score
-      properties:
-        ioc_id:
-          type: string
-        ioc_score:
-          $ref: '#/components/schemas/IOCScore'
-        ioc_features:
-          type: object
-    IOCScore:
-      type: object
-      required:
-      - ioc_type
-      - ioc_key
-      properties:
-        ioc_type:
-          type: string
-        ioc_key:
-          type: string
-        score:
-          type: integer
-        indicators:
-          type: string
+          description: user friendly error message
     CreateCaseDecisionMetricsRequest:
       type: object
       required:
@@ -285,31 +343,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ConcernedIOC'
-    RiskAssessment:
-      type: object
-      required:
-      - score
-      - severity
-      - summary
-      properties:
-        score:
-          type: integer
-        severity:
-          type: string
-        summary:
-          type: string
-    CreateCaseExecutionMetricsRequest:
-      type: object
-      required:
-      - execution_id
-      - ioc_score
-      properties:
-        execution_id:
-          type: string
-        ioc_score:
-          $ref: '#/components/schemas/IOCScore'
-        ioc_features:
-          type: object
     Success:
       type: object
       required:
@@ -318,39 +351,6 @@ components:
         message:
           type: string
           description: user friendly message
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    UpdateCaseDecisionMetricsRequest:
-      type: object
-      properties:
-        execution_id:
-          type: array
-          items:
-            type: string
-        risk_assessment:
-          $ref: '#/components/schemas/RiskAssessment'
-        concerned_iocs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConcernedIOC'
-    GetCaseExecutionMetricsResponse:
-      type: object
-      required:
-      - execution_id
-      - ioc_data
-      properties:
-        execution_id:
-          type: string
-        ioc_data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IOCData'
   securitySchemes:
     SessionCookie:
       type: apiKey

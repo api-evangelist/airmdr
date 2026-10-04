@@ -486,26 +486,6 @@ components:
       properties:
         idempotency_key:
           type: string
-    ChargeInvestigationCreditsRequest:
-      type: object
-      required:
-      - organization_code
-      - alert_id
-      - alert_provider
-      - alert_type
-      - idempotency_key
-      properties:
-        organization_code:
-          type: string
-        alert_id:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        idempotency_key:
-          type: string
-          description: unique per investigation attempt; dedupes retries/redeliveries
     RefundInvestigationCreditsResponse:
       type: object
       required:
@@ -513,22 +493,23 @@ components:
       properties:
         refunded:
           type: boolean
-    Success:
+    InvestigationQuotaResponse:
       type: object
       required:
-      - message
+      - limit_set
       properties:
-        message:
-          type: string
-          description: user friendly message
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
+        limit_set:
+          type: boolean
+          description: Whether a weekly investigation limit is configured for this organization
+        weekly_limit:
+          type: integer
+          description: The configured weekly investigation limit (only present when limit_set is true)
+        investigations_used:
+          type: integer
+          description: Number of investigations consumed this week (only present when limit_set is true)
+        investigations_remaining:
+          type: integer
+          description: Number of investigations remaining this week (only present when limit_set is true)
     ChargeInvestigationCreditsResponse:
       type: object
       required:
@@ -559,6 +540,14 @@ components:
         balance_after:
           type: number
           format: double
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     CaseReindexRequest:
       type: object
       required:
@@ -569,30 +558,35 @@ components:
           items:
             type: string
           description: The list of case uuids to reindex. If this non empty list is provided, only the cases in this list will be reindexed else all cases will be reindexed.
-    InvestigationQuotaResponse:
+    ChargeInvestigationCreditsRequest:
       type: object
       required:
-      - limit_set
+      - organization_code
+      - alert_id
+      - alert_provider
+      - alert_type
+      - idempotency_key
       properties:
-        limit_set:
-          type: boolean
-          description: Whether a weekly investigation limit is configured for this organization
-        weekly_limit:
-          type: integer
-          description: The configured weekly investigation limit (only present when limit_set is true)
-        investigations_used:
-          type: integer
-          description: Number of investigations consumed this week (only present when limit_set is true)
-        investigations_remaining:
-          type: integer
-          description: Number of investigations remaining this week (only present when limit_set is true)
+        organization_code:
+          type: string
+        alert_id:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        idempotency_key:
+          type: string
+          description: unique per investigation attempt; dedupes retries/redeliveries
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
   parameters:
-    organization-id:
-      name: Organization-ID
-      in: header
-      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
     x-request-id:
       name: X-Request-ID
       in: header
@@ -603,6 +597,12 @@ components:
       name: User-ID
       in: header
       description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
   securitySchemes:

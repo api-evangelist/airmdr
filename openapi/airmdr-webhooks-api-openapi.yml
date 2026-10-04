@@ -167,6 +167,25 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    CreateAlertFromWebhookResponse:
+      type: object
+      properties:
+        alert_id:
+          type: string
+    UserInformation:
+      type: object
+      required:
+      - firstname
+      - user_id
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        user_id:
+          type: string
+        email:
+          type: string
     ListWebhooksResponse:
       type: object
       properties:
@@ -193,11 +212,6 @@ components:
       additionalProperties: true
       description: Free-form raw alert payload from the provider. The entire request body is treated as the alert content — there is no wrapper key.
       x-go-type: json.RawMessage
-    CreateAlertFromWebhookResponse:
-      type: object
-      properties:
-        alert_id:
-          type: string
     Error:
       type: object
       required:
@@ -206,20 +220,6 @@ components:
         message:
           type: string
           description: user friendly error message
-    UserInformation:
-      type: object
-      required:
-      - firstname
-      - user_id
-      properties:
-        firstname:
-          type: string
-        lastname:
-          type: string
-        user_id:
-          type: string
-        email:
-          type: string
     Webhook:
       type: object
       properties:
@@ -244,12 +244,6 @@ components:
         created_by:
           $ref: '#/components/schemas/UserInformation'
   parameters:
-    organization-id:
-      name: Organization-ID
-      in: header
-      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
     x-request-id:
       name: X-Request-ID
       in: header
@@ -260,6 +254,12 @@ components:
       name: User-ID
       in: header
       description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
   securitySchemes:

@@ -232,86 +232,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    CreateAPITokenForSlackWorkflowRequest:
-      type: object
-      required:
-      - user_id
-      - organization_id
-      properties:
-        user_id:
-          type: string
-          description: The User ID of the user to create the Slack token for.
-        organization_id:
-          type: string
-          description: The Organization ID of the organization to create the Slack token for.
-    403Error:
-      type: object
-      properties:
-        message:
-          type: string
-          const: User does not have permission to perform this action
-    CreateAPITokenForSlackWorkflowResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/GetAPITokenResponse'
-    CreateAPITokenResponse:
-      type: object
-      required:
-      - token_id
-      - name
-      - token
-      - created_at
-      properties:
-        token_id:
-          type: string
-        name:
-          type: string
-        token:
-          type: string
-          description: The token created for the user
-        created_at:
-          type: integer
-          format: int64
-        last_used_at:
-          type: integer
-          format: int64
-    ListAPITokensResponse:
-      type: object
-      required:
-      - message
-      - data
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/GetAPITokenResponse'
-        total:
-          type: integer
-    Success:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly message
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
     GetAPITokenResponse:
       type: object
       required:
@@ -335,6 +255,86 @@ components:
           format: int64
         organization_id:
           type: string
+    CreateAPITokenForSlackWorkflowResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/GetAPITokenResponse'
+    ListAPITokensResponse:
+      type: object
+      required:
+      - message
+      - data
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetAPITokenResponse'
+        total:
+          type: integer
+    CreateAPITokenResponse:
+      type: object
+      required:
+      - token_id
+      - name
+      - token
+      - created_at
+      properties:
+        token_id:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+          description: The token created for the user
+        created_at:
+          type: integer
+          format: int64
+        last_used_at:
+          type: integer
+          format: int64
+    CreateAPITokenForSlackWorkflowRequest:
+      type: object
+      required:
+      - user_id
+      - organization_id
+      properties:
+        user_id:
+          type: string
+          description: The User ID of the user to create the Slack token for.
+        organization_id:
+          type: string
+          description: The Organization ID of the organization to create the Slack token for.
+    403Error:
+      type: object
+      properties:
+        message:
+          type: string
+          const: User does not have permission to perform this action
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
   securitySchemes:
     SessionCookie:
       type: apiKey

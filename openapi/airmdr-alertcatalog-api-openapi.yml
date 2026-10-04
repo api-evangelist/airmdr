@@ -498,6 +498,123 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    GetCaseInAlertCatalogResponse:
+      type: object
+      required:
+      - case_id
+      - previous_case_exists
+      - meta_data
+      properties:
+        case_id:
+          type: string
+        previous_case_exists:
+          type: boolean
+        previous_case_id:
+          type: string
+        meta_data:
+          $ref: '#/components/schemas/AlertCatalogMetaData'
+    schemas-ProviderSummary:
+      type: object
+      required:
+      - name
+      - logo_url
+      - transparent_bg_logo_url
+      - logo_url_bg_white
+      - provider_id
+      - display_name
+      properties:
+        name:
+          type: string
+        logo_url:
+          type: string
+        transparent_bg_logo_url:
+          type: string
+        logo_url_bg_white:
+          type: string
+        provider_id:
+          type: string
+        display_name:
+          type: string
+    ListAlertCatalogTypesRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListAlertCatalogTypesFilter'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortFields'
+    CaseConfidence:
+      type: object
+      required:
+      - score
+      - summary
+      - assumptions
+      - missing_information
+      properties:
+        score:
+          type: integer
+          description: Number indicating the confidence of the investigation and conclusion
+        summary:
+          type: string
+          description: Describe how the confidence number was established
+        assumptions:
+          type: string
+          description: Assumptions made while investigating the case
+        missing_information:
+          type: string
+          description: Information that was missing while investigating the case
+    UserDetail:
+      type: object
+      required:
+      - firstname
+      - user_uuid
+      - email
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        user_uuid:
+          type: string
+    CaseActivity:
+      type: object
+      required:
+      - happened_at
+      - activity_summary
+      - activity_details
+      - activity_severity
+      properties:
+        happened_at:
+          type: integer
+          format: int64
+          description: Timestamp of the activity
+        activity_summary:
+          type: string
+          description: Summary of the activity
+        activity_details:
+          type: string
+          description: Details of the activity
+        activity_severity:
+          $ref: '#/components/schemas/ActionSeverityLevel'
+          description: Severity of the activity
+    CausalityGraphEdge:
+      type: object
+      required:
+      - from
+      - to
+      properties:
+        from:
+          type: string
+          description: Source node id
+        to:
+          type: string
+          description: Target node id
+        label:
+          type: string
+          description: Causal action linking the two nodes, e.g. "spawned", "beaconed to"
     ProviderSummary:
       type: object
       required:
@@ -514,376 +631,7 @@ components:
           type: string
         provider_id:
           type: string
-    ExploreDeeperQuestion:
-      type: object
-      required:
-      - title
-      - description
-      - status
-      - exploration_type
-      - key_identifiers
-      - question_id
-      - created_at
-      properties:
-        question_id:
-          type: string
-          description: Question ID of the explore deeper question
-        title:
-          type: string
-          description: Title of the explore deeper question
-        description:
-          type: string
-          description: Description of the explore deeper question
-        status:
-          $ref: '#/components/schemas/ExploreDeeperQuestionStatus'
-          description: Status of the explore deeper question
-        exploration_type:
-          $ref: '#/components/schemas/ExplorationType'
-          description: Type of exploration for the explore deeper question
-        required_data:
-          type: string
-          description: Required data for the explore deeper question
-        answer:
-          type: string
-          description: Answer to the explore deeper question
-        key_identifiers:
-          type: array
-          items:
-            type: string
-          description: Key identifiers used to identify the data for the explore deeper question
-        created_at:
-          type: integer
-          format: int64
-          description: Timestamp of creation of the explore deeper question
-    UserDetail:
-      type: object
-      required:
-      - firstname
-      - user_uuid
-      - email
-      properties:
-        firstname:
-          type: string
-        lastname:
-          type: string
-        email:
-          type: string
-        user_uuid:
-          type: string
-    Escalation:
-      type: object
-      required:
-      - escalation_type
-      - escalated_to
-      - escalated_by
-      - escalated_at
-      - email_sent_to
-      - uuid
-      properties:
-        escalation_type:
-          $ref: '#/components/schemas/EscalationType'
-          description: Possible Values are 0(Escalated), 1(Descalated)
-        escalated_to:
-          $ref: '#/components/schemas/EscalatedToType'
-          description: Possible Values are 0(Escalated to customer), 1(Escalated to analyst)
-        escalated_by:
-          type: null
-          $ref: '#/components/schemas/UserDetails'
-        escalated_at:
-          type: integer
-          format: int64
-        comment:
-          type: string
-        email_sent_to:
-          type: array
-          items:
-            type: string
-        uuid:
-          type: string
-    Relationship:
-      type: object
-      required:
-      - relationship_id
-      - source
-      - target
-      - type
-      - finding_refs
-      - event_refs
-      properties:
-        relationship_id:
-          type: string
-          description: ID of the relationship
-        source:
-          type: string
-          description: Source of the relationship
-        target:
-          type: string
-          description: Target of the relationship
-        type:
-          $ref: '#/components/schemas/RelationshipType'
-          description: Type of the relationship
-        timestamp:
-          type: integer
-          description: Timestamp of the relationship
-        confidence:
-          type: integer
-          description: Confidence of the relationship
-        label:
-          type: string
-          description: Label of the relationship
-        finding_refs:
-          type: array
-          items:
-            type: string
-          description: Finding references of the relationship
-        event_refs:
-          type: array
-          items:
-            type: string
-          description: Event references of the relationship
-    AdrTriage:
-      type: integer
-      enum:
-      - 0
-      - 1
-      - 5
-      - 10
-      x-enum-varnames:
-      - NotAvaialbleAdrTriage
-      - NoneAdrTriage
-      - PartialAdrTriage
-      - FullAdrTriage
-    CaseV2:
-      type: object
-      required:
-      - case_id
-      - case_uuid
-      - name
-      - type
-      - status
-      - status_label
-      - severity
-      - severity_label
-      - disposition
-      - disposition_label
-      - priority
-      - category
-      - sub_category
-      - assignee
-      - archived
-      - escalations_count
-      - created_at
-      - modified_at
-      - status_modified_at
-      - case_link
-      - organization_uuid
-      - organization_name
-      properties:
-        case_id:
-          type: string
-          description: Unique number respresenting case of an organization
-        case_uuid:
-          type: string
-          description: Unique identifier of case
-        name:
-          type: string
-          description: Title of the case
-        type:
-          $ref: '#/components/schemas/CaseType'
-          description: Default value is 5 signifying v2 case type. v1 is deprecated.
-        status:
-          type: integer
-        status_label:
-          type: string
-        severity:
-          type: integer
-        severity_label:
-          type: string
-        disposition:
-          type: integer
-        disposition_label:
-          type: string
-        priority:
-          description: Possible values are 0 (Need Attention), 1 (Active), 5(Closed)
-          $ref: '#/components/schemas/CasePriorityV2'
-        category:
-          type: string
-          description: category the case belongs to
-        sub_category:
-          type: string
-          description: sub category the case belongs to based on category
-        assignee:
-          $ref: '#/components/schemas/AssigneeDetails'
-        archived:
-          type: boolean
-          description: Flag indicating if the case has been archived or not
-        escalations_count:
-          type: integer
-        created_at:
-          type: integer
-          format: int64
-          description: Timestamp of creation of the case.
-        modified_at:
-          type: integer
-          format: int64
-          description: Timestamp of the last modification of the case
-        status_modified_at:
-          type: integer
-          format: int64
-          description: Timestamp of the last status modification of the case
-        case_closed_at:
-          type: integer
-          format: int64
-          description: Timestamp of the closing of the case
-        case_link:
-          type: string
-          description: link to the case manager
-        organization_uuid:
-          type: string
-          description: OrganizationUuid of the organization the case belongs to
-        organization_name:
-          type: string
-          description: Name of the organization the case belongs to
-        reviewed:
-          type: boolean
-          description: if true, case has been reviewed
-        marked_for_review:
-          type: boolean
-          description: if true, case is marked for review
-        ignore_metrics:
-          type: boolean
-          description: if true, case is ignored from metrics
-        timeline:
-          $ref: '#/components/schemas/CaseTimeline'
-          description: Timestamps and duration between different milestions in a case
-        alert_type:
-          type: string
-          description: Alert type of the primary alert in the case
-        case_score:
-          $ref: '#/components/schemas/CaseScoreMinimal'
-          description: Score of the case
-    AlertTypeWithProperties:
-      type: object
-      required:
-      - alert_type
-      - alert_provider
-      - default_severity
-      - categories
-      - mitre_tactics
-      properties:
-        alert_type:
-          type: string
-        alert_provider:
-          type: string
-        default_severity:
-          $ref: '#/components/schemas/AlertTypeSeverity'
-        categories:
-          type: array
-          items:
-            type: string
-        mitre_tactics:
-          type: array
-          items:
-            type: string
-    LinkedAlertSourceType:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - InternalAlertSourceType
-      - ExternalAlertSourceType
-    ConnectionDetails:
-      type: object
-      properties:
-        connection_id:
-          type: string
-        connection_name:
-          type: string
-    CausalityGraphEdge:
-      type: object
-      required:
-      - from
-      - to
-      properties:
-        from:
-          type: string
-          description: Source node id
-        to:
-          type: string
-          description: Target node id
-        label:
-          type: string
-          description: Causal action linking the two nodes, e.g. "spawned", "beaconed to"
-    Evidence:
-      type: object
-      required:
-      - name
-      - attached_content_type
-      - attached_content_link
-      - attached_content_version
-      - data
-      properties:
-        name:
-          type: string
-        attached_content_link:
-          type: string
-        attached_content_version:
-          type: integer
-        attached_content_type:
-          $ref: '#/components/schemas/EvidenceAttachmentType'
-          description: Possible values are O (Undefined), 1(Json), 5(Pdf)
-        data:
-          type: string
-    CausalityGraphNode:
-      type: object
-      required:
-      - id
-      - label
-      properties:
-        id:
-          type: string
-          description: Short unique key referenced by edges
-        label:
-          type: string
-          description: Display text shown in the node box
-        kind:
-          type: string
-          description: 'Colour hint: alert/threat/malicious → red; finding/uncertain → amber; anything else → neutral'
-    SortOrder:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - Asc
-      - Desc
-    LinkedCaseSummary:
-      type: object
-      properties:
-        case_id:
-          type: string
-          description: Human-readable case ID
-        disposition:
-          type: integer
-          description: Disposition of the case
-        disposition_label:
-          type: string
-          description: Human-readable label for the case disposition
-        disposition_summary:
-          type: string
-          description: Human-readable summary of the case disposition
-        created_at:
-          type: integer
-          format: int64
-          description: Timestamp when the case was created
-        is_agentic_case:
-          type: boolean
-          description: Flag indicating whether the case was created by agentic investigation
-        agentic_investigation_id:
-          type: string
-          description: ID of the agentic investigation associated with this case
-    GetAlertCatalogExecutionHistoryResponse:
+    ListAlertCatalogTypesResponse:
       type: object
       required:
       - data
@@ -895,193 +643,91 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/AlertCatalogExecutionHistory'
+            $ref: '#/components/schemas/AlertCatalogCaseSummary'
         total:
           type: integer
-    CaseTimelineMetrics:
-      type: object
-      required:
-      - alert_acknowledged_metric
-      - investigation_completed_metric
-      - case_contained_metric
-      - case_closed_metric
-      properties:
-        alert_acknowledged_metric:
-          type: integer
-          format: int64
-          description: Difference between Alert raised at source and Alert acknowledged at AirMDR System in seconds
-        investigation_completed_metric:
-          type: integer
-          format: int64
-          description: Difference between when case investigation is completed and Alert acknowledged at AirMDR System in seconds
-        case_contained_metric:
-          type: integer
-          format: int64
-          description: Difference between when case is moved into contained status and Alert acknowledged at AirMDR System in seconds
-        case_closed_metric:
-          type: integer
-          format: int64
-          description: Difference between when case is moved into closed status and Alert acknowledged at AirMDR System in seconds
-    EntityType:
+    EntityRiskLabel:
       type: string
       enum:
-      - user
-      - service_account
-      - host
-      - ip
-      - domain
-      - file_hash
-      - cloud_resource
-      - process
-      - threat_actor
+      - benign
+      - suspicious
+      - malicious
       x-enum-varnames:
-      - EntityTypeUser
-      - EntityTypeServiceAccount
-      - EntityTypeHost
-      - EntityTypeIP
-      - EntityTypeDomain
-      - EntityTypeFileHash
-      - EntityTypeCloudResource
-      - EntityTypeProcess
-      - EntityTypeThreatActor
-    EvidenceAttachmentType:
-      type: integer
-      enum:
-      - 0
-      - 1
-      - 5
-      x-enum-varnames:
-      - UndefinedAttachmentType
-      - JsonAttachmentType
-      - PdfAttachmentType
-    ScoreStatus:
-      type: string
-      enum:
-      - not_generated
-      - in_progress
-      - completed
-      x-enum-varnames:
-      - ScoreStatusNotGenerated
-      - ScoreStatusInProgress
-      - ScoreStatusCompleted
-    AlertCatalogExecutionHistory:
+      - EntityRiskLabelBenign
+      - EntityRiskLabelSuspicious
+      - EntityRiskLabelMalicious
+    GenerateAlertUsingLLMRequest:
       type: object
       required:
-      - execution_id
-      - execution_link
-      - started_at
-      - completed_at
-      - alert_provider_id
+      - alert_content
+      - alert_provider
       - alert_type
-      - provider_logo_url
-      - alert_provider_display_name
-      - alert_provider_name
       properties:
-        execution_id:
+        alert_content:
           type: string
-        execution_link:
-          type: string
-        started_at:
-          type: integer
-        completed_at:
-          type: integer
-        alert_provider_id:
+        alert_provider:
           type: string
         alert_type:
           type: string
-        provider_logo_url:
-          type: string
-        alert_provider_display_name:
-          type: string
-        alert_provider_name:
-          type: string
-    RequestDemoResponse:
+    CaseExecutionDetails:
       type: object
-      required:
-      - message
-      - data
       properties:
-        message:
+        case_id:
           type: string
-        data:
-          type: object
-          required:
-          - demo_requested
-          properties:
-            demo_requested:
-              type: boolean
-    CaseStructuredData:
-      type: object
-      required:
-      - entities
-      - events
-      - relationships
-      properties:
-        entities:
-          type: array
-          items:
-            $ref: '#/components/schemas/Entity'
-        geo_info:
-          type: array
-          items:
-            $ref: '#/components/schemas/GeoInfo'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        relationships:
-          type: array
-          items:
-            $ref: '#/components/schemas/Relationship'
-    Event:
-      type: object
-      required:
-      - event_id
-      - actor
-      - action
-      - target
-      - outcome
-      - finding_refs
-      properties:
-        event_id:
+        investigation_status:
+          $ref: '#/components/schemas/AlertInvestigationStatus'
+        investigation_playbook_id:
           type: string
-          description: ID of the event
-        timestamp:
-          type: integer
-          description: Timestamp of the event
-        actor:
-          type: array
-          items:
-            type: string
-          description: Actors of the event
-        action:
+        investigation_playbook_name:
           type: string
-          description: Action of the event
-        target:
-          type: array
-          items:
-            type: string
-          description: Targets of the event
-        outcome:
-          $ref: '#/components/schemas/EventOutcome'
-          description: Outcome of the event
-        summary:
+        execution_id:
           type: string
-          description: Summary of the event
-        severity:
-          $ref: '#/components/schemas/EventSeverity'
-          description: Severity of the event
-        mitre_technique_id:
-          type: string
-          description: MITRE technique ID of the event
-        mitre_technique_name:
-          type: string
-          description: MITRE technique name of the event
-        finding_refs:
-          type: array
-          items:
-            type: string
-          description: Finding references of the event
+        linked_manually:
+          type: boolean
+          description: Flag to indicate if the case was linked manually or through investigation playbook
+        is_agentic_case:
+          type: boolean
+          description: whether the linked case was created by agentic investigation
+    EventOutcome:
+      type: string
+      enum:
+      - success
+      - failure
+      - partial
+      - unknown
+      x-enum-varnames:
+      - EventOutcomeSuccess
+      - EventOutcomeFailure
+      - EventOutcomePartial
+      - EventOutcomeUnknown
+    RelationshipType:
+      type: string
+      enum:
+      - uses
+      - connects_to
+      - owns
+      - authenticates_as
+      - resolves_to
+      - downloaded
+      - executed
+      - modified
+      - sent_email_to
+      - lateral_moved_to
+      - belongs_to
+      - other
+      x-enum-varnames:
+      - RelationshipTypeUses
+      - RelationshipTypeConnectsTo
+      - RelationshipTypeOwns
+      - RelationshipTypeAuthenticatesAs
+      - RelationshipTypeResolvesTo
+      - RelationshipTypeDownloaded
+      - RelationshipTypeExecuted
+      - RelationshipTypeModified
+      - RelationshipTypeSentEmailTo
+      - RelationshipTypeLateralMovedTo
+      - RelationshipTypeBelongsTo
+      - RelationshipTypeOther
     CaseTimeline:
       type: object
       properties:
@@ -1117,458 +763,78 @@ components:
           type: integer
           format: int64
           description: Timestamp when case is created for reinvestigation
-    CasePriorityV2:
-      type: integer
-      enum:
-      - 0
-      - 5
-      - 10
-      x-enum-varnames:
-      - NeedAttentionCasePriorityV2
-      - ActiveCasePriorityV2
-      - ClosedCasePriorityV2
-    SortFields:
+    LinkedAlertSource:
       type: object
       required:
-      - field
-      - sort_order
-      properties:
-        field:
-          type: string
-          description: indicates which field will be used for sorting
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: indicates sort order - asc or desc
-    CustomQuestion:
-      type: object
-      required:
-      - question
-      - answer
-      - question_id
-      - created_at
-      - created_by
-      properties:
-        question:
-          type: string
-        answer:
-          type: string
-        guideline:
-          type: string
-        question_id:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-          description: Timestamp of creation of the question
-        created_by:
-          type: string
-          description: User ID of the user who created the question
-    EntitySource:
-      type: string
-      enum:
-      - alert_seed
-      - darryl_enriched
-      x-enum-varnames:
-      - EntitySourceAlertSeed
-      - EntitySourceDarrylEnriched
-    EscalatedToType:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - EscalatedToCustomer
-      - EscalatedToAnalyst
-    ListAlertCatalogProvidersResponse:
-      type: object
-      required:
-      - data
-      - message
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/schemas-ProviderSummary'
-        total:
-          type: integer
-    EntityRisk:
-      type: object
-      required:
-      - score
-      - label
-      - reasons
-      properties:
-        score:
-          type: integer
-        label:
-          $ref: '#/components/schemas/EntityRiskLabel'
-          description: Label of the entity risk
-        reasons:
-          type: array
-          items:
-            type: string
-          description: Reasons of the entity risk
-    ChatSessionDetail:
-      type: object
-      required:
-      - chat_session_id
-      - title
-      - owner_details
-      - created_at
-      - deleted
-      properties:
-        chat_session_id:
-          type: string
-        title:
-          type: string
-        owner_details:
-          $ref: '#/components/schemas/UserDetail'
-        created_at:
-          type: integer
-          format: int64
-        deleted:
-          type: boolean
-          description: Flag indicating if session has been deleted or not
-    AlertsIOC:
-      type: object
-      properties:
-        ip_address:
-          type: array
-          items:
-            type: string
-        domain:
-          type: array
-          items:
-            type: string
-        username:
-          type: array
-          items:
-            type: string
-        location:
-          type: array
-          items:
-            type: string
-        hostname:
-          type: array
-          items:
-            type: string
-        url:
-          type: array
-          items:
-            type: string
-        ioc_fields:
-          type: object
-    ListAlertCatalogTypesResponse:
-      type: object
-      required:
-      - data
-      - message
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertCatalogCaseSummary'
-        total:
-          type: integer
-    ListAlertCatalogTypesFilter:
-      type: object
-      properties:
-        search_query:
-          type: string
-        provider_id:
-          type: array
-          items:
-            type: string
-    Entity:
-      type: object
-      required:
-      - id
-      - name
+      - uuid
       - type
-      - source
-      - tags
-      - finding_refs
-      - attributes
+      - name
+      - path
       properties:
-        id:
-          type: string
-          description: ID of the entity
+        type:
+          $ref: '#/components/schemas/LinkedAlertSourceType'
+          description: Possible Values are 0(Internal alert), 1 (external link)
         name:
           type: string
-          description: Name of the entity
-        type:
-          $ref: '#/components/schemas/EntityType'
-          description: Type of the entity
-        source:
-          $ref: '#/components/schemas/EntitySource'
-          description: Source of the entity
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags of the entity
-        finding_refs:
-          type: array
-          items:
-            type: string
-          description: Finding references of the entity
-        attributes:
-          description: Attributes of the entity
-        display_name:
+        path:
           type: string
-          description: Display name of the entity
-        display_summary:
+        uuid:
           type: string
-          description: Display summary of the entity
-        risk:
-          $ref: '#/components/schemas/EntityRisk'
-          description: Risk of the entity
-    GetCaseInAlertCatalogResponse:
-      type: object
-      required:
-      - case_id
-      - previous_case_exists
-      - meta_data
-      properties:
-        case_id:
-          type: string
-        previous_case_exists:
-          type: boolean
-        previous_case_id:
-          type: string
-        meta_data:
-          $ref: '#/components/schemas/AlertCatalogMetaData'
-    ActionExecutionDetails:
-      type: object
-      properties:
-        execution_id:
-          type: string
-          description: ID of the execution triggered against knowledge-management for this action
-        execution_status:
-          type: string
-          description: Last known execution status, as reported by knowledge-management's GetExecutionLogAPI
-        started_by:
-          type: string
-          description: ID of the user who started the execution
-        started_at:
-          type: integer
-          format: int64
-          description: Timestamp the execution was started; used to bound how long the execution is polled before it is force-resolved as failed
-    ListAlertCatalogTypesRequest:
-      type: object
-      properties:
-        filter:
-          $ref: '#/components/schemas/ListAlertCatalogTypesFilter'
-        sort:
-          type: array
-          items:
-            $ref: '#/components/schemas/SortFields'
-    EntityRiskLabel:
-      type: string
-      enum:
-      - benign
-      - suspicious
-      - malicious
-      x-enum-varnames:
-      - EntityRiskLabelBenign
-      - EntityRiskLabelSuspicious
-      - EntityRiskLabelMalicious
-    EscalationType:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - Escalated
-      - Descalated
-    GetAlertResponse:
-      type: object
-      required:
-      - alert_id
-      - alert_uuid
-      - alert_content
-      - alert_provider
-      - alert_ioc
-      - organization_uuid
-      - organization_code
-      - created_at
-      - created_by
-      - created_at_source
-      - fetched_playbook_id
-      - fetched_playbook_name
-      - investigation_status
-      - alert_provider_details
-      - alert_link
-      properties:
-        alert_id:
-          type: string
-        alert_uuid:
-          type: string
-        alert_content:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        alert_ioc:
-          $ref: '#/components/schemas/AlertsIOC'
-        organization_uuid:
-          type: string
-        organization_code:
-          type: string
-        created_by:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        modified_at:
-          type: integer
-          format: int64
-        created_at_source:
-          type: integer
-          format: int64
-        fetched_playbook_id:
-          type: string
-        fetched_playbook_name:
-          type: string
-        fetched_execution_id:
-          type: string
-        investigation_playbook_id:
-          type: string
-        investigation_playbook_name:
-          type: string
-        investigation_status:
-          $ref: '#/components/schemas/AlertInvestigationStatus'
-        investigation_retry_count:
-          type: integer
-        investigation_completed_time:
-          type: integer
-          format: int64
-        execution_id:
-          type: string
-        linked_case_id:
-          type: string
-          description: ID of the latest case linked to the alert
-        original_alert_id:
-          type: string
-          description: When investigation_status is Duplicate, the alert_id this alert was found to be a duplicate of
-        alert_provider_details:
-          $ref: '#/components/schemas/ProviderDetails'
-        resolved:
-          type: boolean
-        is_investigated_with_agent:
-          type: boolean
-          description: Flag indicating whether the alert was investigated by the agentic investigation service
-        is_alert_reinvestigated:
-          type: boolean
-          description: Flag indicating whether the alert has been manually reinvestigated via the InvestigateAlert API
-        alert_summary:
-          type: string
-          description: Human-readable summary of the alert
-        linked_case_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseExecutionDetails'
-          description: Details of the all the cases that are linked to the alert
-        linked_case_summary:
-          $ref: '#/components/schemas/LinkedCaseSummary'
-          description: Summary of the latest case linked to the alert
-        connection_details:
-          $ref: '#/components/schemas/ConnectionDetails'
-          description: Details of the connection fetched the alert
-        alert_type_details:
-          $ref: '#/components/schemas/AlertTypeWithProperties'
-          description: Details of the alert type
         alert_link:
           type: string
-          description: URL for the alert
-    AlertCatalogMetaData:
+    ScoreStatus:
+      type: string
+      enum:
+      - not_generated
+      - in_progress
+      - completed
+      x-enum-varnames:
+      - ScoreStatusNotGenerated
+      - ScoreStatusInProgress
+      - ScoreStatusCompleted
+    EventSeverity:
+      type: string
+      enum:
+      - info
+      - low
+      - medium
+      - high
+      - critical
+      x-enum-varnames:
+      - EventSeverityInfo
+      - EventSeverityLow
+      - EventSeverityMedium
+      - EventSeverityHigh
+      - EventSeverityCritical
+    ConnectionDetails:
       type: object
-      required:
-      - provider_id
-      - provider_name
-      - provider_display_name
-      - provider_logo_url
-      - provider_logo_url_bg_white
-      - alert_type
       properties:
-        provider_id:
+        connection_id:
           type: string
-        provider_name:
+        connection_name:
           type: string
-        provider_display_name:
-          type: string
-        provider_logo_url:
-          type: string
-        provider_logo_url_bg_white:
-          type: string
-        alert_type:
-          type: string
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    GetAlertCatalogResponse:
-      type: object
-      required:
-      - message
-      - data
-      - alert_catalog_case_exists
-      properties:
-        message:
-          type: string
-        alert_catalog_case_exists:
-          type: boolean
-        data:
-          $ref: '#/components/schemas/AlertCatalogData'
-    GeoInfo:
-      type: object
-      required:
-      - entity_ref
-      properties:
-        entity_ref:
-          type: string
-          description: Entity reference of the geo info
-        lat:
-          type: number
-          description: Latitude of the geo info
-        lon:
-          type: number
-          description: Longitude of the geo info
-        country:
-          type: string
-          description: Country of the geo info
-        country_code:
-          type: string
-          description: Country code of the geo info
-        city:
-          type: string
-          description: City of the geo info
-        asn:
-          type: string
-          description: ASN of the geo info
-        org:
-          type: string
-          description: Org of the geo info
-        is_vpn:
-          type: boolean
-          description: Is VPN of the geo info
-        is_tor:
-          type: boolean
-          description: Is Tor of the geo info
-        is_datacenter:
-          type: boolean
-          description: Is datacenter of the geo info
+    EntityType:
+      type: string
+      enum:
+      - user
+      - service_account
+      - host
+      - ip
+      - domain
+      - file_hash
+      - cloud_resource
+      - process
+      - threat_actor
+      x-enum-varnames:
+      - EntityTypeUser
+      - EntityTypeServiceAccount
+      - EntityTypeHost
+      - EntityTypeIP
+      - EntityTypeDomain
+      - EntityTypeFileHash
+      - EntityTypeCloudResource
+      - EntityTypeProcess
+      - EntityTypeThreatActor
     CustomFieldValue:
       type: object
       required:
@@ -1580,25 +846,18 @@ components:
           description: UUID of the custom field
         value:
           description: Value of the custom field
-    CaseExecutionDetails:
+    ConclusionOverview:
       type: object
+      required:
+      - summary
+      - key_evidence
       properties:
-        case_id:
+        summary:
           type: string
-        investigation_status:
-          $ref: '#/components/schemas/AlertInvestigationStatus'
-        investigation_playbook_id:
+          description: Summary of the conclusion
+        key_evidence:
           type: string
-        investigation_playbook_name:
-          type: string
-        execution_id:
-          type: string
-        linked_manually:
-          type: boolean
-          description: Flag to indicate if the case was linked manually or through investigation playbook
-        is_agentic_case:
-          type: boolean
-          description: whether the linked case was created by agentic investigation
+          description: Key evidences supporting the conclusion
     AlertCatalogData:
       type: object
       required:
@@ -1620,26 +879,6 @@ components:
                 type: string
         meta_data:
           $ref: '#/components/schemas/AlertCatalogMetaData'
-    CaseConfidence:
-      type: object
-      required:
-      - score
-      - summary
-      - assumptions
-      - missing_information
-      properties:
-        score:
-          type: integer
-          description: Number indicating the confidence of the investigation and conclusion
-        summary:
-          type: string
-          description: Describe how the confidence number was established
-        assumptions:
-          type: string
-          description: Assumptions made while investigating the case
-        missing_information:
-          type: string
-          description: Information that was missing while investigating the case
     CaseDetailsV2:
       type: object
       required:
@@ -1808,87 +1047,186 @@ components:
         agentic_investigation_url:
           type: string
           description: Pre-signed S3 URL for the agentic investigation case writeup, present only when the linked alert was investigated by the agent
-    CaseAction:
+    CausalityGraph:
       type: object
-      required:
-      - title
-      - status
-      - status_label
-      - assignee
       properties:
-        uuid:
-          type: string
-          description: unique identifier of the action
         title:
           type: string
-          description: Information on action required
-        status:
-          type: integer
-        status_label:
+          description: Title of the graph, e.g. "Causality chain"
+        direction:
           type: string
-        assignee:
-          $ref: '#/components/schemas/UserDetails'
-        assignee_v2:
-          $ref: '#/components/schemas/AssigneeDetails'
-          description: AssigneeDetails for the action; populated alongside assignee during migration
-        created_at:
+          description: Layout direction — always "TB" (top-to-bottom) for causality chains
+          enum:
+          - TB
+          default: TB
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CausalityGraphNode'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/CausalityGraphEdge'
+    ExploreDeeperQuestionStatus:
+      type: string
+      enum:
+      - Available
+      - Data Needed
+      x-enum-varnames:
+      - AvailableExploreDeeperQuestionStatus
+      - DataNeededExploreDeeperQuestionStatus
+    GetAlertCatalogResponse:
+      type: object
+      required:
+      - message
+      - data
+      - alert_catalog_case_exists
+      properties:
+        message:
+          type: string
+        alert_catalog_case_exists:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AlertCatalogData'
+    LinkedAlertSourceType:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - InternalAlertSourceType
+      - ExternalAlertSourceType
+    CaseStructuredData:
+      type: object
+      required:
+      - entities
+      - events
+      - relationships
+      properties:
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entity'
+        geo_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoInfo'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/Relationship'
+    AlertCatalogCaseSummary:
+      type: object
+      required:
+      - provider_id
+      - alert_type
+      - case_id
+      - case_name
+      - disposition
+      - disposition_label
+      - provider_name
+      - provider_display_name
+      - executive_summary
+      properties:
+        provider_id:
+          type: string
+        alert_type:
+          type: string
+        case_id:
+          type: string
+        alert_id:
+          type: string
+        alert_content:
+          type: string
+        case_name:
+          type: string
+        disposition:
+          type: integer
+        disposition_label:
+          type: string
+        provider_name:
+          type: string
+        provider_display_name:
+          type: string
+        executive_summary:
+          type: string
+    CaseScoreMinimal:
+      type: object
+      required:
+      - score
+      - score_status
+      properties:
+        score:
+          type: number
+          description: Score of the case
+        score_status:
+          $ref: '#/components/schemas/ScoreStatus'
+          description: Status of the score
+    GetExecutionLogResponse:
+      type: object
+      required:
+      - execution_id
+      - execution_status
+      - skill_id
+      - skill_type
+      - skill_name
+      - execution_trigger_source
+      - submitted_at
+      properties:
+        execution_id:
+          type: string
+        execution_result:
+          type: string
+        ai_summary:
+          type: string
+        execution_status:
+          type: integer
+        skill_id:
+          type: string
+        skill_version:
+          type: integer
+        skill_name:
+          type: string
+        alert_id:
+          type: string
+        skill_type:
+          type: integer
+        nl_playbook:
+          type: string
+        validate_version:
+          type: string
+        steps_executed:
+          type: integer
+        total_steps:
+          type: integer
+        step_outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkillExecutionOutput'
+        chat_session_id:
+          type: string
+        submitted_at:
           type: integer
           format: int64
-          description: Timestamp of creation of the action.
-        modified_at:
+        started_at:
           type: integer
           format: int64
-          description: Timestamp of the last modification of the action
         completed_at:
           type: integer
           format: int64
-          description: Timestamp of the completion of the action
-        action_severity:
-          $ref: '#/components/schemas/ActionSeverityLevel'
-          description: Severity of the action
-        session_id:
-          type: string
-          description: Session ID of the action where execution of the action took place
-        required:
-          type: boolean
-          description: Whether this action is required
-        description:
-          type: string
-          description: Description of the action required
-        type:
-          type: string
-          enum:
-          - approval
-          - customer_action
-          - answer_question
-          description: Type of action; null is treated as customer_action
-        blocking_reason:
-          type: string
-          description: Reason this action is blocking the case; only set when type is customer_action
-        blocking_fact_id:
-          type: string
-          description: ID of the fact this action is blocking; only set when type is customer_action
-        playbook_id:
-          type: string
-          description: ID of the playbook associated with this action; only set when type is approval
-        priority:
-          type: string
-          enum:
-          - Containment
-          - Required
-          - Recommended
-          description: Priority of the action; when set on create/update, the required flag is derived from it (Containment/Required -> true, Recommended -> false)
-        evidences:
-          type: array
-          items:
-            type: string
-          description: Free-form evidence text snippets associated with the action
-        status_v2:
-          $ref: '#/components/schemas/ActionStatusV2'
-          description: Lifecycle status of the action, kept in sync with status. If both status and status_v2 are set on write, status_v2 takes priority and status is derived from it. For type approval/answer_question, only completed/will_not_do may be set directly; customer_action allows all values.
-        execution_details:
-          $ref: '#/components/schemas/ActionExecutionDetails'
-          description: Details of the playbook execution triggered externally for this action; only set when type is approval. Polled until the execution reaches a terminal state, at which point status_v2/type are updated accordingly.
+    ActionStatusV2:
+      type: string
+      enum:
+      - open
+      - in_progress
+      - blocked
+      - completed
+      - will_not_do
+      description: 'Lifecycle status of an action, kept in sync with status. Mapping from status: 0/New -> open, 1/Pending -> in_progress, 2/Customer Pending -> blocked, 3/Approved -> in_progress, 4/Rejected -> will_not_do, 5/Completed -> completed.'
     AlertTypeSeverity:
       type: integer
       enum:
@@ -1901,6 +1239,42 @@ components:
       - AlertTypeSeverityMedium
       - AlertTypeSeverityHigh
       - AlertTypeSeverityCritical
+    UpsertCaseInAlertCatalogRequest:
+      type: object
+      required:
+      - alert_provider
+      - alert_type
+      - provider_id
+      properties:
+        provider_id:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+    AlertTypeWithProperties:
+      type: object
+      required:
+      - alert_type
+      - alert_provider
+      - default_severity
+      - categories
+      - mitre_tactics
+      properties:
+        alert_type:
+          type: string
+        alert_provider:
+          type: string
+        default_severity:
+          $ref: '#/components/schemas/AlertTypeSeverity'
+        categories:
+          type: array
+          items:
+            type: string
+        mitre_tactics:
+          type: array
+          items:
+            type: string
     SkillExecutionOutput:
       type: object
       required:
@@ -1918,54 +1292,170 @@ components:
           type: string
         execution_input:
           type: string
-    ExploreDeeperQuestionStatus:
-      type: string
-      enum:
-      - Available
-      - Data Needed
-      x-enum-varnames:
-      - AvailableExploreDeeperQuestionStatus
-      - DataNeededExploreDeeperQuestionStatus
-    CaseType:
-      type: integer
-      enum:
-      - 0
-      - 5
-      x-enum-varnames:
-      - BasicCaseType
-      - V2CaseType
-    GetAlertCatalogByExecutionIdResponse:
+    Entity:
       type: object
       required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/AlertCatalogData'
-    schemas-ProviderSummary:
-      type: object
-      required:
+      - id
       - name
-      - logo_url
-      - transparent_bg_logo_url
-      - logo_url_bg_white
-      - provider_id
-      - display_name
+      - type
+      - source
+      - tags
+      - finding_refs
+      - attributes
+      properties:
+        id:
+          type: string
+          description: ID of the entity
+        name:
+          type: string
+          description: Name of the entity
+        type:
+          $ref: '#/components/schemas/EntityType'
+          description: Type of the entity
+        source:
+          $ref: '#/components/schemas/EntitySource'
+          description: Source of the entity
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags of the entity
+        finding_refs:
+          type: array
+          items:
+            type: string
+          description: Finding references of the entity
+        attributes:
+          description: Attributes of the entity
+        display_name:
+          type: string
+          description: Display name of the entity
+        display_summary:
+          type: string
+          description: Display summary of the entity
+        risk:
+          $ref: '#/components/schemas/EntityRisk'
+          description: Risk of the entity
+    EntityRisk:
+      type: object
+      required:
+      - score
+      - label
+      - reasons
+      properties:
+        score:
+          type: integer
+        label:
+          $ref: '#/components/schemas/EntityRiskLabel'
+          description: Label of the entity risk
+        reasons:
+          type: array
+          items:
+            type: string
+          description: Reasons of the entity risk
+    ProviderDetails:
+      type: object
       properties:
         name:
           type: string
-        logo_url:
-          type: string
-        transparent_bg_logo_url:
-          type: string
-        logo_url_bg_white:
+        icon:
           type: string
         provider_id:
           type: string
-        display_name:
+    ChatSessionDetail:
+      type: object
+      required:
+      - chat_session_id
+      - title
+      - owner_details
+      - created_at
+      - deleted
+      properties:
+        chat_session_id:
           type: string
+        title:
+          type: string
+        owner_details:
+          $ref: '#/components/schemas/UserDetail'
+        created_at:
+          type: integer
+          format: int64
+        deleted:
+          type: boolean
+          description: Flag indicating if session has been deleted or not
+    CustomQuestion:
+      type: object
+      required:
+      - question
+      - answer
+      - question_id
+      - created_at
+      - created_by
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+        guideline:
+          type: string
+        question_id:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+          description: Timestamp of creation of the question
+        created_by:
+          type: string
+          description: User ID of the user who created the question
+    Event:
+      type: object
+      required:
+      - event_id
+      - actor
+      - action
+      - target
+      - outcome
+      - finding_refs
+      properties:
+        event_id:
+          type: string
+          description: ID of the event
+        timestamp:
+          type: integer
+          description: Timestamp of the event
+        actor:
+          type: array
+          items:
+            type: string
+          description: Actors of the event
+        action:
+          type: string
+          description: Action of the event
+        target:
+          type: array
+          items:
+            type: string
+          description: Targets of the event
+        outcome:
+          $ref: '#/components/schemas/EventOutcome'
+          description: Outcome of the event
+        summary:
+          type: string
+          description: Summary of the event
+        severity:
+          $ref: '#/components/schemas/EventSeverity'
+          description: Severity of the event
+        mitre_technique_id:
+          type: string
+          description: MITRE technique ID of the event
+        mitre_technique_name:
+          type: string
+          description: MITRE technique name of the event
+        finding_refs:
+          type: array
+          items:
+            type: string
+          description: Finding references of the event
     CaseDetailFields:
       type: object
       properties:
@@ -2050,67 +1540,186 @@ components:
           items:
             $ref: '#/components/schemas/CaseFactSummary'
           description: Facts associated with the case, resolved from the stored fact ids
-    AssigneeDetails:
+    EntitySource:
+      type: string
+      enum:
+      - alert_seed
+      - darryl_enriched
+      x-enum-varnames:
+      - EntitySourceAlertSeed
+      - EntitySourceDarrylEnriched
+    EscalationType:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - Escalated
+      - Descalated
+    LinkedCaseSummary:
       type: object
-      required:
-      - assignee_id
-      - assignee_type
       properties:
-        firstname:
+        case_id:
           type: string
-        lastname:
+          description: Human-readable case ID
+        disposition:
+          type: integer
+          description: Disposition of the case
+        disposition_label:
           type: string
-        email:
+          description: Human-readable label for the case disposition
+        disposition_summary:
           type: string
-        assignee_id:
-          type: string
-        user_uuid:
-          type: string
-        assignee_type:
-          type: string
-        performed_by_darryl:
+          description: Human-readable summary of the case disposition
+        created_at:
+          type: integer
+          format: int64
+          description: Timestamp when the case was created
+        is_agentic_case:
           type: boolean
-    UpsertCaseInAlertCatalogRequest:
+          description: Flag indicating whether the case was created by agentic investigation
+        agentic_investigation_id:
+          type: string
+          description: ID of the agentic investigation associated with this case
+    AlertsIOC:
+      type: object
+      properties:
+        ip_address:
+          type: array
+          items:
+            type: string
+        domain:
+          type: array
+          items:
+            type: string
+        username:
+          type: array
+          items:
+            type: string
+        location:
+          type: array
+          items:
+            type: string
+        hostname:
+          type: array
+          items:
+            type: string
+        url:
+          type: array
+          items:
+            type: string
+        ioc_fields:
+          type: object
+    AlertCatalogExecutionHistory:
       type: object
       required:
-      - alert_provider
+      - execution_id
+      - execution_link
+      - started_at
+      - completed_at
+      - alert_provider_id
       - alert_type
-      - provider_id
+      - provider_logo_url
+      - alert_provider_display_name
+      - alert_provider_name
       properties:
-        provider_id:
+        execution_id:
           type: string
-        alert_provider:
+        execution_link:
+          type: string
+        started_at:
+          type: integer
+        completed_at:
+          type: integer
+        alert_provider_id:
           type: string
         alert_type:
           type: string
-    RelationshipType:
-      type: string
+        provider_logo_url:
+          type: string
+        alert_provider_display_name:
+          type: string
+        alert_provider_name:
+          type: string
+    ExploreDeeperQuestion:
+      type: object
+      required:
+      - title
+      - description
+      - status
+      - exploration_type
+      - key_identifiers
+      - question_id
+      - created_at
+      properties:
+        question_id:
+          type: string
+          description: Question ID of the explore deeper question
+        title:
+          type: string
+          description: Title of the explore deeper question
+        description:
+          type: string
+          description: Description of the explore deeper question
+        status:
+          $ref: '#/components/schemas/ExploreDeeperQuestionStatus'
+          description: Status of the explore deeper question
+        exploration_type:
+          $ref: '#/components/schemas/ExplorationType'
+          description: Type of exploration for the explore deeper question
+        required_data:
+          type: string
+          description: Required data for the explore deeper question
+        answer:
+          type: string
+          description: Answer to the explore deeper question
+        key_identifiers:
+          type: array
+          items:
+            type: string
+          description: Key identifiers used to identify the data for the explore deeper question
+        created_at:
+          type: integer
+          format: int64
+          description: Timestamp of creation of the explore deeper question
+    AlertCatalogMetaData:
+      type: object
+      required:
+      - provider_id
+      - provider_name
+      - provider_display_name
+      - provider_logo_url
+      - provider_logo_url_bg_white
+      - alert_type
+      properties:
+        provider_id:
+          type: string
+        provider_name:
+          type: string
+        provider_display_name:
+          type: string
+        provider_logo_url:
+          type: string
+        provider_logo_url_bg_white:
+          type: string
+        alert_type:
+          type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    SortOrder:
+      type: integer
       enum:
-      - uses
-      - connects_to
-      - owns
-      - authenticates_as
-      - resolves_to
-      - downloaded
-      - executed
-      - modified
-      - sent_email_to
-      - lateral_moved_to
-      - belongs_to
-      - other
+      - 0
+      - 1
       x-enum-varnames:
-      - RelationshipTypeUses
-      - RelationshipTypeConnectsTo
-      - RelationshipTypeOwns
-      - RelationshipTypeAuthenticatesAs
-      - RelationshipTypeResolvesTo
-      - RelationshipTypeDownloaded
-      - RelationshipTypeExecuted
-      - RelationshipTypeModified
-      - RelationshipTypeSentEmailTo
-      - RelationshipTypeLateralMovedTo
-      - RelationshipTypeBelongsTo
-      - RelationshipTypeOther
+      - Asc
+      - Desc
     ActionSeverityLevel:
       type: string
       enum:
@@ -2123,85 +1732,276 @@ components:
       - HighActionSeverity
       - MediumActionSeverity
       - LowActionSeverity
-    EventSeverity:
-      type: string
+    SortFields:
+      type: object
+      required:
+      - field
+      - sort_order
+      properties:
+        field:
+          type: string
+          description: indicates which field will be used for sorting
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: indicates sort order - asc or desc
+    CaseTimelineMetrics:
+      type: object
+      required:
+      - alert_acknowledged_metric
+      - investigation_completed_metric
+      - case_contained_metric
+      - case_closed_metric
+      properties:
+        alert_acknowledged_metric:
+          type: integer
+          format: int64
+          description: Difference between Alert raised at source and Alert acknowledged at AirMDR System in seconds
+        investigation_completed_metric:
+          type: integer
+          format: int64
+          description: Difference between when case investigation is completed and Alert acknowledged at AirMDR System in seconds
+        case_contained_metric:
+          type: integer
+          format: int64
+          description: Difference between when case is moved into contained status and Alert acknowledged at AirMDR System in seconds
+        case_closed_metric:
+          type: integer
+          format: int64
+          description: Difference between when case is moved into closed status and Alert acknowledged at AirMDR System in seconds
+    Faq:
+      type: object
+      required:
+      - question
+      - answer
+      - question_id
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+        question_id:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+    GeoInfo:
+      type: object
+      required:
+      - entity_ref
+      properties:
+        entity_ref:
+          type: string
+          description: Entity reference of the geo info
+        lat:
+          type: number
+          description: Latitude of the geo info
+        lon:
+          type: number
+          description: Longitude of the geo info
+        country:
+          type: string
+          description: Country of the geo info
+        country_code:
+          type: string
+          description: Country code of the geo info
+        city:
+          type: string
+          description: City of the geo info
+        asn:
+          type: string
+          description: ASN of the geo info
+        org:
+          type: string
+          description: Org of the geo info
+        is_vpn:
+          type: boolean
+          description: Is VPN of the geo info
+        is_tor:
+          type: boolean
+          description: Is Tor of the geo info
+        is_datacenter:
+          type: boolean
+          description: Is datacenter of the geo info
+    AlertInvestigationStatus:
+      type: integer
       enum:
-      - info
-      - low
-      - medium
-      - high
-      - critical
+      - 0
+      - 5
+      - 10
+      - 12
+      - 15
+      - 20
+      - 25
+      - 30
+      - 35
+      - 40
       x-enum-varnames:
-      - EventSeverityInfo
-      - EventSeverityLow
-      - EventSeverityMedium
-      - EventSeverityHigh
-      - EventSeverityCritical
-    CaseFactSummary:
+      - AlertInvestigationStatusCreated
+      - AlertInvestigationStatusSubmitted
+      - AlertInvestigationStatusInProgress
+      - AlertInvestigationStatusSuspended
+      - AlertInvestigationStatusCompleted
+      - AlertInvestigationStatusFailed
+      - AlertInvestigationStatusInvestigationLimitReached
+      - AlertInvestigationStatusStopped
+      - AlertInvestigationStatusSkipped
+      - AlertInvestigationStatusDuplicate
+    CausalityGraphNode:
       type: object
       required:
       - id
+      - label
       properties:
         id:
           type: string
-        name:
+          description: Short unique key referenced by edges
+        label:
           type: string
-        content:
+          description: Display text shown in the node box
+        kind:
           type: string
-    CausalityGraph:
+          description: 'Colour hint: alert/threat/malicious → red; finding/uncertain → amber; anything else → neutral'
+    CaseAction:
       type: object
+      required:
+      - title
+      - status
+      - status_label
+      - assignee
       properties:
+        uuid:
+          type: string
+          description: unique identifier of the action
         title:
           type: string
-          description: Title of the graph, e.g. "Causality chain"
-        direction:
+          description: Information on action required
+        status:
+          type: integer
+        status_label:
           type: string
-          description: Layout direction — always "TB" (top-to-bottom) for causality chains
-          enum:
-          - TB
-          default: TB
-        nodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CausalityGraphNode'
-        edges:
-          type: array
-          items:
-            $ref: '#/components/schemas/CausalityGraphEdge'
-    GenerateAlertUsingLLMRequest:
-      type: object
-      required:
-      - alert_content
-      - alert_provider
-      - alert_type
-      properties:
-        alert_content:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-    CaseActivity:
-      type: object
-      required:
-      - happened_at
-      - activity_summary
-      - activity_details
-      - activity_severity
-      properties:
-        happened_at:
+        assignee:
+          $ref: '#/components/schemas/UserDetails'
+        assignee_v2:
+          $ref: '#/components/schemas/AssigneeDetails'
+          description: AssigneeDetails for the action; populated alongside assignee during migration
+        created_at:
           type: integer
           format: int64
-          description: Timestamp of the activity
-        activity_summary:
-          type: string
-          description: Summary of the activity
-        activity_details:
-          type: string
-          description: Details of the activity
-        activity_severity:
+          description: Timestamp of creation of the action.
+        modified_at:
+          type: integer
+          format: int64
+          description: Timestamp of the last modification of the action
+        completed_at:
+          type: integer
+          format: int64
+          description: Timestamp of the completion of the action
+        action_severity:
           $ref: '#/components/schemas/ActionSeverityLevel'
-          description: Severity of the activity
+          description: Severity of the action
+        session_id:
+          type: string
+          description: Session ID of the action where execution of the action took place
+        required:
+          type: boolean
+          description: Whether this action is required
+        description:
+          type: string
+          description: Description of the action required
+        type:
+          type: string
+          enum:
+          - approval
+          - customer_action
+          - answer_question
+          description: Type of action; null is treated as customer_action
+        blocking_reason:
+          type: string
+          description: Reason this action is blocking the case; only set when type is customer_action
+        blocking_fact_id:
+          type: string
+          description: ID of the fact this action is blocking; only set when type is customer_action
+        playbook_id:
+          type: string
+          description: ID of the playbook associated with this action; only set when type is approval
+        priority:
+          type: string
+          enum:
+          - Containment
+          - Required
+          - Recommended
+          description: Priority of the action; when set on create/update, the required flag is derived from it (Containment/Required -> true, Recommended -> false)
+        evidences:
+          type: array
+          items:
+            type: string
+          description: Free-form evidence text snippets associated with the action
+        status_v2:
+          $ref: '#/components/schemas/ActionStatusV2'
+          description: Lifecycle status of the action, kept in sync with status. If both status and status_v2 are set on write, status_v2 takes priority and status is derived from it. For type approval/answer_question, only completed/will_not_do may be set directly; customer_action allows all values.
+        execution_details:
+          $ref: '#/components/schemas/ActionExecutionDetails'
+          description: Details of the playbook execution triggered externally for this action; only set when type is approval. Polled until the execution reaches a terminal state, at which point status_v2/type are updated accordingly.
+    GetAlertCatalogExecutionHistoryResponse:
+      type: object
+      required:
+      - data
+      - message
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertCatalogExecutionHistory'
+        total:
+          type: integer
+    Escalation:
+      type: object
+      required:
+      - escalation_type
+      - escalated_to
+      - escalated_by
+      - escalated_at
+      - email_sent_to
+      - uuid
+      properties:
+        escalation_type:
+          $ref: '#/components/schemas/EscalationType'
+          description: Possible Values are 0(Escalated), 1(Descalated)
+        escalated_to:
+          $ref: '#/components/schemas/EscalatedToType'
+          description: Possible Values are 0(Escalated to customer), 1(Escalated to analyst)
+        escalated_by:
+          type: null
+          $ref: '#/components/schemas/UserDetails'
+        escalated_at:
+          type: integer
+          format: int64
+        comment:
+          type: string
+        email_sent_to:
+          type: array
+          items:
+            type: string
+        uuid:
+          type: string
+    ListAlertCatalogProvidersResponse:
+      type: object
+      required:
+      - data
+      - message
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/schemas-ProviderSummary'
+        total:
+          type: integer
     CaseFinding:
       type: object
       required:
@@ -2240,43 +2040,131 @@ components:
         ai_reasoning:
           type: string
           description: AI reasoning for adding the finding to the case
-    Faq:
+    EscalatedToType:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - EscalatedToCustomer
+      - EscalatedToAnalyst
+    CaseFactSummary:
       type: object
       required:
-      - question
-      - answer
-      - question_id
+      - id
       properties:
-        question:
+        id:
           type: string
-        answer:
+        name:
           type: string
-        question_id:
+        content:
           type: string
-        created_at:
+    ActionExecutionDetails:
+      type: object
+      properties:
+        execution_id:
+          type: string
+          description: ID of the execution triggered against knowledge-management for this action
+        execution_status:
+          type: string
+          description: Last known execution status, as reported by knowledge-management's GetExecutionLogAPI
+        started_by:
+          type: string
+          description: ID of the user who started the execution
+        started_at:
           type: integer
           format: int64
-    ConclusionOverview:
+          description: Timestamp the execution was started; used to bound how long the execution is polled before it is force-resolved as failed
+    Evidence:
       type: object
       required:
-      - summary
-      - key_evidence
+      - name
+      - attached_content_type
+      - attached_content_link
+      - attached_content_version
+      - data
       properties:
-        summary:
+        name:
           type: string
-          description: Summary of the conclusion
-        key_evidence:
+        attached_content_link:
           type: string
-          description: Key evidences supporting the conclusion
-    ActionStatusV2:
-      type: string
+        attached_content_version:
+          type: integer
+        attached_content_type:
+          $ref: '#/components/schemas/EvidenceAttachmentType'
+          description: Possible values are O (Undefined), 1(Json), 5(Pdf)
+        data:
+          type: string
+    GetAlertCatalogByExecutionIdResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AlertCatalogData'
+    Relationship:
+      type: object
+      required:
+      - relationship_id
+      - source
+      - target
+      - type
+      - finding_refs
+      - event_refs
+      properties:
+        relationship_id:
+          type: string
+          description: ID of the relationship
+        source:
+          type: string
+          description: Source of the relationship
+        target:
+          type: string
+          description: Target of the relationship
+        type:
+          $ref: '#/components/schemas/RelationshipType'
+          description: Type of the relationship
+        timestamp:
+          type: integer
+          description: Timestamp of the relationship
+        confidence:
+          type: integer
+          description: Confidence of the relationship
+        label:
+          type: string
+          description: Label of the relationship
+        finding_refs:
+          type: array
+          items:
+            type: string
+          description: Finding references of the relationship
+        event_refs:
+          type: array
+          items:
+            type: string
+          description: Event references of the relationship
+    UserDetails:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        user_uuid:
+          type: string
+        performed_by_darryl:
+          type: boolean
+    CaseType:
+      type: integer
       enum:
-      - open
-      - in_progress
-      - blocked
-      - completed
-      - will_not_do
-      description: 'Lifecycle status of an action, kept in sync with status. Mapping from status: 0/New -> open, 1/Pending -> in_progress, 2/Customer Pending -> blocked, 3/Approved -> in_progress, 4/Rejected -> will_not_do, 5/Completed -> completed.'
+      - 0
+      - 5
+      x-enum-varnames:
+      - BasicCaseType
+      - V2CaseType
     ExplorationType:
       type: string
       enum:
@@ -2301,180 +2189,292 @@ components:
       - NetworkAnalysisExplorationType
       - FileAnalysisExplorationType
       - PolicyReviewExplorationType
-    LinkedAlertSource:
+    GetAlertResponse:
       type: object
       required:
-      - uuid
-      - type
-      - name
-      - path
+      - alert_id
+      - alert_uuid
+      - alert_content
+      - alert_provider
+      - alert_ioc
+      - organization_uuid
+      - organization_code
+      - created_at
+      - created_by
+      - created_at_source
+      - fetched_playbook_id
+      - fetched_playbook_name
+      - investigation_status
+      - alert_provider_details
+      - alert_link
       properties:
-        type:
-          $ref: '#/components/schemas/LinkedAlertSourceType'
-          description: Possible Values are 0(Internal alert), 1 (external link)
-        name:
-          type: string
-        path:
-          type: string
-        uuid:
-          type: string
-        alert_link:
-          type: string
-    AlertCatalogCaseSummary:
-      type: object
-      required:
-      - provider_id
-      - alert_type
-      - case_id
-      - case_name
-      - disposition
-      - disposition_label
-      - provider_name
-      - provider_display_name
-      - executive_summary
-      properties:
-        provider_id:
-          type: string
-        alert_type:
-          type: string
-        case_id:
-          type: string
         alert_id:
+          type: string
+        alert_uuid:
           type: string
         alert_content:
           type: string
-        case_name:
+        alert_provider:
           type: string
-        disposition:
+        alert_type:
+          type: string
+        alert_ioc:
+          $ref: '#/components/schemas/AlertsIOC'
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        created_by:
+          type: string
+        created_at:
           type: integer
-        disposition_label:
+          format: int64
+        modified_at:
+          type: integer
+          format: int64
+        created_at_source:
+          type: integer
+          format: int64
+        fetched_playbook_id:
           type: string
-        provider_name:
+        fetched_playbook_name:
           type: string
-        provider_display_name:
+        fetched_execution_id:
           type: string
-        executive_summary:
+        investigation_playbook_id:
           type: string
-    EventOutcome:
-      type: string
-      enum:
-      - success
-      - failure
-      - partial
-      - unknown
-      x-enum-varnames:
-      - EventOutcomeSuccess
-      - EventOutcomeFailure
-      - EventOutcomePartial
-      - EventOutcomeUnknown
-    GetExecutionLogResponse:
-      type: object
-      required:
-      - execution_id
-      - execution_status
-      - skill_id
-      - skill_type
-      - skill_name
-      - execution_trigger_source
-      - submitted_at
-      properties:
+        investigation_playbook_name:
+          type: string
+        investigation_status:
+          $ref: '#/components/schemas/AlertInvestigationStatus'
+        investigation_retry_count:
+          type: integer
+        investigation_completed_time:
+          type: integer
+          format: int64
         execution_id:
           type: string
-        execution_result:
+        linked_case_id:
           type: string
-        ai_summary:
+          description: ID of the latest case linked to the alert
+        original_alert_id:
           type: string
-        execution_status:
-          type: integer
-        skill_id:
+          description: When investigation_status is Duplicate, the alert_id this alert was found to be a duplicate of
+        alert_provider_details:
+          $ref: '#/components/schemas/ProviderDetails'
+        resolved:
+          type: boolean
+        is_investigated_with_agent:
+          type: boolean
+          description: Flag indicating whether the alert was investigated by the agentic investigation service
+        is_alert_reinvestigated:
+          type: boolean
+          description: Flag indicating whether the alert has been manually reinvestigated via the InvestigateAlert API
+        alert_summary:
           type: string
-        skill_version:
-          type: integer
-        skill_name:
-          type: string
-        alert_id:
-          type: string
-        skill_type:
-          type: integer
-        nl_playbook:
-          type: string
-        validate_version:
-          type: string
-        steps_executed:
-          type: integer
-        total_steps:
-          type: integer
-        step_outputs:
+          description: Human-readable summary of the alert
+        linked_case_details:
           type: array
           items:
-            $ref: '#/components/schemas/SkillExecutionOutput'
-        chat_session_id:
+            $ref: '#/components/schemas/CaseExecutionDetails'
+          description: Details of the all the cases that are linked to the alert
+        linked_case_summary:
+          $ref: '#/components/schemas/LinkedCaseSummary'
+          description: Summary of the latest case linked to the alert
+        connection_details:
+          $ref: '#/components/schemas/ConnectionDetails'
+          description: Details of the connection fetched the alert
+        alert_type_details:
+          $ref: '#/components/schemas/AlertTypeWithProperties'
+          description: Details of the alert type
+        alert_link:
           type: string
-        submitted_at:
-          type: integer
-          format: int64
-        started_at:
-          type: integer
-          format: int64
-        completed_at:
-          type: integer
-          format: int64
-    ProviderDetails:
-      type: object
-      properties:
-        name:
-          type: string
-        icon:
-          type: string
-        provider_id:
-          type: string
-    AlertInvestigationStatus:
+          description: URL for the alert
+    CasePriorityV2:
       type: integer
       enum:
       - 0
       - 5
       - 10
-      - 12
-      - 15
-      - 20
-      - 25
-      - 30
-      - 35
-      - 40
       x-enum-varnames:
-      - AlertInvestigationStatusCreated
-      - AlertInvestigationStatusSubmitted
-      - AlertInvestigationStatusInProgress
-      - AlertInvestigationStatusSuspended
-      - AlertInvestigationStatusCompleted
-      - AlertInvestigationStatusFailed
-      - AlertInvestigationStatusInvestigationLimitReached
-      - AlertInvestigationStatusStopped
-      - AlertInvestigationStatusSkipped
-      - AlertInvestigationStatusDuplicate
-    UserDetails:
+      - NeedAttentionCasePriorityV2
+      - ActiveCasePriorityV2
+      - ClosedCasePriorityV2
+    ListAlertCatalogTypesFilter:
       type: object
+      properties:
+        search_query:
+          type: string
+        provider_id:
+          type: array
+          items:
+            type: string
+    CaseV2:
+      type: object
+      required:
+      - case_id
+      - case_uuid
+      - name
+      - type
+      - status
+      - status_label
+      - severity
+      - severity_label
+      - disposition
+      - disposition_label
+      - priority
+      - category
+      - sub_category
+      - assignee
+      - archived
+      - escalations_count
+      - created_at
+      - modified_at
+      - status_modified_at
+      - case_link
+      - organization_uuid
+      - organization_name
+      properties:
+        case_id:
+          type: string
+          description: Unique number respresenting case of an organization
+        case_uuid:
+          type: string
+          description: Unique identifier of case
+        name:
+          type: string
+          description: Title of the case
+        type:
+          $ref: '#/components/schemas/CaseType'
+          description: Default value is 5 signifying v2 case type. v1 is deprecated.
+        status:
+          type: integer
+        status_label:
+          type: string
+        severity:
+          type: integer
+        severity_label:
+          type: string
+        disposition:
+          type: integer
+        disposition_label:
+          type: string
+        priority:
+          description: Possible values are 0 (Need Attention), 1 (Active), 5(Closed)
+          $ref: '#/components/schemas/CasePriorityV2'
+        category:
+          type: string
+          description: category the case belongs to
+        sub_category:
+          type: string
+          description: sub category the case belongs to based on category
+        assignee:
+          $ref: '#/components/schemas/AssigneeDetails'
+        archived:
+          type: boolean
+          description: Flag indicating if the case has been archived or not
+        escalations_count:
+          type: integer
+        created_at:
+          type: integer
+          format: int64
+          description: Timestamp of creation of the case.
+        modified_at:
+          type: integer
+          format: int64
+          description: Timestamp of the last modification of the case
+        status_modified_at:
+          type: integer
+          format: int64
+          description: Timestamp of the last status modification of the case
+        case_closed_at:
+          type: integer
+          format: int64
+          description: Timestamp of the closing of the case
+        case_link:
+          type: string
+          description: link to the case manager
+        organization_uuid:
+          type: string
+          description: OrganizationUuid of the organization the case belongs to
+        organization_name:
+          type: string
+          description: Name of the organization the case belongs to
+        reviewed:
+          type: boolean
+          description: if true, case has been reviewed
+        marked_for_review:
+          type: boolean
+          description: if true, case is marked for review
+        ignore_metrics:
+          type: boolean
+          description: if true, case is ignored from metrics
+        timeline:
+          $ref: '#/components/schemas/CaseTimeline'
+          description: Timestamps and duration between different milestions in a case
+        alert_type:
+          type: string
+          description: Alert type of the primary alert in the case
+        case_score:
+          $ref: '#/components/schemas/CaseScoreMinimal'
+          description: Score of the case
+    RequestDemoResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          required:
+          - demo_requested
+          properties:
+            demo_requested:
+              type: boolean
+    AssigneeDetails:
+      type: object
+      required:
+      - assignee_id
+      - assignee_type
       properties:
         firstname:
           type: string
         lastname:
           type: string
+        email:
+          type: string
+        assignee_id:
+          type: string
         user_uuid:
+          type: string
+        assignee_type:
           type: string
         performed_by_darryl:
           type: boolean
-    CaseScoreMinimal:
-      type: object
-      required:
-      - score
-      - score_status
-      properties:
-        score:
-          type: number
-          description: Score of the case
-        score_status:
-          $ref: '#/components/schemas/ScoreStatus'
-          description: Status of the score
+    AdrTriage:
+      type: integer
+      enum:
+      - 0
+      - 1
+      - 5
+      - 10
+      x-enum-varnames:
+      - NotAvaialbleAdrTriage
+      - NoneAdrTriage
+      - PartialAdrTriage
+      - FullAdrTriage
+    EvidenceAttachmentType:
+      type: integer
+      enum:
+      - 0
+      - 1
+      - 5
+      x-enum-varnames:
+      - UndefinedAttachmentType
+      - JsonAttachmentType
+      - PdfAttachmentType
   securitySchemes:
     SessionCookie:
       type: apiKey

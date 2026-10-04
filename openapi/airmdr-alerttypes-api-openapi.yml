@@ -160,28 +160,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    ListAlertTypesFilter:
-      type: object
-      properties:
-        alert_type:
-          type: array
-          items:
-            type: string
-    ListAlertTypesWithPropertiesResponse:
-      type: object
-      required:
-      - data
-      - total
-      - message
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeWithProperties'
-        total:
-          type: integer
-        message:
-          type: string
     UpsertAlertTypeRequest:
       type: object
       required:
@@ -202,41 +180,6 @@ components:
           type: array
           items:
             type: string
-    UpsertAlertTypeResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/AlertTypeWithProperties'
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    AlertTypeSeverity:
-      type: integer
-      enum:
-      - 10
-      - 20
-      - 30
-      - 40
-      x-enum-varnames:
-      - AlertTypeSeverityLow
-      - AlertTypeSeverityMedium
-      - AlertTypeSeverityHigh
-      - AlertTypeSeverityCritical
-    ListAlertTypesRequest:
-      type: object
-      properties:
-        filter:
-          $ref: '#/components/schemas/ListAlertTypesFilter'
     ListAlertTypesByProvidersRequest:
       type: object
       required:
@@ -275,6 +218,63 @@ components:
           type: array
           items:
             type: string
+    ListAlertTypesWithPropertiesResponse:
+      type: object
+      required:
+      - data
+      - total
+      - message
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeWithProperties'
+        total:
+          type: integer
+        message:
+          type: string
+    UpsertAlertTypeResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AlertTypeWithProperties'
+    ListAlertTypesRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListAlertTypesFilter'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    ListAlertTypesFilter:
+      type: object
+      properties:
+        alert_type:
+          type: array
+          items:
+            type: string
+    AlertTypeSeverity:
+      type: integer
+      enum:
+      - 10
+      - 20
+      - 30
+      - 40
+      x-enum-varnames:
+      - AlertTypeSeverityLow
+      - AlertTypeSeverityMedium
+      - AlertTypeSeverityHigh
+      - AlertTypeSeverityCritical
   securitySchemes:
     SessionCookie:
       type: apiKey

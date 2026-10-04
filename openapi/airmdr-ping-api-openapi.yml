@@ -21,6 +21,14 @@ paths:
     - url: /airmdrapi
 components:
   schemas:
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     UserManagementResponse:
       type: object
       required:
@@ -31,14 +39,6 @@ components:
           type: string
         data:
           type: object
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
   securitySchemes:
     SessionCookie:
       type: apiKey

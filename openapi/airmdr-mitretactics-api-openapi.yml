@@ -99,6 +99,23 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    AddMitreTacticsRequest:
+      type: object
+      required:
+      - mitre_tactics
+      properties:
+        mitre_tactics:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
     ListMitreTacticsResponse:
       type: object
       required:
@@ -114,14 +131,6 @@ components:
           type: integer
         message:
           type: string
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
     AddMitreTacticsResponse:
       type: object
       required:
@@ -131,15 +140,6 @@ components:
         message:
           type: string
         data:
-          type: array
-          items:
-            type: string
-    AddMitreTacticsRequest:
-      type: object
-      required:
-      - mitre_tactics
-      properties:
-        mitre_tactics:
           type: array
           items:
             type: string
