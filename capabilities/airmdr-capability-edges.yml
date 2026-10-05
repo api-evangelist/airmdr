@@ -1,0 +1,79 @@
+slug: airmdr
+provider: AirMDR
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 6
+edges:
+- tag: Alerts
+  spec_file: airmdr-alerts-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.92
+  evidence: POST /alerts/{alert_id}/investigate 'process or investigate the alert'; POST /alerts/analyze
+    'Analyze alerts'; schema 'AlertsIOC'
+  reason: Operations ingest, analyse and investigate security detection alerts with indicators of compromise
+    — core SOC threat detection and response, not any other kind of alerting.
+- tag: Case Manager
+  spec_file: airmdr-case-manager-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.85
+  evidence: POST /case 'create a new case'; schemas 'AnalystPerformance', 'SlaAdherenceResult', 'InvestigationTierListResponse'
+  reason: Security investigation case lifecycle for an MDR/SOC service — incident case creation, triage
+    and analyst handling, which is threat detection and response casework rather than generic customer
+    service ticketing.
+- tag: Case Manager V2
+  spec_file: airmdr-case-manager-v2-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.85
+  evidence: POST /v2/case/{case_uuid}/finding 'add a new finding in case'; GET /v2/case/{case_uuid}/finding/{finding_uuid}/evidence/{evidence_uuid}
+    'get evidence data for a finding'
+  reason: Second-generation security case management with findings and evidence for MDR investigations
+    — SOC incident investigation and response.
+- tag: CaseDecisionAutomation
+  spec_file: airmdr-casedecisionautomation-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.72
+  evidence: POST /case_decision_metrics 'Create a new case decision metrics object for a given case';
+    schemas 'ConcernedIOC', 'IOCScore', 'RiskAssessment'
+  reason: Captures automated triage/decision scoring over indicators of compromise for security cases,
+    part of automated detection and response. Note the RiskAssessment schema here is IOC scoring, not
+    enterprise risk management.
+- tag: Organization
+  spec_file: airmdr-organization-api-openapi.yml
+  capability_id: BC-4230
+  capability_id_l1: BC-4230
+  capability_name: SaaS Tenant Management
+  confidence: 0.7
+  evidence: POST /organization 'create an organization'; PATCH /organization/{organization_identifier}/features
+    'update features for an organization'; schema 'OrganizationSSOConfiguration'
+  reason: Organizations are the tenants of this multi-tenant MDR service; the operations create, delete
+    and configure per-tenant features, branding (logo) and SSO. Evidence spans provisioning, configuration
+    and identity federation so only the L1 is asserted.
+- tag: Security Review
+  spec_file: airmdr-security-review-api-openapi.yml
+  capability_id: BC-620
+  capability_id_l1: BC-620
+  capability_name: Cybersecurity Management
+  confidence: 0.7
+  evidence: POST /v2/security-report/generate  generateSecurityReportAPI  Generate a security review report
+    (internal only)
+  reason: Generates and distributes periodic security review reports with SOC metrics (SecurityReviewKPIs,
+    ResponseTimeMetric, AlertSourceCount, SecurityReviewCaseDispositionMetrics) to customer organizations
+    — cybersecurity reporting. Left at L1 because the evidence straddles SOC/detection-response reporting
+    and security governance reporting.
