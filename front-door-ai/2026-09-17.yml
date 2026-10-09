@@ -1,0 +1,32 @@
+# Front Door AI Index — airmdr — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: airmdr
+  lexicon_version: '1.0'
+  probed_at: '2026-09-25'
+  host: airmdr.com
+  final_host: airmdr.com
+  ownership: own
+  owner: airmdr
+  shares_host_with: null
+  inherited_from: null
+  alias_of: null
+  verdict: scored
+  score: 22
+  band: 6
+  band_label: dominant
+  host_score: 22
+  density: 33.23
+  words: 662
+  tiers:
+    agentic: 3
+    core: 19
+    model: 0
+  ambiguous: 3
+  top_terms:
+    AI: 19
+    agentic: 2
+    automation: 2
+    AI agent: 1
+    agent: 1
