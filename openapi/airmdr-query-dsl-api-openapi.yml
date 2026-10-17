@@ -317,43 +317,34 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    QuerySchemaResponse:
+    QueryValidateRequest:
       type: object
       required:
-      - collections
-      properties:
-        collections:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CollectionSchema'
-          description: Available collection schemas
-    QueryExecuteResponse:
-      type: object
-      required:
-      - data
-      - total
-      - limit
-      - offset
       - collection
       properties:
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-          description: Query results
-        total:
-          type: integer
-          description: Total number of matching documents
-        limit:
-          type: integer
-          description: Limit used for the query
-        offset:
-          type: integer
-          description: Offset used for the query
         collection:
           type: string
-          description: Collection that was queried
+          description: The collection to validate against
+          enum:
+          - cases
+          - alerts
+        select:
+          type: array
+          items:
+            type: string
+        where:
+          type: object
+          additionalProperties: true
+        sort:
+          type: object
+          additionalProperties:
+            type: string
+        limit:
+          type: integer
+        offset:
+          type: integer
+        aggregate:
+          $ref: '#/components/schemas/AggregateRequest'
     QueryExecuteRequest:
       type: object
       required:
@@ -396,31 +387,58 @@ components:
         aggregate:
           $ref: '#/components/schemas/AggregateRequest'
           description: Aggregation configuration for analytics queries
-    QueryValidationError:
+    QueryExecuteResponse:
       type: object
       required:
-      - field
-      - message
+      - data
+      - total
+      - limit
+      - offset
+      - collection
       properties:
-        field:
-          type: string
-          description: Field that caused the error
-        message:
-          type: string
-          description: Error description
-    QueryValidateResponse:
-      type: object
-      required:
-      - valid
-      properties:
-        valid:
-          type: boolean
-          description: Whether the query is valid
-        errors:
+        data:
           type: array
           items:
-            $ref: '#/components/schemas/QueryValidationError'
-          description: Validation errors if any
+            type: object
+            additionalProperties: true
+          description: Query results
+        total:
+          type: integer
+          description: Total number of matching documents
+        limit:
+          type: integer
+          description: Limit used for the query
+        offset:
+          type: integer
+          description: Offset used for the query
+        collection:
+          type: string
+          description: Collection that was queried
+    CollectionSchema:
+      type: object
+      required:
+      - name
+      - fields
+      properties:
+        name:
+          type: string
+          description: Collection name
+        fields:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FieldSchema'
+          description: Available fields in this collection
+        array_fields:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Valid unwind names and their MongoDB paths.
+
+            Keys are the values accepted in aggregate.unwind (e.g. "entities", "events").
+
+            Use these to discover which array fields support unwind-based aggregation.
+
+            '
     QueryErrorResponse:
       type: object
       required:
@@ -434,6 +452,64 @@ components:
           items:
             $ref: '#/components/schemas/QueryValidationError'
           description: Detailed validation errors
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    QuerySchemaResponse:
+      type: object
+      required:
+      - collections
+      properties:
+        collections:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CollectionSchema'
+          description: Available collection schemas
+    QueryValidationError:
+      type: object
+      required:
+      - field
+      - message
+      properties:
+        field:
+          type: string
+          description: Field that caused the error
+        message:
+          type: string
+          description: Error description
+    AggregateRequest:
+      type: object
+      properties:
+        group_by:
+          type: array
+          items:
+            oneOf:
+            - type: string
+              description: Field name to group by
+            - type: object
+              description: Complex grouping like date truncation {"$dateTrunc":{"field":"created_at","unit":"day"}}
+              additionalProperties: true
+          description: Fields to group by
+        metrics:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: true
+          description: Metric definitions with aggregation operators
+        unwind:
+          type: string
+          description: 'Array field to unwind before grouping. Required for entity/event-level analytics.
+
+            Valid values per collection — cases: "entities", "events"; alerts: "mitre_tactics".
+
+            Example: unwind "entities" with group_by ["entities.name"] to count cases per IP/user/host.
+
+            '
     FieldSchema:
       type: object
       required:
@@ -464,95 +540,19 @@ components:
         aggregatable:
           type: boolean
           description: Whether this field can be used in group_by
-    CollectionSchema:
+    QueryValidateResponse:
       type: object
       required:
-      - name
-      - fields
+      - valid
       properties:
-        name:
-          type: string
-          description: Collection name
-        fields:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/FieldSchema'
-          description: Available fields in this collection
-        array_fields:
-          type: object
-          additionalProperties:
-            type: string
-          description: 'Valid unwind names and their MongoDB paths.
-
-            Keys are the values accepted in aggregate.unwind (e.g. "entities", "events").
-
-            Use these to discover which array fields support unwind-based aggregation.
-
-            '
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    AggregateRequest:
-      type: object
-      properties:
-        group_by:
+        valid:
+          type: boolean
+          description: Whether the query is valid
+        errors:
           type: array
           items:
-            oneOf:
-            - type: string
-              description: Field name to group by
-            - type: object
-              description: Complex grouping like date truncation {"$dateTrunc":{"field":"created_at","unit":"day"}}
-              additionalProperties: true
-          description: Fields to group by
-        metrics:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties: true
-          description: Metric definitions with aggregation operators
-        unwind:
-          type: string
-          description: 'Array field to unwind before grouping. Required for entity/event-level analytics.
-
-            Valid values per collection — cases: "entities", "events"; alerts: "mitre_tactics".
-
-            Example: unwind "entities" with group_by ["entities.name"] to count cases per IP/user/host.
-
-            '
-    QueryValidateRequest:
-      type: object
-      required:
-      - collection
-      properties:
-        collection:
-          type: string
-          description: The collection to validate against
-          enum:
-          - cases
-          - alerts
-        select:
-          type: array
-          items:
-            type: string
-        where:
-          type: object
-          additionalProperties: true
-        sort:
-          type: object
-          additionalProperties:
-            type: string
-        limit:
-          type: integer
-        offset:
-          type: integer
-        aggregate:
-          $ref: '#/components/schemas/AggregateRequest'
+            $ref: '#/components/schemas/QueryValidationError'
+          description: Validation errors if any
   securitySchemes:
     SessionCookie:
       type: apiKey

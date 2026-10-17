@@ -232,6 +232,24 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    CreateAPITokenForSlackWorkflowResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/GetAPITokenResponse'
+    Success:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly message
     GetAPITokenResponse:
       type: object
       required:
@@ -255,31 +273,6 @@ components:
           format: int64
         organization_id:
           type: string
-    CreateAPITokenForSlackWorkflowResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/GetAPITokenResponse'
-    ListAPITokensResponse:
-      type: object
-      required:
-      - message
-      - data
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/GetAPITokenResponse'
-        total:
-          type: integer
     CreateAPITokenResponse:
       type: object
       required:
@@ -301,6 +294,35 @@ components:
         last_used_at:
           type: integer
           format: int64
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    ListAPITokensResponse:
+      type: object
+      required:
+      - message
+      - data
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetAPITokenResponse'
+        total:
+          type: integer
+    403Error:
+      type: object
+      properties:
+        message:
+          type: string
+          const: User does not have permission to perform this action
     CreateAPITokenForSlackWorkflowRequest:
       type: object
       required:
@@ -313,28 +335,6 @@ components:
         organization_id:
           type: string
           description: The Organization ID of the organization to create the Slack token for.
-    403Error:
-      type: object
-      properties:
-        message:
-          type: string
-          const: User does not have permission to perform this action
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    Success:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly message
   securitySchemes:
     SessionCookie:
       type: apiKey

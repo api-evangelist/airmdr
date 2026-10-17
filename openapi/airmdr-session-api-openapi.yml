@@ -226,7 +226,45 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    LoginUserResponse:
+    GetLoginUrlRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        redirect_url:
+          type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
+    GetLoginUrlResponse:
       type: object
       required:
       - data
@@ -235,7 +273,19 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/LoginUserData'
+          $ref: '#/components/schemas/LoginUrl'
+    Permission:
+      type: object
+      required:
+      - permission_id
+      - name
+      properties:
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
     LoginRequest:
       type: object
       required:
@@ -246,17 +296,93 @@ components:
           type: string
         password:
           type: string
-    UserRole:
+    AuthenticateUserData:
+      type: object
+      required:
+      - session_id
+      - user_id
+      - organization_id
+      - organization_hosturl
+      - active_organization_id
+      - email
+      properties:
+        session_id:
+          type: string
+        user_id:
+          type: string
+        organization_id:
+          type: string
+        organization_hosturl:
+          type: string
+        active_organization_id:
+          type: string
+        email:
+          type: string
+        organization_code:
+          type: string
+        token_id:
+          type: string
+          description: UUID of the API token used to authenticate, when the request is authenticated via an API token. Empty for interactive login sessions.
+        token_name:
+          type: string
+          description: Human-readable name of the API token used to authenticate. Empty for interactive login sessions.
+    LoginMethod:
       type: string
-      description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
       enum:
-      - user
-      - admin
-      - superadmin
+      - password
+      - sso
       x-enum-varnames:
-      - UserRoleUser
-      - UserRoleAdmin
-      - UserRoleSuperAdmin
+      - LoginMethodPassword
+      - LoginMethodSSO
+    LoginUrl:
+      type: object
+      required:
+      - email
+      - login_method
+      properties:
+        email:
+          type: string
+          description: The email of the user
+        login_method:
+          $ref: '#/components/schemas/LoginMethod'
+          description: The method for login, can be password or sso
+        login_url:
+          type: string
+          description: The login url in case the login method is sso
+        logo_url:
+          type: string
+          description: The url of the logo of the user's organization
+    AuthenticateRequest:
+      type: object
+      required:
+      - session_token
+      properties:
+        session_token:
+          type: string
+        metadata:
+          type: object
+    UpdateSessionResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    AirMDRFeature:
+      type: object
+      required:
+      - feature_id
+      - name
+      properties:
+        feature_id:
+          type: string
+          description: The id of the feature
+        name:
+          type: string
+          description: The name of the feature
+        description:
+          type: string
+          description: The description of the feature
     LoginUser:
       type: object
       required:
@@ -303,46 +429,18 @@ components:
         is_internal:
           type: boolean
           description: Whether user belongs to airmdr organization or not
-    AuthenticateRequest:
-      type: object
-      required:
-      - session_token
-      properties:
-        session_token:
-          type: string
-        metadata:
-          type: object
-    AuthenticateUserData:
-      type: object
-      required:
-      - session_id
-      - user_id
-      - organization_id
-      - organization_hosturl
-      - active_organization_id
-      - email
-      properties:
-        session_id:
-          type: string
-        user_id:
-          type: string
-        organization_id:
-          type: string
-        organization_hosturl:
-          type: string
-        active_organization_id:
-          type: string
-        email:
-          type: string
-        organization_code:
-          type: string
-        token_id:
-          type: string
-          description: UUID of the API token used to authenticate, when the request is authenticated via an API token. Empty for interactive login sessions.
-        token_name:
-          type: string
-          description: Human-readable name of the API token used to authenticate. Empty for interactive login sessions.
-    GetLoginUrlResponse:
+    UserRole:
+      type: string
+      description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
+      enum:
+      - user
+      - admin
+      - superadmin
+      x-enum-varnames:
+      - UserRoleUser
+      - UserRoleAdmin
+      - UserRoleSuperAdmin
+    LoginUserResponse:
       type: object
       required:
       - data
@@ -351,35 +449,7 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/LoginUrl'
-    Permission:
-      type: object
-      required:
-      - permission_id
-      - name
-      properties:
-        permission_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    LoginMethod:
-      type: string
-      enum:
-      - password
-      - sso
-      x-enum-varnames:
-      - LoginMethodPassword
-      - LoginMethodSSO
+          $ref: '#/components/schemas/LoginUserData'
     AuthenticateUserResponse:
       type: object
       required:
@@ -390,6 +460,18 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/AuthenticateUserData'
+    LoginUserData:
+      type: object
+      required:
+      - session_token
+      - user
+      properties:
+        session_token:
+          type: string
+        active_organization_id:
+          type: string
+        user:
+          $ref: '#/components/schemas/LoginUser'
     UpdateSessionRequest:
       type: object
       required:
@@ -412,88 +494,6 @@ components:
       - UserStatusDisabled
       - UserStatusDeleted
       - UserStatusPasswordResetRequired
-    AirMDRFeature:
-      type: object
-      required:
-      - feature_id
-      - name
-      properties:
-        feature_id:
-          type: string
-          description: The id of the feature
-        name:
-          type: string
-          description: The name of the feature
-        description:
-          type: string
-          description: The description of the feature
-    UpdateSessionResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-    LoginUserData:
-      type: object
-      required:
-      - session_token
-      - user
-      properties:
-        session_token:
-          type: string
-        active_organization_id:
-          type: string
-        user:
-          $ref: '#/components/schemas/LoginUser'
-    LoginUrl:
-      type: object
-      required:
-      - email
-      - login_method
-      properties:
-        email:
-          type: string
-          description: The email of the user
-        login_method:
-          $ref: '#/components/schemas/LoginMethod'
-          description: The method for login, can be password or sso
-        login_url:
-          type: string
-          description: The login url in case the login method is sso
-        logo_url:
-          type: string
-          description: The url of the logo of the user's organization
-    OrganizationMinimal:
-      type: object
-      required:
-      - organization_id
-      - name
-      - code
-      - sso_enabled
-      properties:
-        organization_id:
-          type: string
-          description: unique id of the organization
-        name:
-          type: string
-          description: name of the organization
-        code:
-          type: string
-          description: code of the organization
-        logo_url:
-          type: string
-          description: url of the organization's logo
-        sso_enabled:
-          type: boolean
-          description: flag indicating whether sso is enabled for the organization
-    GetLoginUrlRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        redirect_url:
-          type: string
   securitySchemes:
     SessionCookie:
       type: apiKey

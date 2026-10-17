@@ -528,6 +528,320 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    UpdateUserRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: first name of the user
+        last_name:
+          type: string
+          description: last name of the user
+        preferred_name:
+          type: string
+          description: preferred name of the user
+        role:
+          $ref: '#/components/schemas/UserRole'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    SortFields:
+      type: object
+      required:
+      - field
+      - sort_order
+      properties:
+        field:
+          type: string
+          description: indicates which field will be used for sorting
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: indicates sort order - asc or desc
+    User:
+      type: object
+      required:
+      - user_id
+      - first_name
+      - last_name
+      - email
+      - parent_organization
+      - role
+      - status
+      properties:
+        user_id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        preferred_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        parent_organization:
+          $ref: '#/components/schemas/OrganizationMinimal'
+        created_at:
+          type: integer
+          format: int64
+        created_by:
+          type: string
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        role:
+          $ref: '#/components/schemas/UserRole'
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/AirMDRFeature'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+        user_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserGroupMinimal'
+        last_login:
+          type: integer
+          format: int64
+        is_internal:
+          type: boolean
+          description: Whether user belongs to airmdr organization or not
+    FilterFeaturePermissionsRequest:
+      type: object
+      properties:
+        accessible_organization_ids:
+          type: array
+          items:
+            type: string
+          description: The list of organization IDs for which feature permissions are needed.
+        feature_identifier:
+          type: string
+          description: The identifier of the feature for which feature permissions are needed.
+        operation:
+          $ref: '#/components/schemas/ValidateFeaturePermissionsAction'
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
+    Permission:
+      type: object
+      required:
+      - permission_id
+      - name
+      properties:
+        permission_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    UserGroupMinimal:
+      type: object
+      required:
+      - user_group_id
+      - name
+      - type
+      properties:
+        user_group_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+    ListUserFilter:
+      type: object
+      properties:
+        search:
+          type: string
+          description: search key for user name or email
+        organization_id_list:
+          type: array
+          items:
+            type: string
+          description: The list of organization IDs for which user information is needed.
+        user_id_list:
+          type: array
+          items:
+            type: string
+          description: The list of user IDs for which user information is needed.
+        email_id_list:
+          type: array
+          items:
+            type: string
+          description: The list of email IDs for which user information is needed.
+        status_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserStatus'
+          description: The list of user status for which user information is needed.
+        role_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRole'
+          description: The list of user roles for which user information is needed.
+        never_logged_in:
+          type: boolean
+          description: Fetch users who have never logged into the system.
+        created_by:
+          type: array
+          description: The list of users uuids who created users
+          items:
+            type: string
+        only_logged_in_users:
+          type: boolean
+          description: Fetch only logged in users.
+        exclude_system_users:
+          type: boolean
+          description: Fetch only users who are not system users.
+        accessible_organization_list:
+          type: array
+          description: The list of organization IDs for which user information is needed.
+          items:
+            type: string
+        include_child_users_with_org_context_access:
+          type: boolean
+          description: Fetch users who have access to the organization context.
+    VerifyEmailResponse:
+      type: object
+      required:
+      - email_id
+      properties:
+        email_id:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        organization:
+          $ref: '#/components/schemas/Organization'
+    SortOrder:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - Asc
+      - Desc
+    ValidateFeaturePermissionsAction:
+      type: string
+      enum:
+      - read
+      - write
+      x-enum-varnames:
+      - ValidateFeaturePermissionsActionRead
+      - ValidateFeaturePermissionsActionWrite
+    FilterUserRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListUserFilter'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortFields'
+    CreateUserRequest:
+      type: object
+      required:
+      - email
+      - organization_id
+      properties:
+        first_name:
+          type: string
+          description: first name of the user
+        last_name:
+          type: string
+          description: last name of the user
+        preferred_name:
+          type: string
+          description: preferred name of the user
+        email:
+          type: string
+          description: email address of the user
+        password:
+          type: string
+          description: password to set for the account
+        organization_id:
+          type: string
+          description: id of the organization in which the user needs to be added
+        role:
+          $ref: '#/components/schemas/UserRole'
+    VerifyEmailsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifyEmailResponse'
+    FilterFeaturePermissionsResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserFeaturePermission'
+        operation_allowed:
+          type: boolean
+          description: Whether the operation is allowed for the given feature permissions.
+    CreateUserResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/User'
+    AirMDRFeature:
+      type: object
+      required:
+      - feature_id
+      - name
+      properties:
+        feature_id:
+          type: string
+          description: The id of the feature
+        name:
+          type: string
+          description: The name of the feature
+        description:
+          type: string
+          description: The description of the feature
     UserRole:
       type: string
       description: role of the user. A <b>user</b> can view data in accessible organizations but cannot create or modify organizations or user accounts. An <b>admin</b> can view data and manage users in accessible organizations but cannot create or modify organizations. A <b>superadmin</b> can view data, manage users, and manage descendant organizations in their accessible organizations.
@@ -539,6 +853,86 @@ components:
       - UserRoleUser
       - UserRoleAdmin
       - UserRoleSuperAdmin
+    FetchUserResponse:
+      type: object
+      required:
+      - data
+      - message
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/User'
+    403Error:
+      type: object
+      properties:
+        message:
+          type: string
+          const: User does not have permission to perform this action
+    UpdateUserResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/User'
+    FilterLoggedInUsersRequest:
+      type: object
+      properties:
+        accessible_organization_list:
+          type: array
+          items:
+            type: string
+          description: The list of organization IDs for which user information is needed.
+    VerifyEmailsRequest:
+      type: object
+      required:
+      - email_ids
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+    UserFeaturePermission:
+      type: object
+      required:
+      - feature_id
+      - user_id
+      properties:
+        user_id:
+          type: string
+          description: The ID of the user
+        feature_id:
+          type: string
+          description: The ID of the feature
+        can_read_permission_granted_by:
+          type: array
+          items:
+            type: string
+          description: The list of user IDs who granted the read permission
+        can_write_permission_granted_by:
+          type: array
+          items:
+            type: string
+          description: The list of user IDs who granted the write permission
+    FetchAllUsersResponse:
+      type: object
+      required:
+      - data
+      - message
+      - total
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        total:
+          type: integer
     Organization:
       type: object
       required:
@@ -621,249 +1015,6 @@ components:
           type: integer
           format: int64
           description: modified time of organization
-    UserFeaturePermission:
-      type: object
-      required:
-      - feature_id
-      - user_id
-      properties:
-        user_id:
-          type: string
-          description: The ID of the user
-        feature_id:
-          type: string
-          description: The ID of the feature
-        can_read_permission_granted_by:
-          type: array
-          items:
-            type: string
-          description: The list of user IDs who granted the read permission
-        can_write_permission_granted_by:
-          type: array
-          items:
-            type: string
-          description: The list of user IDs who granted the write permission
-    UserGroupMinimal:
-      type: object
-      required:
-      - user_group_id
-      - name
-      - type
-      properties:
-        user_group_id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-    FetchAllUsersResponse:
-      type: object
-      required:
-      - data
-      - message
-      - total
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        total:
-          type: integer
-    User:
-      type: object
-      required:
-      - user_id
-      - first_name
-      - last_name
-      - email
-      - parent_organization
-      - role
-      - status
-      properties:
-        user_id:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        preferred_name:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        parent_organization:
-          $ref: '#/components/schemas/OrganizationMinimal'
-        created_at:
-          type: integer
-          format: int64
-        created_by:
-          type: string
-        status:
-          $ref: '#/components/schemas/UserStatus'
-        role:
-          $ref: '#/components/schemas/UserRole'
-        features:
-          type: array
-          items:
-            $ref: '#/components/schemas/AirMDRFeature'
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-        user_groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserGroupMinimal'
-        last_login:
-          type: integer
-          format: int64
-        is_internal:
-          type: boolean
-          description: Whether user belongs to airmdr organization or not
-    FetchUserResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/User'
-    Permission:
-      type: object
-      required:
-      - permission_id
-      - name
-      properties:
-        permission_id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    FilterFeaturePermissionsRequest:
-      type: object
-      properties:
-        accessible_organization_ids:
-          type: array
-          items:
-            type: string
-          description: The list of organization IDs for which feature permissions are needed.
-        feature_identifier:
-          type: string
-          description: The identifier of the feature for which feature permissions are needed.
-        operation:
-          $ref: '#/components/schemas/ValidateFeaturePermissionsAction'
-    ValidateFeaturePermissionsAction:
-      type: string
-      enum:
-      - read
-      - write
-      x-enum-varnames:
-      - ValidateFeaturePermissionsActionRead
-      - ValidateFeaturePermissionsActionWrite
-    CreateUserResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/User'
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
-    SortOrder:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - Asc
-      - Desc
-    UpdateUserRequest:
-      type: object
-      properties:
-        first_name:
-          type: string
-          description: first name of the user
-        last_name:
-          type: string
-          description: last name of the user
-        preferred_name:
-          type: string
-          description: preferred name of the user
-        role:
-          $ref: '#/components/schemas/UserRole'
-    FilterFeaturePermissionsResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserFeaturePermission'
-        operation_allowed:
-          type: boolean
-          description: Whether the operation is allowed for the given feature permissions.
-    UpdateUserResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/User'
-    SortFields:
-      type: object
-      required:
-      - field
-      - sort_order
-      properties:
-        field:
-          type: string
-          description: indicates which field will be used for sorting
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: indicates sort order - asc or desc
-    VerifyEmailsResponse:
-      type: object
-      required:
-      - data
-      - message
-      properties:
-        message:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifyEmailResponse'
-    FilterUserRequest:
-      type: object
-      properties:
-        filter:
-          $ref: '#/components/schemas/ListUserFilter'
-        sort:
-          type: array
-          items:
-            $ref: '#/components/schemas/SortFields'
     UserStatus:
       type: string
       description: user account status
@@ -879,29 +1030,6 @@ components:
       - UserStatusDisabled
       - UserStatusDeleted
       - UserStatusPasswordResetRequired
-    FilterLoggedInUsersRequest:
-      type: object
-      properties:
-        accessible_organization_list:
-          type: array
-          items:
-            type: string
-          description: The list of organization IDs for which user information is needed.
-    AirMDRFeature:
-      type: object
-      required:
-      - feature_id
-      - name
-      properties:
-        feature_id:
-          type: string
-          description: The id of the feature
-        name:
-          type: string
-          description: The name of the feature
-        description:
-          type: string
-          description: The description of the feature
     DeleteUsersResponse:
       type: object
       required:
@@ -909,134 +1037,6 @@ components:
       properties:
         message:
           type: string
-    403Error:
-      type: object
-      properties:
-        message:
-          type: string
-          const: User does not have permission to perform this action
-    CreateUserRequest:
-      type: object
-      required:
-      - email
-      - organization_id
-      properties:
-        first_name:
-          type: string
-          description: first name of the user
-        last_name:
-          type: string
-          description: last name of the user
-        preferred_name:
-          type: string
-          description: preferred name of the user
-        email:
-          type: string
-          description: email address of the user
-        password:
-          type: string
-          description: password to set for the account
-        organization_id:
-          type: string
-          description: id of the organization in which the user needs to be added
-        role:
-          $ref: '#/components/schemas/UserRole'
-    ListUserFilter:
-      type: object
-      properties:
-        search:
-          type: string
-          description: search key for user name or email
-        organization_id_list:
-          type: array
-          items:
-            type: string
-          description: The list of organization IDs for which user information is needed.
-        user_id_list:
-          type: array
-          items:
-            type: string
-          description: The list of user IDs for which user information is needed.
-        email_id_list:
-          type: array
-          items:
-            type: string
-          description: The list of email IDs for which user information is needed.
-        status_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserStatus'
-          description: The list of user status for which user information is needed.
-        role_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRole'
-          description: The list of user roles for which user information is needed.
-        never_logged_in:
-          type: boolean
-          description: Fetch users who have never logged into the system.
-        created_by:
-          type: array
-          description: The list of users uuids who created users
-          items:
-            type: string
-        only_logged_in_users:
-          type: boolean
-          description: Fetch only logged in users.
-        exclude_system_users:
-          type: boolean
-          description: Fetch only users who are not system users.
-        accessible_organization_list:
-          type: array
-          description: The list of organization IDs for which user information is needed.
-          items:
-            type: string
-        include_child_users_with_org_context_access:
-          type: boolean
-          description: Fetch users who have access to the organization context.
-    OrganizationMinimal:
-      type: object
-      required:
-      - organization_id
-      - name
-      - code
-      - sso_enabled
-      properties:
-        organization_id:
-          type: string
-          description: unique id of the organization
-        name:
-          type: string
-          description: name of the organization
-        code:
-          type: string
-          description: code of the organization
-        logo_url:
-          type: string
-          description: url of the organization's logo
-        sso_enabled:
-          type: boolean
-          description: flag indicating whether sso is enabled for the organization
-    VerifyEmailResponse:
-      type: object
-      required:
-      - email_id
-      properties:
-        email_id:
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-        organization:
-          $ref: '#/components/schemas/Organization'
-    VerifyEmailsRequest:
-      type: object
-      required:
-      - email_ids
-      properties:
-        email_ids:
-          type: array
-          items:
-            type: string
   parameters:
     organization-id:
       name: Organization-ID

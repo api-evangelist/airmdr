@@ -1314,59 +1314,166 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    OutlierCase:
+    CaseActionCount:
       type: object
       required:
       - case_id
-      - case_uuid
+      - count
       properties:
         case_id:
           type: string
-        case_uuid:
-          type: string
-        category:
-          type: string
-        severity:
+        count:
           type: integer
-        assignee_email:
-          type: string
-        investigation_time_seconds:
+          description: Number of actions matching the filter for this case.
+    SlaAdherenceResult:
+      type: object
+      required:
+      - total_cases
+      - met_count
+      - breach_count
+      - adherence_pct
+      properties:
+        total_cases:
           type: integer
-          description: Time from alert_acknowledged_at to investigation_completed_at in seconds.
-        close_time_seconds:
+        met_count:
           type: integer
-          description: Time from alert_raised_at to case_closed_at in seconds.
-    HostWidgets:
+          description: Cases where investigation_completed_metric <= target.
+        breach_count:
+          type: integer
+          description: Cases where investigation_completed_metric > target.
+        adherence_pct:
+          type: number
+          format: float
+          description: met_count / total_cases as a percentage.
+        avg_mtti_seconds:
+          type: integer
+          description: Average MTTI across all cases in this tier.
+    AlertTypeMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - provider
+        - alert_type
+        properties:
+          provider:
+            $ref: '#/components/schemas/ProviderSummary'
+          alert_type:
+            type: string
+          severity_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/SeverityMetrics'
+              description: Severity metrics list
+    UserWidgets:
       type: object
       properties:
-        repeat_incident_hosts:
+        repeat_targeted_users:
           type: array
           items:
             $ref: '#/components/schemas/EntityCount'
-          description: Hosts appearing in more than one case.
-        hosts_in_malicious_activity:
+          description: Users (type=user or service_account) appearing in more than one case.
+        users_in_malicious_activity:
           type: array
           items:
             $ref: '#/components/schemas/EntityCount'
-          description: Hosts appearing in malicious cases.
-        multi_vector_targeted_hosts:
+          description: Users appearing in malicious cases (disposition=10).
+        users_high_false_positives:
           type: array
           items:
-            $ref: '#/components/schemas/MultiVectorHost'
-          description: Hosts involved in more than one distinct attack type.
-    RemediationWidgets:
+            $ref: '#/components/schemas/EntityCount'
+          description: Users most frequently appearing in non-malicious cases (disposition in [1,5]).
+        multi_vector_targeted_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiVectorUser'
+          description: Users involved in more than one distinct attack type.
+    CaseReviewMetrics:
       type: object
       properties:
-        unresolved_actions:
+        case_coverage:
+          type: number
+          format: double
+        darryl_investigated_case_coverage:
+          type: number
+          format: double
+        human_investigated_case_coverage:
+          type: number
+          format: double
+        cases_to_be_reviewed:
+          type: integer
+          description: Number of cases to be reviewed
+        cases_reviewed:
+          type: integer
+          description: Number of cases reviewed
+        high_quality_cases:
+          type: integer
+          description: Number of high quality cases
+        medium_quality_cases:
+          type: integer
+          description: Number of medium quality cases
+        low_quality_cases:
+          type: integer
+          description: Number of low quality cases
+        case_quality:
+          type: number
+          format: double
+        darryl_investigated_case_quality:
+          type: number
+          format: double
+        human_investigated_case_quality:
+          type: number
+          format: double
+    GlobalMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - failed_alert_count
+        - successful_alert_sources
+        - failed_alert_sources
+        - successful_sources_without_alerts
+        properties:
+          global_provider_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProviderMetrics'
+            description: Provider metrics list
+          failed_alert_count:
+            type: integer
+            description: Number of failed alerts
+          successful_alert_sources:
+            type: array
+            items:
+              type: string
+            description: List of successful alert sources
+          failed_alert_sources:
+            type: array
+            items:
+              type: string
+            description: List of failed alert sources
+          successful_sources_without_alerts:
+            type: array
+            items:
+              type: string
+            description: List of successful sources without alerts
+    SocEmailResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming email was queued
+    ListSystemWidgetsResponse:
+      type: object
+      required:
+      - widgets
+      properties:
+        widgets:
           type: array
           items:
-            $ref: '#/components/schemas/CaseActionCount'
-          description: Cases ranked by count of actions with status in [0,1,2] (New, Pending, Customer Pending).
-        customer_action_cases:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseActionCount'
-          description: Cases ranked by count of actions with status=2 (Customer Pending).
+            $ref: '#/components/schemas/SystemWidget'
     DashboardSchedule:
       type: object
       required:
@@ -1419,452 +1526,52 @@ components:
         created_by:
           type: string
           description: User ID of the creator.
-    CostTrimTotals:
+    ScheduleRecurrence:
+      type: object
+      description: Recurrence config. Required for daily/weekly/monthly; omit for send_now.
+      required:
+      - hour
+      - minute
+      - user_timezone_offset
+      properties:
+        hour:
+          type: integer
+          minimum: 0
+          maximum: 23
+          description: Hour of day to send (0–23, in the specified timezone).
+        minute:
+          type: integer
+          minimum: 0
+          maximum: 59
+          description: Minute of hour to send (0–59).
+        day_of_week:
+          type: integer
+          minimum: 0
+          maximum: 6
+          description: Day of week (0=Sunday, 6=Saturday). Required when frequency is weekly.
+        day_of_month:
+          type: integer
+          minimum: 1
+          maximum: 31
+          description: Day of month (1–31). Required when frequency is monthly.
+        user_timezone_offset:
+          type: integer
+          minimum: -720
+          maximum: 720
+          description: User's timezone offset in minutes from UTC. Required for all frequencies.
+    DashboardSummary:
       type: object
       required:
-      - alerts
-      - investigated
-      - escalations
-      - efficacy
-      properties:
-        alerts:
-          type: integer
-          format: int64
-        investigated:
-          type: integer
-          format: int64
-        escalations:
-          type: integer
-          format: int64
-          description: Count of alerts whose linked case was escalated to the customer.
-        efficacy:
-          type: number
-          format: double
-          description: Total escalations divided by total alerts.
-    CaseAnalyticsEmailRequest:
-      type: object
-      required:
-      - email_ids
-      - subject
-      - filter
-      properties:
-        email_ids:
-          type: array
-          items:
-            type: string
-          description: List of email addresses to send the report to
-        subject:
-          type: string
-          description: Email subject line. If empty, a default subject will be generated.
-        filter:
-          $ref: '#/components/schemas/CaseAnalyticsEmailRequestFilter'
-          description: Filter parameters for the report
-    ListDashboardScheduleExecutionsResponse:
-      type: object
-      required:
-      - executions
-      - total
-      properties:
-        executions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DashboardScheduleExecution'
-        total:
-          type: integer
-          description: Total count of executions for this schedule.
-    MetricsAttributes:
-      required:
-      - mean_metric_total
-      - daily_mean_metrics
-      - mean_metrics_intervals
-      type: object
-      properties:
-        mean_metric_total:
-          type: number
-          description: Mean metric value for the total range
-        daily_mean_metrics:
-          type: object
-          additionalProperties:
-            type: number
-          description: Mean metric values for each day
-        mean_metrics_intervals:
-          type: object
-          additionalProperties:
-            type: number
-          description: Mean metric values for each interval
-    BulkUpdateDashboardScheduleRequest:
-      type: object
-      required:
-      - schedules
-      properties:
-        schedules:
-          type: array
-          items:
-            $ref: '#/components/schemas/UpdateDashboardScheduleItem'
-          minItems: 1
-          maxItems: 50
-    SocPerformanceDashboardResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/SocPerformanceDashboardData'
-    AlertTypeCount:
-      type: object
-      required:
-      - alert_type
-      - total
-      properties:
-        alert_type:
-          type: string
-        total:
-          type: integer
-          description: Total cases for this alert type.
-        malicious:
-          type: integer
-          description: Cases with disposition=10 (Malicious).
-        false_positive:
-          type: integer
-          description: Cases with disposition in [1,5] (NoThreatFound + NonMaliciousPositive).
-    DetectionWidgets:
-      type: object
-      properties:
-        high_value_detections:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Alert types ranked by malicious case count.
-        false_positive_alert_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Alert types ranked by false positive case count.
-        uninvestigated_alerts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Alert types with no linked case (linked_case_id null and no non-empty case_id in linked_case_executions).
-        missing_data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Alert types where cases have a non-empty confidence.missing_information field, grouped by alert type.
-        top_alert_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Top 10 alert types ranked by case count within the requested date range.
-    ListDashboardSchedulesResponse:
-      type: object
-      required:
-      - schedules
-      properties:
-        schedules:
-          type: array
-          items:
-            $ref: '#/components/schemas/DashboardSchedule'
-        total:
-          type: integer
-          description: Total count of schedules available for user.
-    ProviderSummary:
-      type: object
-      required:
-      - name
-      - display_name
-      - logo_url
-      - provider_id
-      properties:
-        name:
-          type: string
-        display_name:
-          type: string
-        logo_url:
-          type: string
-        provider_id:
-          type: string
-    CaseMetricsResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/CaseMetrics'
-          description: case metrics object
-    CostTrimSnapshotRow:
-      type: object
-      required:
-      - organization_uuid
-      - alert_provider
-      - alert_type
-      - alerts
-      - investigated
-      - escalated_to_customer
-      properties:
-        organization_uuid:
-          type: string
-        organization_code:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        window_start:
-          type: integer
-          format: int64
-        window_end:
-          type: integer
-          format: int64
-        computed_at:
-          type: integer
-          format: int64
-        alerts:
-          type: integer
-          format: int64
-        investigated:
-          type: integer
-          format: int64
-        linked_case_count:
-          type: integer
-          format: int64
-        escalated_to_customer:
-          type: integer
-          format: int64
-        escalated_to_analyst:
-          type: integer
-          format: int64
-        first_seen_at:
-          type: integer
-          format: int64
-        last_seen_at:
-          type: integer
-          format: int64
-    UserWidgets:
-      type: object
-      properties:
-        repeat_targeted_users:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Users (type=user or service_account) appearing in more than one case.
-        users_in_malicious_activity:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Users appearing in malicious cases (disposition=10).
-        users_high_false_positives:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCount'
-          description: Users most frequently appearing in non-malicious cases (disposition in [1,5]).
-        multi_vector_targeted_users:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiVectorUser'
-          description: Users involved in more than one distinct attack type.
-    ResponseRemediationWidgets:
-      type: object
-      properties:
-        stalled_cases_count:
-          type: integer
-          description: Number of cases currently in status=10 (CustomerPending).
-        stalled_cases_by_category:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Stalled case count (status=10) grouped by case category.
-        customer_response_time:
-          $ref: '#/components/schemas/ResponseTimeMetric'
-          description: 'Avg time from customer_pending_at to customer_responded_at. Requires two new timestamp fields on CaseTimeline: customer_pending_at (set on status→10) and customer_responded_at (set on first customer activity — comment, field change, or action update).'
-    WidgetSourceType:
-      type: string
-      enum:
-      - playbook_execution
-      - case_metric
-    EntityCount:
-      type: object
-      required:
-      - name
-      - case_count
-      properties:
-        name:
-          type: string
-          description: Entity value (e.g. IP address, domain, username, hostname).
-        entity_type:
-          type: string
-          description: Entity type (ip, domain, user, service_account, host, file_hash, cloud_resource).
-        case_count:
-          type: integer
-          description: Number of distinct cases this entity appears in.
-    CaseActionCount:
-      type: object
-      required:
-      - case_id
-      - count
-      properties:
-        case_id:
-          type: string
-        count:
-          type: integer
-          description: Number of actions matching the filter for this case.
-    CostTrimOrgTypeRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - organization_uuid
-        - alert_type
-        properties:
-          organization_uuid:
-            type: string
-          organization_code:
-            type: string
-          alert_type:
-            type: string
-    CreateWidgetsResponse:
-      type: object
-      required:
-      - widgets
-      properties:
-        widgets:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateWidgetResponse'
-          description: List of created widgets with their IDs and configurations.
-    UpdateWidgetRequest:
-      type: object
-      properties:
-        widget_name:
-          type: string
-        render_type:
-          type: string
-        nl_description:
-          type: string
-        layout:
-          $ref: '#/components/schemas/WidgetLayout'
-        playbook_execution_source:
-          $ref: '#/components/schemas/PlaybookExecutionSource'
-        system_widget_source:
-          $ref: '#/components/schemas/SystemWidgetSelection'
-    MultiVectorHost:
-      type: object
-      required:
-      - name
-      - attack_types
-      properties:
-        name:
-          type: string
-          description: Hostname.
-        attack_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AttackTypeCount'
-          description: Distinct alert types this host has been involved in, with case count per type.
-        case_count:
-          type: integer
-    CustomerExperienceWidgets:
-      type: object
-      properties:
-        cases_with_communication_count:
-          type: integer
-          description: Cases with at least one escalation entry where escalated_to=0 (EscalatedToCustomer). Escalation is the confirmed trigger for customer notification tracking.
-        escalation_breakdown:
-          $ref: '#/components/schemas/EscalationBreakdown'
-          description: Overall breakdown of escalated vs non-escalated cases.
-        communication_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommunicationBySeverity'
-          description: For each severity, count of cases with and without customer communication.
-        communication_by_disposition:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommunicationByDisposition'
-          description: For each disposition, count of cases with and without customer communication.
-    TrendWidgets:
-      type: object
-      properties:
-        cases_over_time:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyCount'
-          description: Daily case volume within the requested date range.
-        cases_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeverityCount'
-          description: Case count broken down by severity level.
-        business_hours_breakdown:
-          $ref: '#/components/schemas/BusinessHoursBreakdown'
-          description: Case volume split by business hours (Mon–Fri 09:00–17:00 UTC) vs after-hours & weekends.
-    DashboardScheduleResult:
-      type: object
-      required:
-      - success
-      properties:
-        schedule_id:
-          type: string
-          description: Echoes the request item's schedule_id for update/delete results. For create results, present only when success is true (once the new schedule has been assigned an ID).
-        success:
-          type: boolean
-        schedule:
-          $ref: '#/components/schemas/DashboardSchedule'
-          description: The resulting schedule. Present when success is true, for create and update results (omitted for delete).
-        error:
-          type: string
-          description: Human-readable failure reason. Present when success is false.
-    ResponseTimePercentiles:
-      type: object
-      properties:
-        mtta:
-          $ref: '#/components/schemas/PercentileMetric'
-        mtti:
-          $ref: '#/components/schemas/PercentileMetric'
-        mttc:
-          $ref: '#/components/schemas/PercentileMetric'
-        mtt_close:
-          $ref: '#/components/schemas/PercentileMetric'
-    SocPerformanceDashboardData:
-      type: object
-      properties:
-        kpi:
-          $ref: '#/components/schemas/KpiWidgets'
-        speed_sla:
-          $ref: '#/components/schemas/SpeedSlaWidgets'
-        throughput:
-          $ref: '#/components/schemas/ThroughputWidgets'
-        investigation_quality:
-          $ref: '#/components/schemas/InvestigationQualityWidgets'
-        response_remediation:
-          $ref: '#/components/schemas/ResponseRemediationWidgets'
-        consistency:
-          $ref: '#/components/schemas/ConsistencyWidgets'
-        customer_experience:
-          $ref: '#/components/schemas/CustomerExperienceWidgets'
-        automation:
-          $ref: '#/components/schemas/AutomationWidgets'
-        operational_gaps:
-          $ref: '#/components/schemas/OperationalGapsWidgets'
-    ListDashboardsResponse:
-      type: object
-      required:
-      - dashboards
-      properties:
-        dashboards:
-          type: array
-          items:
-            $ref: '#/components/schemas/DashboardSummary'
-    CreateDashboardRequest:
-      type: object
-      required:
+      - dashboard_id
       - dashboard_name
+      - organization_id
+      - created_at
+      - widget_count
+      - has_email_schedule
+      - organization_code
       properties:
+        dashboard_id:
+          type: string
         dashboard_name:
           type: string
         description:
@@ -1872,115 +1579,115 @@ components:
           description: Optional free-text description of the dashboard.
         organization_id:
           type: string
-          description: Target organisation to create the dashboard in. If not provided, defaults to the user's logged in organization.
+        organization_code:
+          type: string
+          description: Human-readable code of the organization the dashboard belongs to. Derived from the organization, not stored on the dashboard.
+        created_at:
+          type: string
+          format: date-time
         print_config:
           $ref: '#/components/schemas/PrintConfig'
-    PlaybookExecutionSource:
+        widget_count:
+          type: integer
+          description: Number of widgets currently on the dashboard.
+        has_email_schedule:
+          type: boolean
+          description: Whether the dashboard has a recurring email schedule configured. Always false until scheduled dashboard emails are implemented.
+    SeverityMetrics:
       type: object
       required:
-      - playbook_uuid
-      - node_id
-      - step_number
-      - schedule_id
+      - alert_count
       properties:
-        playbook_uuid:
-          type: string
-        playbook_version:
+        severity:
           type: integer
-          description: Specific playbook version to use. Defaults to latest if omitted.
-        node_id:
-          type: string
-          description: Unique identifier for the node within the playbook.
-        step_number:
+        alert_count:
           type: integer
-          description: 1-indexed step number within the playbook.
-        schedule_id:
-          type: string
-          description: Schedule ID to pull data from. Uses most recent execution if omitted.
-    DailyCount:
+          description: Number of alerts
+    QualityScoreDailyPoint:
       type: object
       required:
       - date
-      - count
       properties:
         date:
           type: string
           description: Date in YYYY-MM-DD format.
-        count:
-          type: integer
-    SocEmailRequestFilter:
-      type: object
-      required:
-      - created_at_from
-      - created_at_to
-      properties:
-        org_id:
-          type: string
-          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
-        created_at_from:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (start of date range)
-        created_at_to:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (end of date range)
-        metadata:
-          type: object
-          description: Optional metadata for report customization
-    CostTrimOrgRow:
+        overall:
+          type: number
+          format: double
+          description: Average case_score across all cases on this day.
+        darryl_investigated:
+          type: number
+          format: double
+          description: Average case_score for Darryl-investigated cases on this day.
+        human_investigated:
+          type: number
+          format: double
+          description: Average case_score for human-investigated cases on this day.
+    OrganizationMetrics:
       allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - $ref: '#/components/schemas/DetailedMetrics'
       - type: object
         required:
-        - organization_uuid
-        - alert_types
+        - organization_id
         properties:
-          organization_uuid:
+          organization_id:
             type: string
-          organization_code:
+            description: Organization ID
+    GetDetailedMetricsRequest:
+      type: object
+      properties:
+        global_metrics_organization_filter:
+          type: array
+          items:
             type: string
-          alert_types:
-            type: integer
-            description: Count of distinct alert types within this org.
-          trim_headroom:
-            type: object
-            additionalProperties:
-              type: number
-              format: double
-            description: 'Map of threshold-name → fraction of total alerts in this org
-
-              that come from alert types with escalation rate ≤ threshold.
-
-              Keys are named `safe_trim_pct_0` for 0% and `trim_pct_N` for
-
-              N% (e.g. `trim_pct_5`, `trim_pct_10`, `trim_pct_25`).
-
-              '
-    GetDetailedMetricsResponse:
+          description: Organization IDs for which the global metrics should be fetched
+        alert_type_metrics_organization_filter:
+          type: array
+          items:
+            type: string
+          description: Organization IDs for which the alert type metrics should be fetched
+    ScheduleFrequency:
+      type: string
+      enum:
+      - send_now
+      - daily
+      - weekly
+      - monthly
+      description: Delivery mode. send_now triggers an immediate one-off send; others set up a recurring schedule.
+    SystemWidget:
       type: object
       required:
-      - message
-      - data
+      - widget_id
+      - dashboard_source
+      - display_name
+      - category
       properties:
-        message:
+        widget_id:
           type: string
-        data:
-          $ref: '#/components/schemas/AggregatedMetrics'
-    AdrTriageDailyBreakdown:
+          description: Identifier used in CaseMetricSource.metric_widget_type when adding this widget to a custom dashboard.
+        dashboard_source:
+          $ref: '#/components/schemas/SystemWidgetDashboardSource'
+        display_name:
+          type: string
+        category:
+          type: string
+          description: Grouping label for display in the widget picker (e.g. IP & Network, User Risk).
+    DispositionEscalationWidgets:
       type: object
-      required:
-      - date
       properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        fully_automated:
-          type: integer
-        partially_automated:
-          type: integer
-        manual:
-          type: integer
+        disposition_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: For each disposition, count of cases with and without customer communication (escalated_to=0).
+        escalation_breakdown:
+          $ref: '#/components/schemas/EscalationBreakdown'
+          description: Case counts split by whether they have at least one customer escalation.
+        escalations_by_provider:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEscalationCount'
+          description: Escalated vs benign (not escalated) case counts grouped by security vendor (detection source / provider).
     SpeedSlaWidgets:
       type: object
       properties:
@@ -2016,253 +1723,74 @@ components:
         response_time_percentiles:
           $ref: '#/components/schemas/ResponseTimePercentiles'
           description: P50/P95/P99 for each timing metric across closed cases in the window.
-    ScheduleFrequency:
-      type: string
-      enum:
-      - send_now
-      - daily
-      - weekly
-      - monthly
-      description: Delivery mode. send_now triggers an immediate one-off send; others set up a recurring schedule.
-    UpdateDashboardScheduleRequest:
+    ListDashboardSchedulesResponse:
       type: object
-      description: All fields optional. Only provided fields are updated.
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSchedule'
+        total:
+          type: integer
+          description: Total count of schedules available for user.
+    CreateDashboardScheduleRequest:
+      type: object
+      required:
+      - name
+      - frequency
+      - recipients
       properties:
         name:
           type: string
+        organization_id:
+          type: string
+          description: Target organization to create the schedule in. Defaults to the user's logged in organization if not provided.
         frequency:
           $ref: '#/components/schemas/ScheduleFrequency'
         recurrence:
           $ref: '#/components/schemas/ScheduleRecurrence'
+          description: Required when frequency is daily, weekly, or monthly. Omit for send_now.
         recipients:
           type: array
           items:
             type: string
             format: email
           minItems: 1
-          description: If provided, replaces the entire recipient list. Omit to leave unchanged.
         is_enabled:
           type: boolean
-          description: Set to false to pause the schedule without deleting it.
-    CaseAnalyticsDashboardResponse:
+          description: Whether the schedule is active on creation. Defaults to true if omitted.
+    OutlierCase:
       type: object
       required:
-      - message
-      - data
+      - case_id
+      - case_uuid
       properties:
-        message:
+        case_id:
           type: string
-        data:
-          $ref: '#/components/schemas/CaseAnalyticsDashboardData'
-    UpdateDashboardScheduleItem:
-      allOf:
-      - type: object
-        required:
-        - schedule_id
-        properties:
-          schedule_id:
-            type: string
-      - $ref: '#/components/schemas/UpdateDashboardScheduleRequest'
-    SlaAdherenceResult:
-      type: object
-      required:
-      - total_cases
-      - met_count
-      - breach_count
-      - adherence_pct
-      properties:
-        total_cases:
-          type: integer
-        met_count:
-          type: integer
-          description: Cases where investigation_completed_metric <= target.
-        breach_count:
-          type: integer
-          description: Cases where investigation_completed_metric > target.
-        adherence_pct:
-          type: number
-          format: float
-          description: met_count / total_cases as a percentage.
-        avg_mtti_seconds:
-          type: integer
-          description: Average MTTI across all cases in this tier.
-    QuestionsAnsweredByCategory:
-      type: object
-      description: Answered vs unanswered question split across the 3 question categories. Used for grouped bar chart.
-      properties:
-        investigation_questions:
-          $ref: '#/components/schemas/QuestionsAnsweredSplit'
-          description: case_detail_fields.custom_questions[]
-        faqs:
-          $ref: '#/components/schemas/QuestionsAnsweredSplit'
-          description: case_detail_fields.faqs[]
-        explore_deeper:
-          $ref: '#/components/schemas/QuestionsAnsweredSplit'
-          description: case_detail_fields.explore_deeper_questions[]
-    OrganizationMetrics:
-      allOf:
-      - $ref: '#/components/schemas/DetailedMetrics'
-      - type: object
-        required:
-        - organization_id
-        properties:
-          organization_id:
-            type: string
-            description: Organization ID
-    ProviderMetrics:
-      allOf:
-      - $ref: '#/components/schemas/Metrics'
-      - type: object
-        required:
-        - provider
-        properties:
-          provider:
-            $ref: '#/components/schemas/ProviderSummary'
-          alert_type_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/AlertTypeMetrics'
-            description: Alert type metrics list
-    CaseMetricsSummaryResponse:
-      type: object
-      required:
-      - message
-      - summary
-      properties:
-        message:
+        case_uuid:
           type: string
-          description: Message indicating the status of the summary generation.
-        summary:
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseMetricsLLMSummary'
-          description: A summary of the case metrics in natural language generated by Darryl using the available case data and metrics. This summary can be used to quickly understand the overall status and health of the case.
-    DashboardSummary:
-      type: object
-      required:
-      - dashboard_id
-      - dashboard_name
-      - organization_id
-      - created_at
-      - widget_count
-      - has_email_schedule
-      - organization_code
-      properties:
-        dashboard_id:
+        category:
           type: string
-        dashboard_name:
-          type: string
-        description:
-          type: string
-          description: Optional free-text description of the dashboard.
-        organization_id:
-          type: string
-        organization_code:
-          type: string
-          description: Human-readable code of the organization the dashboard belongs to. Derived from the organization, not stored on the dashboard.
-        created_at:
-          type: string
-          format: date-time
-        print_config:
-          $ref: '#/components/schemas/PrintConfig'
-        widget_count:
-          type: integer
-          description: Number of widgets currently on the dashboard.
-        has_email_schedule:
-          type: boolean
-          description: Whether the dashboard has a recurring email schedule configured. Always false until scheduled dashboard emails are implemented.
-    CostTrimProviderTypeRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - alert_provider
-        - alert_type
-        properties:
-          alert_provider:
-            type: string
-          alert_type:
-            type: string
-    SlaAdherenceTrendPoint:
-      type: object
-      required:
-      - date
-      properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        critical_incident_pct:
-          type: number
-          format: float
-          description: SLA adherence % for Critical Incident Support (sev=15, target=2hr) on this day.
-        critical_alert_pct:
-          type: number
-          format: float
-          description: SLA adherence % for Critical Alert Validation (sev=10, target=4hr) on this day.
-        non_critical_pct:
-          type: number
-          format: float
-          description: SLA adherence % for Non-Critical Incident Support (sev≤5, target=8hr) on this day.
-    CommunicationBySeverity:
-      type: object
-      required:
-      - severity
-      - with_communication
-      - without_communication
-      properties:
         severity:
           type: integer
-        severity_label:
+        assignee_email:
           type: string
-        with_communication:
+        investigation_time_seconds:
           type: integer
-        without_communication:
+          description: Time from alert_acknowledged_at to investigation_completed_at in seconds.
+        close_time_seconds:
           type: integer
-    ScheduleExecutionStatus:
-      type: string
-      enum:
-      - success
-      - partial_data
-      - render_error
-      - delivery_failed
-      - failed
-      description: Outcome of a schedule run.
-    CaseReviewMetrics:
+          description: Time from alert_raised_at to case_closed_at in seconds.
+    CaseAnalyticsEmailResponse:
       type: object
+      required:
+      - message
       properties:
-        case_coverage:
-          type: number
-          format: double
-        darryl_investigated_case_coverage:
-          type: number
-          format: double
-        human_investigated_case_coverage:
-          type: number
-          format: double
-        cases_to_be_reviewed:
-          type: integer
-          description: Number of cases to be reviewed
-        cases_reviewed:
-          type: integer
-          description: Number of cases reviewed
-        high_quality_cases:
-          type: integer
-          description: Number of high quality cases
-        medium_quality_cases:
-          type: integer
-          description: Number of medium quality cases
-        low_quality_cases:
-          type: integer
-          description: Number of low quality cases
-        case_quality:
-          type: number
-          format: double
-        darryl_investigated_case_quality:
-          type: number
-          format: double
-        human_investigated_case_quality:
-          type: number
-          format: double
+        message:
+          type: string
+          description: Status message confirming email was queued
     CaseMetrics:
       type: object
       required:
@@ -2319,171 +1847,6 @@ components:
             type: integer
             format: int64
           description: count of cases for each severity type
-    CostTrimEscalationsByTypeRow:
-      type: object
-      required:
-      - alert_type
-      - escalations
-      properties:
-        alert_type:
-          type: string
-        escalations:
-          type: integer
-          format: int64
-    MissingTelemetryCount:
-      type: object
-      required:
-      - alert_type
-      - case_count
-      properties:
-        alert_type:
-          type: string
-        case_count:
-          type: integer
-          description: Cases where confidence.missing_information is non-empty.
-    AlertTypeMetrics:
-      allOf:
-      - $ref: '#/components/schemas/Metrics'
-      - type: object
-        required:
-        - provider
-        - alert_type
-        properties:
-          provider:
-            $ref: '#/components/schemas/ProviderSummary'
-          alert_type:
-            type: string
-          severity_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/SeverityMetrics'
-              description: Severity metrics list
-    GetDashboardResponse:
-      type: object
-      required:
-      - dashboard_id
-      - dashboard_name
-      - organization_id
-      - created_at
-      - widgets
-      properties:
-        dashboard_id:
-          type: string
-        dashboard_name:
-          type: string
-        description:
-          type: string
-        organization_id:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        widgets:
-          type: array
-          items:
-            $ref: '#/components/schemas/WidgetDetail'
-        print_config:
-          $ref: '#/components/schemas/PrintConfig'
-    InvestigationQualityWidgets:
-      type: object
-      properties:
-        questions_per_category:
-          $ref: '#/components/schemas/QuestionsAnsweredByCategory'
-          description: Answered vs unanswered question counts across 3 categories. Grouped bar chart.
-        escalations_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeverityCount'
-          description: Escalated case count grouped by severity.
-        rework_daily:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReworkDailyPoint'
-          description: Daily reinvestigation count, rate, and avg time to rework.
-        quality_score_daily:
-          type: array
-          items:
-            $ref: '#/components/schemas/QualityScoreDailyPoint'
-          description: Daily avg quality score — three line charts (overall, Darryl, human).
-        questions_answered_by_outcome:
-          type: array
-          items:
-            $ref: '#/components/schemas/QuestionsAnsweredByOutcome'
-          description: Count of answered explore_deeper_questions grouped by case disposition (outcome).
-    BulkDeleteDashboardScheduleRequest:
-      type: object
-      required:
-      - schedule_ids
-      properties:
-        schedule_ids:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          maxItems: 50
-    SlaConfig:
-      type: object
-      description: 'Three SLA tiers. Critical Incident Support (sev=15): 2hr MTTI for true incidents (malware, lateral movement). Critical Alert Validation (sev=10): 4hr MTTI for critical alert detection and customer notification. Non-Critical (sev≤5): 8hr MTTI for incidents with mitigations in place.'
-      properties:
-        critical_incident_target_seconds:
-          type: integer
-          default: 7200
-          description: MTTI target for Critical severity (sev=15) true incidents — 2 hr.
-        critical_alert_target_seconds:
-          type: integer
-          default: 14400
-          description: MTTI target for High severity (sev=10) alert validation and customer notification — 4 hr.
-        non_critical_target_seconds:
-          type: integer
-          default: 28800
-          description: MTTI target for non-critical severity (sev≤5) incidents — 8 hr.
-    WidgetDetail:
-      type: object
-      required:
-      - widget_id
-      - dashboard_id
-      - widget_name
-      - source_type
-      - render_type
-      - layout
-      - created_at
-      - updated_at
-      properties:
-        widget_id:
-          type: string
-        dashboard_id:
-          type: string
-        widget_name:
-          type: string
-        source_type:
-          $ref: '#/components/schemas/WidgetSourceType'
-        render_type:
-          type: string
-        nl_description:
-          type: string
-        layout:
-          $ref: '#/components/schemas/WidgetLayout'
-        playbook_execution_source:
-          $ref: '#/components/schemas/PlaybookExecutionSource'
-        system_widget_source:
-          $ref: '#/components/schemas/SystemWidgetSelection'
-        transformation_code:
-          type: string
-          description: Python code to transform the playbook step output.
-        last_output:
-          description: Latest execution output stored on the widget document.
-        raw_data_preview:
-          description: Raw/unprocessed output from playbook step execution before transformation.
-        execution_data_updated_at:
-          type: integer
-          format: int64
-          description: Unix timestamp (ms) at which the underlying execution data was last updated.
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     DailyMetrics:
       type: object
       required:
@@ -2497,6 +1860,292 @@ components:
           items:
             $ref: '#/components/schemas/ProviderList'
           description: Provider list
+    QuestionsAnsweredSplit:
+      type: object
+      required:
+      - answered
+      - unanswered
+      - total
+      properties:
+        answered:
+          type: integer
+          description: Questions where status is not Available or Data Needed.
+        unanswered:
+          type: integer
+          description: Questions where status is Available or Data Needed.
+        total:
+          type: integer
+    HostWidgets:
+      type: object
+      properties:
+        repeat_incident_hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Hosts appearing in more than one case.
+        hosts_in_malicious_activity:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCount'
+          description: Hosts appearing in malicious cases.
+        multi_vector_targeted_hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiVectorHost'
+          description: Hosts involved in more than one distinct attack type.
+    CostTrimSnapshotRow:
+      type: object
+      required:
+      - organization_uuid
+      - alert_provider
+      - alert_type
+      - alerts
+      - investigated
+      - escalated_to_customer
+      properties:
+        organization_uuid:
+          type: string
+        organization_code:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        window_start:
+          type: integer
+          format: int64
+        window_end:
+          type: integer
+          format: int64
+        computed_at:
+          type: integer
+          format: int64
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        linked_case_count:
+          type: integer
+          format: int64
+        escalated_to_customer:
+          type: integer
+          format: int64
+        escalated_to_analyst:
+          type: integer
+          format: int64
+        first_seen_at:
+          type: integer
+          format: int64
+        last_seen_at:
+          type: integer
+          format: int64
+    SystemWidgetSelection:
+      type: object
+      required:
+      - widget_id
+      - dashboard_source
+      - category
+      - days
+      - data_source_ids
+      properties:
+        widget_id:
+          type: string
+          description: ID of the system widget (e.g., mtta, top_attacking_ips).
+        dashboard_source:
+          type: string
+          description: Source dashboard (case_analytics, soc_performance, security_review).
+        category:
+          type: string
+          description: Category of the widget for organization.
+        days:
+          type: integer
+          description: Time window in days for the widget data (e.g. 7, 30, 90).
+        data_source_ids:
+          type: array
+          items:
+            type: string
+          description: List of data sources (filtered from metrics apis) to include in the widget.
+          minItems: 1
+    ThreatCategorizationWidgets:
+      type: object
+      properties:
+        cases_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count grouped by category field.
+        high_severity_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count for severity in [10,15] (High, Critical) grouped by category.
+        emerging_threats:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmergingThreat'
+          description: Categories with significant growth vs the prior period.
+    PlaybookExecutionSource:
+      type: object
+      required:
+      - playbook_uuid
+      - node_id
+      - step_number
+      - schedule_id
+      properties:
+        playbook_uuid:
+          type: string
+        playbook_version:
+          type: integer
+          description: Specific playbook version to use. Defaults to latest if omitted.
+        node_id:
+          type: string
+          description: Unique identifier for the node within the playbook.
+        step_number:
+          type: integer
+          description: 1-indexed step number within the playbook.
+        schedule_id:
+          type: string
+          description: Schedule ID to pull data from. Uses most recent execution if omitted.
+    AggregatedMetrics:
+      allOf:
+      - $ref: '#/components/schemas/DetailedMetrics'
+      - type: object
+        required:
+        - organization_metrics_list
+        properties:
+          organization_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/OrganizationMetrics'
+              description: Organization metrics list
+    CaseAnalyticsEmailRequest:
+      type: object
+      required:
+      - email_ids
+      - subject
+      - filter
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+        filter:
+          $ref: '#/components/schemas/CaseAnalyticsEmailRequestFilter'
+          description: Filter parameters for the report
+    CreateWidgetsRequest:
+      type: object
+      required:
+      - widgets
+      properties:
+        widgets:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/CreateWidgetRequest'
+          description: List of widgets to create (1-100 widgets per request).
+    UpdateDashboardResponse:
+      type: object
+      required:
+      - dashboard_id
+      - dashboard_name
+      - updated_at
+      properties:
+        dashboard_id:
+          type: string
+        dashboard_name:
+          type: string
+        description:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    CommunicationByDisposition:
+      type: object
+      required:
+      - disposition
+      - with_communication
+      - without_communication
+      properties:
+        disposition:
+          type: integer
+        disposition_label:
+          type: string
+        with_communication:
+          type: integer
+        without_communication:
+          type: integer
+    CaseMetricsSummaryResponse:
+      type: object
+      required:
+      - message
+      - summary
+      properties:
+        message:
+          type: string
+          description: Message indicating the status of the summary generation.
+        summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseMetricsLLMSummary'
+          description: A summary of the case metrics in natural language generated by Darryl using the available case data and metrics. This summary can be used to quickly understand the overall status and health of the case.
+    ProviderList:
+      type: object
+      required:
+      - provider
+      - alert_count
+      properties:
+        provider:
+          $ref: '#/components/schemas/ProviderSummary'
+        alert_count:
+          type: integer
+          description: Number of alerts
+    UpdateDashboardScheduleRequest:
+      type: object
+      description: All fields optional. Only provided fields are updated.
+      properties:
+        name:
+          type: string
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        recurrence:
+          $ref: '#/components/schemas/ScheduleRecurrence'
+        recipients:
+          type: array
+          items:
+            type: string
+            format: email
+          minItems: 1
+          description: If provided, replaces the entire recipient list. Omit to leave unchanged.
+        is_enabled:
+          type: boolean
+          description: Set to false to pause the schedule without deleting it.
+    SystemWidgetDashboardSource:
+      type: string
+      enum:
+      - case_analytics
+      - soc_performance
+      - security_review
+      - executive
+    ResponseTimePercentiles:
+      type: object
+      properties:
+        mtta:
+          $ref: '#/components/schemas/PercentileMetric'
+        mtti:
+          $ref: '#/components/schemas/PercentileMetric'
+        mttc:
+          $ref: '#/components/schemas/PercentileMetric'
+        mtt_close:
+          $ref: '#/components/schemas/PercentileMetric'
     CostTrimProviderRow:
       allOf:
       - $ref: '#/components/schemas/CostTrimRollupBase'
@@ -2506,169 +2155,237 @@ components:
         properties:
           alert_provider:
             type: string
-    EscalationBreakdown:
+    MultiVectorUser:
       type: object
       required:
+      - name
+      - attack_types
+      properties:
+        name:
+          type: string
+          description: Username or service account name.
+        attack_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttackTypeCount'
+          description: Distinct alert types this user has been involved in, with case count per type.
+        case_count:
+          type: integer
+    ProviderMetrics:
+      allOf:
+      - $ref: '#/components/schemas/Metrics'
+      - type: object
+        required:
+        - provider
+        properties:
+          provider:
+            $ref: '#/components/schemas/ProviderSummary'
+          alert_type_metrics_list:
+            type: array
+            items:
+              $ref: '#/components/schemas/AlertTypeMetrics'
+            description: Alert type metrics list
+    MttiComparisonPoint:
+      type: object
+      required:
+      - x
+      - y
+      properties:
+        x:
+          type: number
+          format: float
+          description: Average investigation time in minutes.
+        y:
+          type: number
+          format: float
+          description: Time difference (avg_mtti - x) in minutes.
+    CaseAnalyticsDashboardResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseAnalyticsDashboardData'
+    UpdateWidgetResponse:
+      type: object
+      required:
+      - widget_id
+      - dashboard_id
+      - widget_name
+      - updated_at
+      properties:
+        widget_id:
+          type: string
+        dashboard_id:
+          type: string
+        widget_name:
+          type: string
+        render_type:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        updated_at:
+          type: string
+          format: date-time
+        last_output:
+          description: Latest execution output for system widgets.
+    Metrics:
+      allOf:
+      - $ref: '#/components/schemas/CaseReviewMetrics'
+      - type: object
+        properties:
+          darryl_reviewed_case_metrics:
+            $ref: '#/components/schemas/CaseReviewMetrics'
+            description: Darryl reviewed case metrics
+          human_reviewed_case_metrics:
+            $ref: '#/components/schemas/CaseReviewMetrics'
+            description: Human reviewed case metrics
+          darryl_investigated_cases:
+            type: integer
+            description: Number of cases investigated by darryl
+          human_investigated_cases:
+            type: integer
+            description: Number of cases investigated by human
+          alert_count:
+            type: integer
+            description: Number of alerts
+          alert_type_count:
+            type: integer
+            description: Number of alert types
+    SocPerformanceDashboardData:
+      type: object
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        speed_sla:
+          $ref: '#/components/schemas/SpeedSlaWidgets'
+        throughput:
+          $ref: '#/components/schemas/ThroughputWidgets'
+        investigation_quality:
+          $ref: '#/components/schemas/InvestigationQualityWidgets'
+        response_remediation:
+          $ref: '#/components/schemas/ResponseRemediationWidgets'
+        consistency:
+          $ref: '#/components/schemas/ConsistencyWidgets'
+        customer_experience:
+          $ref: '#/components/schemas/CustomerExperienceWidgets'
+        automation:
+          $ref: '#/components/schemas/AutomationWidgets'
+        operational_gaps:
+          $ref: '#/components/schemas/OperationalGapsWidgets'
+    ProviderEscalationCount:
+      type: object
+      required:
+      - provider
       - escalated_count
       - not_escalated_count
       - total
       properties:
-        escalated_count:
-          type: integer
-          description: Number of cases with at least one escalation in the escalations[] array.
-        not_escalated_count:
-          type: integer
-          description: Number of cases with no escalations.
-        total:
-          type: integer
-          description: Total case count (escalated_count + not_escalated_count).
-        ai_summary:
+        provider:
           type: string
-          description: AI-generated natural-language summary of the escalation breakdown. Populated separately; may be absent.
-    EntityCountWithDays:
-      allOf:
-      - $ref: '#/components/schemas/EntityCount'
-      - type: object
-        required:
-        - days
-        properties:
-          days:
-            type: integer
-            description: Number of distinct days this entity appears in cases.
-    CaseAnalyticsEmailResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: Status message confirming email was queued
-    CreateWidgetRequest:
-      type: object
-      required:
-      - widget_name
-      - source_type
-      - render_type
-      - nl_description
-      - layout
-      properties:
-        widget_name:
-          type: string
-        source_type:
-          $ref: '#/components/schemas/WidgetSourceType'
-        render_type:
-          type: string
-          description: Visualization type (e.g. bar_chart, line_chart, table, number).
-        nl_description:
-          type: string
-          description: Natural language description used to generate the widget code.
-        layout:
-          $ref: '#/components/schemas/WidgetLayout'
-        playbook_execution_source:
-          $ref: '#/components/schemas/PlaybookExecutionSource'
-        system_widget_source:
-          $ref: '#/components/schemas/SystemWidgetSelection'
-          description: Optional specific system widget to display. If omitted with case_metric_source, returns aggregated view of all widgets for the dashboard.
-    EmailCustomDashboardResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: Status message confirming the dashboard report was emailed
-    EmergingThreat:
-      type: object
-      required:
-      - category
-      - current_count
-      - prior_count
-      properties:
-        category:
-          type: string
-        current_count:
-          type: integer
-          description: Case count in the current window.
-        prior_count:
-          type: integer
-          description: Case count in the prior equal window.
-        growth_rate:
-          type: number
-          format: float
-          description: Growth as a ratio (current / prior). Null if prior_count is zero.
-    ScheduleRecurrence:
-      type: object
-      description: Recurrence config. Required for daily/weekly/monthly; omit for send_now.
-      required:
-      - hour
-      - minute
-      - user_timezone_offset
-      properties:
-        hour:
-          type: integer
-          minimum: 0
-          maximum: 23
-          description: Hour of day to send (0–23, in the specified timezone).
-        minute:
-          type: integer
-          minimum: 0
-          maximum: 59
-          description: Minute of hour to send (0–59).
-        day_of_week:
-          type: integer
-          minimum: 0
-          maximum: 6
-          description: Day of week (0=Sunday, 6=Saturday). Required when frequency is weekly.
-        day_of_month:
-          type: integer
-          minimum: 1
-          maximum: 31
-          description: Day of month (1–31). Required when frequency is monthly.
-        user_timezone_offset:
-          type: integer
-          minimum: -720
-          maximum: 720
-          description: User's timezone offset in minutes from UTC. Required for all frequencies.
-    QuestionsAnsweredByOutcome:
-      type: object
-      required:
-      - disposition
-      - answered_count
-      properties:
-        disposition:
-          type: integer
-          description: 'Case disposition: 0=Pending, 1=NoThreatFound, 5=NonMaliciousPositive, 10=Malicious.'
-        label:
-          type: string
-          description: Human-readable outcome label (Malicious, Benign, Suspicious, etc.).
-        answered_count:
-          type: integer
-          description: Total explore_deeper_questions answered (status != Available, status != Data Needed) across cases with this disposition.
-    SystemWidgetDashboardSource:
-      type: string
-      enum:
-      - case_analytics
-      - soc_performance
-      - security_review
-      - executive
-    SystemWidget:
-      type: object
-      required:
-      - widget_id
-      - dashboard_source
-      - display_name
-      - category
-      properties:
-        widget_id:
-          type: string
-          description: Identifier used in CaseMetricSource.metric_widget_type when adding this widget to a custom dashboard.
-        dashboard_source:
-          $ref: '#/components/schemas/SystemWidgetDashboardSource'
+          description: Detection source / provider name (security vendor). "Unknown" when the case has no provider.
         display_name:
           type: string
-        category:
+          description: Human-readable provider name.
+        escalated_count:
+          type: integer
+          description: Cases from this provider with at least one escalation.
+        not_escalated_count:
+          type: integer
+          description: Benign cases from this provider (no escalation).
+        total:
+          type: integer
+          description: Total cases from this provider.
+    BulkDeleteDashboardScheduleRequest:
+      type: object
+      required:
+      - schedule_ids
+      properties:
+        schedule_ids:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 50
+    ScheduleExecutionStatus:
+      type: string
+      enum:
+      - success
+      - partial_data
+      - render_error
+      - delivery_failed
+      - failed
+      description: Outcome of a schedule run.
+    ResponseTimeMetric:
+      type: object
+      required:
+      - avg_seconds
+      - case_count
+      - mean_metrics_intervals
+      - daily_mean_metrics
+      properties:
+        avg_seconds:
+          type: integer
+        case_count:
+          type: integer
+        mean_metrics_intervals:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+        daily_mean_metrics:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+    EntityCount:
+      type: object
+      required:
+      - name
+      - case_count
+      properties:
+        name:
           type: string
-          description: Grouping label for display in the widget picker (e.g. IP & Network, User Risk).
+          description: Entity value (e.g. IP address, domain, username, hostname).
+        entity_type:
+          type: string
+          description: Entity type (ip, domain, user, service_account, host, file_hash, cloud_resource).
+        case_count:
+          type: integer
+          description: Number of distinct cases this entity appears in.
+    WidgetLayout:
+      type: object
+      required:
+      - column
+      - row
+      - width
+      - height
+      - min_width
+      - min_height
+      properties:
+        column:
+          type: integer
+          description: Column position (0–9, step 3 for a 12-col layout).
+        row:
+          type: integer
+          description: Row position. Use 9999 to append to bottom.
+        width:
+          type: integer
+          minimum: 3
+          description: Number of columns the widget occupies.
+        height:
+          type: integer
+          minimum: 3
+          description: Number of rows the widget occupies.
+        min_width:
+          type: integer
+          description: Minimum number of columns (3).
+        min_height:
+          type: integer
+          description: Minimum number of rows (3).
     RecentMaliciousCase:
       type: object
       required:
@@ -2704,159 +2421,190 @@ components:
         category:
           type: string
           description: Threat category.
-    SeverityMetrics:
+    AttackTypeCount:
       type: object
       required:
-      - alert_count
+      - type
+      - count
       properties:
-        severity:
-          type: integer
-        alert_count:
-          type: integer
-          description: Number of alerts
-    CaseAnalyticsEmailRequestFilter:
-      type: object
-      required:
-      - created_at_from
-      - created_at_to
-      properties:
-        org_id:
+        type:
           type: string
-          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
-        created_at_from:
+          description: Alert type name.
+        count:
           type: integer
-          format: int64
-          description: Unix epoch seconds (start of date range)
-        created_at_to:
-          type: integer
-          format: int64
-          description: Unix epoch seconds (end of date range)
-        metadata:
-          type: object
-          description: Optional metadata for report customization
-    ExecutiveDashboardData:
-      type: object
-      description: Curated executive-view widgets. KPI card + escalation, detection, trend, and threat widgets reused from the analytics/SOC dashboards, plus recent malicious cases and MITRE category volume.
-      properties:
-        kpi:
-          $ref: '#/components/schemas/KpiWidgets'
-        escalations_by_disposition:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommunicationByDisposition'
-          description: Escalated vs non-escalated case counts grouped by disposition (with_communication = escalated).
-        escalations_by_provider:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderEscalationCount'
-          description: Escalated vs benign case counts grouped by security vendor (detection source).
-        high_value_detections:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Alert types most likely to be malicious.
-        false_positive_alert_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeCount'
-          description: Alert types most likely to be false positives.
-        cases_over_time:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyCount'
-          description: Daily total case volume within the requested window.
-        escalations_over_time:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyCount'
-          description: Daily escalated case volume within the requested window.
-        cases_by_threat_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Case count grouped by threat category.
-        escalations_by_severity:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeverityCount'
-          description: Escalated case count broken down by severity level.
-        recent_malicious_cases:
-          type: array
-          items:
-            $ref: '#/components/schemas/RecentMaliciousCase'
-          description: Most recent malicious cases (disposition in [2,10]), newest first.
-        mitre_category_volume:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmergingThreat'
-          description: Case volume per threat category, current window vs the prior equal window.
-    DispositionEscalationWidgets:
-      type: object
-      properties:
-        disposition_breakdown:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommunicationByDisposition'
-          description: For each disposition, count of cases with and without customer communication (escalated_to=0).
-        escalation_breakdown:
-          $ref: '#/components/schemas/EscalationBreakdown'
-          description: Case counts split by whether they have at least one customer escalation.
-        escalations_by_provider:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderEscalationCount'
-          description: Escalated vs benign (not escalated) case counts grouped by security vendor (detection source / provider).
-    CreateWidgetsRequest:
+          description: Number of cases involving this alert type for the given entity.
+    SocEmailRequest:
       type: object
       required:
+      - email_ids
+      - subject
+      - filter
+      properties:
+        email_ids:
+          type: array
+          items:
+            type: string
+          description: List of email addresses to send the report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+        filter:
+          $ref: '#/components/schemas/SocEmailRequestFilter'
+          description: Filter parameters for the report
+    GetDashboardResponse:
+      type: object
+      required:
+      - dashboard_id
+      - dashboard_name
+      - organization_id
+      - created_at
       - widgets
       properties:
+        dashboard_id:
+          type: string
+        dashboard_name:
+          type: string
+        description:
+          type: string
+        organization_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
         widgets:
           type: array
-          minItems: 1
-          maxItems: 100
           items:
-            $ref: '#/components/schemas/CreateWidgetRequest'
-          description: List of widgets to create (1-100 widgets per request).
-    CaseAnalyticsDashboardData:
+            $ref: '#/components/schemas/WidgetDetail'
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    CaseMetricsLLMSummary:
+      type: object
+      required:
+      - risk
+      - tag
+      - title
+      - details
+      - footer_label
+      - footer_text
+      properties:
+        risk:
+          type: string
+          description: Drives the chip color. Accepts color-semantic (info/success/warning/danger, emitted by /query_metrics) or severity (Critical/High/Medium/Low/Informational, emitted by the monthly report).
+          enum:
+          - info
+          - success
+          - warning
+          - danger
+          - Critical
+          - High
+          - Medium
+          - Low
+          - Informational
+          x-enum-varnames:
+          - InfoLLMSummaryRisk
+          - SuccessLLMSummaryRisk
+          - WarningLLMSummaryRisk
+          - DangerLLMSummaryRisk
+          - CriticalLLMSummaryRisk
+          - HighLLMSummaryRisk
+          - MediumLLMSummaryRisk
+          - LowLLMSummaryRisk
+          - InformationalLLMSummaryRisk
+        tag:
+          type: string
+          description: Chip label, e.g. "1 CRITICAL ESCALATION", "TELEMETRY GAP".
+        title:
+          type: string
+          description: a brief summary text of this briefing point in < 10 words
+        details:
+          type: string
+          description: Narrative paragraph describing the briefing point.
+        footer_label:
+          type: string
+          description: Footer flips between a resolved/no-action STATUS line and a NEXT STEP line.
+          enum:
+          - STATUS
+          - NEXT STEP
+          x-enum-varnames:
+          - StatusLLMSummaryFooter
+          - NextStepLLMSummaryFooter
+        footer_text:
+          type: string
+          description: Footer body text for the STATUS / NEXT STEP line.
+    UpdateDashboardScheduleItem:
+      allOf:
+      - type: object
+        required:
+        - schedule_id
+        properties:
+          schedule_id:
+            type: string
+      - $ref: '#/components/schemas/UpdateDashboardScheduleRequest'
+    AdrTriageCount:
+      type: object
+      required:
+      - adr_triage
+      - count
+      properties:
+        adr_triage:
+          type: integer
+          description: 'Automation level: 0=NA, 1=None (manual), 5=Partial, 10=Full (automated).'
+        count:
+          type: integer
+        percentage:
+          type: number
+          format: float
+          description: Percentage of total cases in this tier.
+    CustomerExperienceWidgets:
       type: object
       properties:
-        kpi:
-          $ref: '#/components/schemas/KpiWidgets'
-        network:
-          $ref: '#/components/schemas/NetworkWidgets'
-        users:
-          $ref: '#/components/schemas/UserWidgets'
-        hosts:
-          $ref: '#/components/schemas/HostWidgets'
-        detection:
-          $ref: '#/components/schemas/DetectionWidgets'
-        trends:
-          $ref: '#/components/schemas/TrendWidgets'
-        threat_categorization:
-          $ref: '#/components/schemas/ThreatCategorizationWidgets'
-        remediation:
-          $ref: '#/components/schemas/RemediationWidgets'
-        disposition_escalation:
-          $ref: '#/components/schemas/DispositionEscalationWidgets'
-    ThreatCategorizationWidgets:
+        cases_with_communication_count:
+          type: integer
+          description: Cases with at least one escalation entry where escalated_to=0 (EscalatedToCustomer). Escalation is the confirmed trigger for customer notification tracking.
+        escalation_breakdown:
+          $ref: '#/components/schemas/EscalationBreakdown'
+          description: Overall breakdown of escalated vs non-escalated cases.
+        communication_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationBySeverity'
+          description: For each severity, count of cases with and without customer communication.
+        communication_by_disposition:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: For each disposition, count of cases with and without customer communication.
+    MultiVectorHost:
+      type: object
+      required:
+      - name
+      - attack_types
+      properties:
+        name:
+          type: string
+          description: Hostname.
+        attack_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttackTypeCount'
+          description: Distinct alert types this host has been involved in, with case count per type.
+        case_count:
+          type: integer
+    UpdateWidgetRequest:
       type: object
       properties:
-        cases_by_threat_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Case count grouped by category field.
-        high_severity_by_threat_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/CategoryCount'
-          description: Case count for severity in [10,15] (High, Critical) grouped by category.
-        emerging_threats:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmergingThreat'
-          description: Categories with significant growth vs the prior period.
+        widget_name:
+          type: string
+        render_type:
+          type: string
+        nl_description:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
     DashboardScheduleExecution:
       type: object
       required:
@@ -2908,6 +2656,106 @@ components:
         user_timezone_offset:
           type: integer
           description: User's timezone offset in minutes from UTC at the time the schedule was configured.
+    BusinessHoursBreakdown:
+      type: object
+      required:
+      - business_hours_count
+      - after_hours_count
+      - total
+      properties:
+        business_hours_count:
+          type: integer
+          description: Cases created during standard business hours (Mon–Fri 09:00–17:00 UTC).
+        after_hours_count:
+          type: integer
+          description: Cases created outside business hours — nights, early mornings, and weekends (UTC).
+        total:
+          type: integer
+          description: Total cases across both buckets.
+        ai_summary:
+          type: string
+          description: AI-generated natural-language summary of the business-hours breakdown. Populated separately; may be absent.
+    ListDashboardsResponse:
+      type: object
+      required:
+      - dashboards
+      properties:
+        dashboards:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSummary'
+    QuestionsAnsweredByCategory:
+      type: object
+      description: Answered vs unanswered question split across the 3 question categories. Used for grouped bar chart.
+      properties:
+        investigation_questions:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.custom_questions[]
+        faqs:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.faqs[]
+        explore_deeper:
+          $ref: '#/components/schemas/QuestionsAnsweredSplit'
+          description: case_detail_fields.explore_deeper_questions[]
+    TrendWidgets:
+      type: object
+      properties:
+        cases_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily case volume within the requested date range.
+        cases_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Case count broken down by severity level.
+        business_hours_breakdown:
+          $ref: '#/components/schemas/BusinessHoursBreakdown'
+          description: Case volume split by business hours (Mon–Fri 09:00–17:00 UTC) vs after-hours & weekends.
+    EntityCountWithDays:
+      allOf:
+      - $ref: '#/components/schemas/EntityCount'
+      - type: object
+        required:
+        - days
+        properties:
+          days:
+            type: integer
+            description: Number of distinct days this entity appears in cases.
+    DashboardScheduleResult:
+      type: object
+      required:
+      - success
+      properties:
+        schedule_id:
+          type: string
+          description: Echoes the request item's schedule_id for update/delete results. For create results, present only when success is true (once the new schedule has been assigned an ID).
+        success:
+          type: boolean
+        schedule:
+          $ref: '#/components/schemas/DashboardSchedule'
+          description: The resulting schedule. Present when success is true, for create and update results (omitted for delete).
+        error:
+          type: string
+          description: Human-readable failure reason. Present when success is false.
+    AlertTypeCount:
+      type: object
+      required:
+      - alert_type
+      - total
+      properties:
+        alert_type:
+          type: string
+        total:
+          type: integer
+          description: Total cases for this alert type.
+        malicious:
+          type: integer
+          description: Cases with disposition=10 (Malicious).
+        false_positive:
+          type: integer
+          description: Cases with disposition in [1,5] (NoThreatFound + NonMaliciousPositive).
     Error:
       type: object
       required:
@@ -2916,18 +2764,92 @@ components:
         message:
           type: string
           description: user friendly error message
-    AttackTypeCount:
+    PrintConfig:
       type: object
       required:
-      - type
-      - count
+      - grid_width
+      - orientation
+      - page_size
       properties:
-        type:
-          type: string
-          description: Alert type name.
-        count:
+        grid_width:
           type: integer
-          description: Number of cases involving this alert type for the given entity.
+          description: Grid width (number of columns) used when printing/exporting the dashboard.
+        orientation:
+          type: string
+          enum:
+          - portrait
+          - landscape
+          description: Page orientation for print/export.
+        page_size:
+          type: string
+          enum:
+          - letter
+          - A4
+          description: Page size for print/export.
+    OperationalGapsWidgets:
+      type: object
+      properties:
+        missing_telemetry_by_alert_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/MissingTelemetryCount'
+          description: Cases with non-empty confidence.missing_information, grouped by alert_type.
+        blocked_by_customer_by_category:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlockedByCategoryCount'
+          description: Cases with status=10 OR actions_required[status=2], grouped by category and severity tier.
+    BulkCreateDashboardScheduleRequest:
+      type: object
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateDashboardScheduleRequest'
+          minItems: 1
+          maxItems: 50
+    CostTrimOrgRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - organization_uuid
+        - alert_types
+        properties:
+          organization_uuid:
+            type: string
+          organization_code:
+            type: string
+          alert_types:
+            type: integer
+            description: Count of distinct alert types within this org.
+          trim_headroom:
+            type: object
+            additionalProperties:
+              type: number
+              format: double
+            description: 'Map of threshold-name → fraction of total alerts in this org
+
+              that come from alert types with escalation rate ≤ threshold.
+
+              Keys are named `safe_trim_pct_0` for 0% and `trim_pct_N` for
+
+              N% (e.g. `trim_pct_5`, `trim_pct_10`, `trim_pct_25`).
+
+              '
+    CostTrimEscalationsByTypeRow:
+      type: object
+      required:
+      - alert_type
+      - escalations
+      properties:
+        alert_type:
+          type: string
+        escalations:
+          type: integer
+          format: int64
     NetworkWidgets:
       type: object
       properties:
@@ -2956,161 +2878,66 @@ components:
           items:
             $ref: '#/components/schemas/EntityCount'
           description: All entity types seen across multiple cases, ranked by case count.
-    GetDetailedMetricsRequest:
-      type: object
-      properties:
-        global_metrics_organization_filter:
-          type: array
-          items:
-            type: string
-          description: Organization IDs for which the global metrics should be fetched
-        alert_type_metrics_organization_filter:
-          type: array
-          items:
-            type: string
-          description: Organization IDs for which the alert type metrics should be fetched
-    CostTrimAlertTypeRow:
-      allOf:
-      - $ref: '#/components/schemas/CostTrimRollupBase'
-      - type: object
-        required:
-        - alert_type
-        properties:
-          alert_type:
-            type: string
-    SocEmailResponse:
+    GetDetailedMetricsResponse:
       type: object
       required:
       - message
+      - data
       properties:
         message:
           type: string
-          description: Status message confirming email was queued
-    SeverityCount:
+        data:
+          $ref: '#/components/schemas/AggregatedMetrics'
+    CreateWidgetResponse:
       type: object
       required:
-      - severity
-      - severity_label
-      - count
+      - widget_id
+      - dashboard_id
+      - widget_name
+      - source_type
+      - render_type
+      - layout
+      - created_at
       properties:
-        severity:
-          type: integer
-          description: Severity value (0=Unassigned, 1=Low, 2=Informational, 5=Medium, 10=High, 15=Critical).
-        severity_label:
+        widget_id:
           type: string
-          description: Human-readable severity label.
-        count:
-          type: integer
-          description: Number of cases with this severity.
-    GlobalMetrics:
-      allOf:
-      - $ref: '#/components/schemas/Metrics'
-      - type: object
-        required:
-        - failed_alert_count
-        - successful_alert_sources
-        - failed_alert_sources
-        - successful_sources_without_alerts
-        properties:
-          global_provider_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/ProviderMetrics'
-            description: Provider metrics list
-          failed_alert_count:
-            type: integer
-            description: Number of failed alerts
-          successful_alert_sources:
-            type: array
-            items:
-              type: string
-            description: List of successful alert sources
-          failed_alert_sources:
-            type: array
-            items:
-              type: string
-            description: List of failed alert sources
-          successful_sources_without_alerts:
-            type: array
-            items:
-              type: string
-            description: List of successful sources without alerts
-    PrintConfig:
-      type: object
-      required:
-      - grid_width
-      - orientation
-      - page_size
-      properties:
-        grid_width:
-          type: integer
-          description: Grid width (number of columns) used when printing/exporting the dashboard.
-        orientation:
+        dashboard_id:
           type: string
-          enum:
-          - portrait
-          - landscape
-          description: Page orientation for print/export.
-        page_size:
+        widget_name:
           type: string
-          enum:
-          - letter
-          - A4
-          description: Page size for print/export.
-    DetailedMetrics:
+        source_type:
+          $ref: '#/components/schemas/WidgetSourceType'
+        render_type:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+        transformation_code:
+          type: string
+          description: Python code to transform the playbook step output.
+        created_at:
+          type: string
+          format: date-time
+        last_output:
+          description: Latest execution output for system widgets.
+    QuestionsAnsweredByOutcome:
       type: object
       required:
-      - provider_metrics_list
-      - global_metrics
+      - disposition
+      - answered_count
       properties:
-        provider_metrics_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderMetrics'
-          description: Provider metrics list
-        alert_type_metrics_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertTypeMetrics'
-          description: Alert type metrics list
-        global_metrics:
-          $ref: '#/components/schemas/GlobalMetrics'
-          description: Global metrics
-        daily_metrics_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyMetrics'
-          description: Daily metrics list
-    WidgetLayout:
-      type: object
-      required:
-      - column
-      - row
-      - width
-      - height
-      - min_width
-      - min_height
-      properties:
-        column:
+        disposition:
           type: integer
-          description: Column position (0–9, step 3 for a 12-col layout).
-        row:
+          description: 'Case disposition: 0=Pending, 1=NoThreatFound, 5=NonMaliciousPositive, 10=Malicious.'
+        label:
+          type: string
+          description: Human-readable outcome label (Malicious, Benign, Suspicious, etc.).
+        answered_count:
           type: integer
-          description: Row position. Use 9999 to append to bottom.
-        width:
-          type: integer
-          minimum: 3
-          description: Number of columns the widget occupies.
-        height:
-          type: integer
-          minimum: 3
-          description: Number of rows the widget occupies.
-        min_width:
-          type: integer
-          description: Minimum number of columns (3).
-        min_height:
-          type: integer
-          description: Minimum number of rows (3).
+          description: Total explore_deeper_questions answered (status != Available, status != Data Needed) across cases with this disposition.
     KpiWidgets:
       type: object
       required:
@@ -3131,44 +2958,67 @@ components:
           type: number
           format: float
           description: Mean time to investigate (investigation_completed_at - alert_acknowledged_at) in seconds, excluding cases flagged ignore_case_metric. Absent when no qualifying cases.
-    EmailCustomDashboardRequest:
+    ResponseRemediationWidgets:
       type: object
-      required:
-      - dashboard
-      - email_ids
-      - subject
       properties:
-        dashboard:
-          $ref: '#/components/schemas/GetDashboardResponse'
-          description: The dashboard to email, exactly as returned by GET /v2/dashboard/{dashboard_id} (including print_config). Not re-fetched or recalculated server-side.
-        email_ids:
+        stalled_cases_count:
+          type: integer
+          description: Number of cases currently in status=10 (CustomerPending).
+        stalled_cases_by_category:
           type: array
           items:
-            type: string
-          description: List of email addresses to send the dashboard report to
-        subject:
-          type: string
-          description: Email subject line. If empty, a default subject will be generated.
-    QualityScoreDailyPoint:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Stalled case count (status=10) grouped by case category.
+        customer_response_time:
+          $ref: '#/components/schemas/ResponseTimeMetric'
+          description: 'Avg time from customer_pending_at to customer_responded_at. Requires two new timestamp fields on CaseTimeline: customer_pending_at (set on status→10) and customer_responded_at (set on first customer activity — comment, field change, or action update).'
+    CostTrimRollupBase:
       type: object
       required:
-      - date
+      - alerts
+      - investigated
+      - escalations
+      - efficacy
       properties:
-        date:
+        alerts:
+          type: integer
+          format: int64
+        investigated:
+          type: integer
+          format: int64
+        linked_case_count:
+          type: integer
+          format: int64
+        escalations:
+          type: integer
+          format: int64
+          description: Count of alerts whose linked case was escalated to the customer.
+        escalated_to_analyst:
+          type: integer
+          format: int64
+        efficacy:
+          type: number
+          format: double
+    CaseAnalyticsEmailRequestFilter:
+      type: object
+      required:
+      - created_at_from
+      - created_at_to
+      properties:
+        org_id:
           type: string
-          description: Date in YYYY-MM-DD format.
-        overall:
-          type: number
-          format: double
-          description: Average case_score across all cases on this day.
-        darryl_investigated:
-          type: number
-          format: double
-          description: Average case_score for Darryl-investigated cases on this day.
-        human_investigated:
-          type: number
-          format: double
-          description: Average case_score for human-investigated cases on this day.
+          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
+        created_at_from:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (start of date range)
+        created_at_to:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (end of date range)
+        metadata:
+          type: object
+          description: Optional metadata for report customization
     CostTrimAnalysisResponse:
       type: object
       required:
@@ -3227,116 +3077,53 @@ components:
               $ref: '#/components/schemas/CostTrimEscalationsByTypeRow'
         totals:
           $ref: '#/components/schemas/CostTrimTotals'
-    CaseMetricsLLMSummary:
+    WidgetLayoutUpdate:
       type: object
       required:
-      - risk
-      - tag
-      - title
-      - details
-      - footer_label
-      - footer_text
+      - widget_id
+      - layout
       properties:
-        risk:
+        widget_id:
           type: string
-          description: Drives the chip color. Accepts color-semantic (info/success/warning/danger, emitted by /query_metrics) or severity (Critical/High/Medium/Low/Informational, emitted by the monthly report).
-          enum:
-          - info
-          - success
-          - warning
-          - danger
-          - Critical
-          - High
-          - Medium
-          - Low
-          - Informational
-          x-enum-varnames:
-          - InfoLLMSummaryRisk
-          - SuccessLLMSummaryRisk
-          - WarningLLMSummaryRisk
-          - DangerLLMSummaryRisk
-          - CriticalLLMSummaryRisk
-          - HighLLMSummaryRisk
-          - MediumLLMSummaryRisk
-          - LowLLMSummaryRisk
-          - InformationalLLMSummaryRisk
-        tag:
-          type: string
-          description: Chip label, e.g. "1 CRITICAL ESCALATION", "TELEMETRY GAP".
-        title:
-          type: string
-          description: a brief summary text of this briefing point in < 10 words
-        details:
-          type: string
-          description: Narrative paragraph describing the briefing point.
-        footer_label:
-          type: string
-          description: Footer flips between a resolved/no-action STATUS line and a NEXT STEP line.
-          enum:
-          - STATUS
-          - NEXT STEP
-          x-enum-varnames:
-          - StatusLLMSummaryFooter
-          - NextStepLLMSummaryFooter
-        footer_text:
-          type: string
-          description: Footer body text for the STATUS / NEXT STEP line.
-    MultiVectorUser:
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+    CreateWidgetRequest:
       type: object
       required:
-      - name
-      - attack_types
+      - widget_name
+      - source_type
+      - render_type
+      - nl_description
+      - layout
       properties:
-        name:
+        widget_name:
           type: string
-          description: Username or service account name.
-        attack_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AttackTypeCount'
-          description: Distinct alert types this user has been involved in, with case count per type.
-        case_count:
-          type: integer
-    CommunicationByDisposition:
-      type: object
-      required:
-      - disposition
-      - with_communication
-      - without_communication
-      properties:
-        disposition:
-          type: integer
-        disposition_label:
+        source_type:
+          $ref: '#/components/schemas/WidgetSourceType'
+        render_type:
           type: string
-        with_communication:
-          type: integer
-        without_communication:
-          type: integer
-    BulkDashboardScheduleResponse:
+          description: Visualization type (e.g. bar_chart, line_chart, table, number).
+        nl_description:
+          type: string
+          description: Natural language description used to generate the widget code.
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+          description: Optional specific system widget to display. If omitted with case_metric_source, returns aggregated view of all widgets for the dashboard.
+    SocPerformanceDashboardResponse:
       type: object
       required:
-      - results
+      - message
+      - data
       properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/DashboardScheduleResult'
-          description: One result per request item, in the same order as the request. A failure in one item does not affect the others.
-    MttiComparisonPoint:
-      type: object
-      required:
-      - x
-      - y
-      properties:
-        x:
-          type: number
-          format: float
-          description: Average investigation time in minutes.
-        y:
-          type: number
-          format: float
-          description: Time difference (avg_mtti - x) in minutes.
-    ListSystemWidgetsResponse:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SocPerformanceDashboardData'
+    CreateWidgetsResponse:
       type: object
       required:
       - widgets
@@ -3344,17 +3131,71 @@ components:
         widgets:
           type: array
           items:
-            $ref: '#/components/schemas/SystemWidget'
-    CategoryCount:
+            $ref: '#/components/schemas/CreateWidgetResponse'
+          description: List of created widgets with their IDs and configurations.
+    CaseAnalyticsDashboardData:
+      type: object
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        network:
+          $ref: '#/components/schemas/NetworkWidgets'
+        users:
+          $ref: '#/components/schemas/UserWidgets'
+        hosts:
+          $ref: '#/components/schemas/HostWidgets'
+        detection:
+          $ref: '#/components/schemas/DetectionWidgets'
+        trends:
+          $ref: '#/components/schemas/TrendWidgets'
+        threat_categorization:
+          $ref: '#/components/schemas/ThreatCategorizationWidgets'
+        remediation:
+          $ref: '#/components/schemas/RemediationWidgets'
+        disposition_escalation:
+          $ref: '#/components/schemas/DispositionEscalationWidgets'
+    InvestigationQualityWidgets:
+      type: object
+      properties:
+        questions_per_category:
+          $ref: '#/components/schemas/QuestionsAnsweredByCategory'
+          description: Answered vs unanswered question counts across 3 categories. Grouped bar chart.
+        escalations_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Escalated case count grouped by severity.
+        rework_daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReworkDailyPoint'
+          description: Daily reinvestigation count, rate, and avg time to rework.
+        quality_score_daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualityScoreDailyPoint'
+          description: Daily avg quality score — three line charts (overall, Darryl, human).
+        questions_answered_by_outcome:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionsAnsweredByOutcome'
+          description: Count of answered explore_deeper_questions grouped by case disposition (outcome).
+    SeverityCount:
       type: object
       required:
-      - category
+      - severity
+      - severity_label
       - count
       properties:
-        category:
+        severity:
+          type: integer
+          description: Severity value (0=Unassigned, 1=Low, 2=Informational, 5=Medium, 10=High, 15=Critical).
+        severity_label:
           type: string
+          description: Human-readable severity label.
         count:
           type: integer
+          description: Number of cases with this severity.
     AnalystPerformance:
       type: object
       required:
@@ -3369,87 +3210,286 @@ components:
         avg_mtti_seconds:
           type: integer
           description: Average MTTI in seconds for this analyst's cases (manual cases only).
-    AggregatedMetrics:
+    ReworkDailyPoint:
+      type: object
+      required:
+      - date
+      - rework_count
+      - rework_rate
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        rework_count:
+          type: integer
+          description: Number of reinvestigated cases on this day.
+        rework_rate:
+          type: number
+          format: float
+          description: rework_count / total_cases_that_day as a percentage.
+        avg_rework_seconds:
+          type: integer
+          description: Average time from case_closed_at to reinvestigated_at for reinvestigated cases on this day.
+    CaseMetricsResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CaseMetrics'
+          description: case metrics object
+    CostTrimOrgTypeRow:
       allOf:
-      - $ref: '#/components/schemas/DetailedMetrics'
+      - $ref: '#/components/schemas/CostTrimRollupBase'
       - type: object
         required:
-        - organization_metrics_list
+        - organization_uuid
+        - alert_type
         properties:
-          organization_metrics_list:
-            type: array
-            items:
-              $ref: '#/components/schemas/OrganizationMetrics'
-              description: Organization metrics list
-    ProviderEscalationCount:
+          organization_uuid:
+            type: string
+          organization_code:
+            type: string
+          alert_type:
+            type: string
+    BlockedByCategoryCount:
       type: object
       required:
-      - provider
-      - escalated_count
-      - not_escalated_count
+      - category
       - total
       properties:
-        provider:
+        category:
           type: string
-          description: Detection source / provider name (security vendor). "Unknown" when the case has no provider.
-        display_name:
-          type: string
-          description: Human-readable provider name.
-        escalated_count:
+        critical_high_count:
           type: integer
-          description: Cases from this provider with at least one escalation.
-        not_escalated_count:
+          description: Blocked cases with severity in [10, 15] (High, Critical).
+        medium_count:
           type: integer
-          description: Benign cases from this provider (no escalation).
+          description: Blocked cases with severity=5 (Medium).
+        low_info_count:
+          type: integer
+          description: Blocked cases with severity in [0, 1, 2] (Unassigned, Low, Informational).
         total:
           type: integer
-          description: Total cases from this provider.
-    BusinessHoursBreakdown:
+          description: Total blocked cases in this category.
+    SlaAdherenceTrendPoint:
       type: object
       required:
-      - business_hours_count
-      - after_hours_count
-      - total
+      - date
       properties:
-        business_hours_count:
-          type: integer
-          description: Cases created during standard business hours (Mon–Fri 09:00–17:00 UTC).
-        after_hours_count:
-          type: integer
-          description: Cases created outside business hours — nights, early mornings, and weekends (UTC).
-        total:
-          type: integer
-          description: Total cases across both buckets.
-        ai_summary:
+        date:
           type: string
-          description: AI-generated natural-language summary of the business-hours breakdown. Populated separately; may be absent.
-    CreateDashboardScheduleRequest:
+          description: Date in YYYY-MM-DD format.
+        critical_incident_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Critical Incident Support (sev=15, target=2hr) on this day.
+        critical_alert_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Critical Alert Validation (sev=10, target=4hr) on this day.
+        non_critical_pct:
+          type: number
+          format: float
+          description: SLA adherence % for Non-Critical Incident Support (sev≤5, target=8hr) on this day.
+    CostTrimProviderTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_provider
+        - alert_type
+        properties:
+          alert_provider:
+            type: string
+          alert_type:
+            type: string
+    MissingTelemetryCount:
       type: object
       required:
-      - name
-      - frequency
-      - recipients
+      - alert_type
+      - case_count
       properties:
-        name:
+        alert_type:
           type: string
-        organization_id:
-          type: string
-          description: Target organization to create the schedule in. Defaults to the user's logged in organization if not provided.
-        frequency:
-          $ref: '#/components/schemas/ScheduleFrequency'
-        recurrence:
-          $ref: '#/components/schemas/ScheduleRecurrence'
-          description: Required when frequency is daily, weekly, or monthly. Omit for send_now.
-        recipients:
+        case_count:
+          type: integer
+          description: Cases where confidence.missing_information is non-empty.
+    SlaConfig:
+      type: object
+      description: 'Three SLA tiers. Critical Incident Support (sev=15): 2hr MTTI for true incidents (malware, lateral movement). Critical Alert Validation (sev=10): 4hr MTTI for critical alert detection and customer notification. Non-Critical (sev≤5): 8hr MTTI for incidents with mitigations in place.'
+      properties:
+        critical_incident_target_seconds:
+          type: integer
+          default: 7200
+          description: MTTI target for Critical severity (sev=15) true incidents — 2 hr.
+        critical_alert_target_seconds:
+          type: integer
+          default: 14400
+          description: MTTI target for High severity (sev=10) alert validation and customer notification — 4 hr.
+        non_critical_target_seconds:
+          type: integer
+          default: 28800
+          description: MTTI target for non-critical severity (sev≤5) incidents — 8 hr.
+    PercentileMetric:
+      type: object
+      properties:
+        p50_seconds:
+          type: integer
+          description: 50th percentile (median) value in seconds.
+        p95_seconds:
+          type: integer
+          description: 95th percentile value in seconds.
+        p99_seconds:
+          type: integer
+          description: 99th percentile value in seconds.
+    MetricsAttributes:
+      required:
+      - mean_metric_total
+      - daily_mean_metrics
+      - mean_metrics_intervals
+      type: object
+      properties:
+        mean_metric_total:
+          type: number
+          description: Mean metric value for the total range
+        daily_mean_metrics:
+          type: object
+          additionalProperties:
+            type: number
+          description: Mean metric values for each day
+        mean_metrics_intervals:
+          type: object
+          additionalProperties:
+            type: number
+          description: Mean metric values for each interval
+    HourCount:
+      type: object
+      required:
+      - hour
+      - count
+      properties:
+        hour:
+          type: integer
+          description: Hour of day in UTC (0–23).
+        count:
+          type: integer
+          description: Number of cases created in this hour across all days in the window.
+    EmailCustomDashboardRequest:
+      type: object
+      required:
+      - dashboard
+      - email_ids
+      - subject
+      properties:
+        dashboard:
+          $ref: '#/components/schemas/GetDashboardResponse'
+          description: The dashboard to email, exactly as returned by GET /v2/dashboard/{dashboard_id} (including print_config). Not re-fetched or recalculated server-side.
+        email_ids:
           type: array
           items:
             type: string
-            format: email
-          minItems: 1
-        is_enabled:
-          type: boolean
-          description: Whether the schedule is active on creation. Defaults to true if omitted.
-    CostTrimRollupBase:
+          description: List of email addresses to send the dashboard report to
+        subject:
+          type: string
+          description: Email subject line. If empty, a default subject will be generated.
+    DailyCount:
+      type: object
+      required:
+      - date
+      - count
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        count:
+          type: integer
+    WidgetSourceType:
+      type: string
+      enum:
+      - playbook_execution
+      - case_metric
+    EmailCustomDashboardResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: Status message confirming the dashboard report was emailed
+    ListDashboardScheduleExecutionsResponse:
+      type: object
+      required:
+      - executions
+      - total
+      properties:
+        executions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardScheduleExecution'
+        total:
+          type: integer
+          description: Total count of executions for this schedule.
+    ExecutiveDashboardData:
+      type: object
+      description: Curated executive-view widgets. KPI card + escalation, detection, trend, and threat widgets reused from the analytics/SOC dashboards, plus recent malicious cases and MITRE category volume.
+      properties:
+        kpi:
+          $ref: '#/components/schemas/KpiWidgets'
+        escalations_by_disposition:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunicationByDisposition'
+          description: Escalated vs non-escalated case counts grouped by disposition (with_communication = escalated).
+        escalations_by_provider:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEscalationCount'
+          description: Escalated vs benign case counts grouped by security vendor (detection source).
+        high_value_detections:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types most likely to be malicious.
+        false_positive_alert_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types most likely to be false positives.
+        cases_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily total case volume within the requested window.
+        escalations_over_time:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Daily escalated case volume within the requested window.
+        cases_by_threat_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          description: Case count grouped by threat category.
+        escalations_by_severity:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          description: Escalated case count broken down by severity level.
+        recent_malicious_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentMaliciousCase'
+          description: Most recent malicious cases (disposition in [2,10]), newest first.
+        mitre_category_volume:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmergingThreat'
+          description: Case volume per threat category, current window vs the prior equal window.
+    CostTrimTotals:
       type: object
       required:
       - alerts
@@ -3463,60 +3503,23 @@ components:
         investigated:
           type: integer
           format: int64
-        linked_case_count:
-          type: integer
-          format: int64
         escalations:
           type: integer
           format: int64
           description: Count of alerts whose linked case was escalated to the customer.
-        escalated_to_analyst:
-          type: integer
-          format: int64
         efficacy:
           type: number
           format: double
-    ThroughputWidgets:
-      type: object
-      properties:
-        total_cases:
-          type: integer
-          description: Total cases created in the date window.
-        daily_case_volume:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyCount'
-          description: Case count per day in the window.
-        analyst_performance:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnalystPerformance'
-          description: Per-analyst case volume and avg MTTI (manual cases only).
-        peak_load_by_hour:
-          type: array
-          items:
-            $ref: '#/components/schemas/HourCount'
-          description: Case volume by hour of day (UTC) — peak load signal.
-        adr_triage_breakdown:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdrTriageCount'
-          description: Distribution of cases by automation tier (adr_triage).
-        status_breakdown:
-          type: object
-          additionalProperties:
-            type: integer
-          description: Case count grouped by status (status_id → count).
-    WidgetLayoutUpdate:
-      type: object
-      required:
-      - widget_id
-      - layout
-      properties:
-        widget_id:
-          type: string
-        layout:
-          $ref: '#/components/schemas/WidgetLayout'
+          description: Total escalations divided by total alerts.
+    CostTrimAlertTypeRow:
+      allOf:
+      - $ref: '#/components/schemas/CostTrimRollupBase'
+      - type: object
+        required:
+        - alert_type
+        properties:
+          alert_type:
+            type: string
     ListDashboardScheduleExecutionsRequest:
       type: object
       description: All fields optional. Omit entirely for an unfiltered, first-page listing.
@@ -3555,187 +3558,40 @@ components:
           type: integer
           default: 20
           description: Number of executions per page.
-    UpdateWidgetResponse:
+    EscalationBreakdown:
       type: object
       required:
-      - widget_id
-      - dashboard_id
-      - widget_name
-      - updated_at
+      - escalated_count
+      - not_escalated_count
+      - total
       properties:
-        widget_id:
-          type: string
-        dashboard_id:
-          type: string
-        widget_name:
-          type: string
-        render_type:
-          type: string
-        layout:
-          $ref: '#/components/schemas/WidgetLayout'
-        updated_at:
-          type: string
-          format: date-time
-        last_output:
-          description: Latest execution output for system widgets.
-    ReworkDailyPoint:
-      type: object
-      required:
-      - date
-      - rework_count
-      - rework_rate
-      properties:
-        date:
-          type: string
-          description: Date in YYYY-MM-DD format.
-        rework_count:
+        escalated_count:
           type: integer
-          description: Number of reinvestigated cases on this day.
-        rework_rate:
-          type: number
-          format: float
-          description: rework_count / total_cases_that_day as a percentage.
-        avg_rework_seconds:
+          description: Number of cases with at least one escalation in the escalations[] array.
+        not_escalated_count:
           type: integer
-          description: Average time from case_closed_at to reinvestigated_at for reinvestigated cases on this day.
-    Metrics:
-      allOf:
-      - $ref: '#/components/schemas/CaseReviewMetrics'
-      - type: object
-        properties:
-          darryl_reviewed_case_metrics:
-            $ref: '#/components/schemas/CaseReviewMetrics'
-            description: Darryl reviewed case metrics
-          human_reviewed_case_metrics:
-            $ref: '#/components/schemas/CaseReviewMetrics'
-            description: Human reviewed case metrics
-          darryl_investigated_cases:
-            type: integer
-            description: Number of cases investigated by darryl
-          human_investigated_cases:
-            type: integer
-            description: Number of cases investigated by human
-          alert_count:
-            type: integer
-            description: Number of alerts
-          alert_type_count:
-            type: integer
-            description: Number of alert types
-    ConsistencyWidgets:
-      type: object
-      properties:
-        outlier_cases:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutlierCase'
-          description: Top slowest investigations by investigation_completed_metric, descending.
-    SocEmailRequest:
-      type: object
-      required:
-      - email_ids
-      - subject
-      - filter
-      properties:
-        email_ids:
-          type: array
-          items:
-            type: string
-          description: List of email addresses to send the report to
-        subject:
-          type: string
-          description: Email subject line. If empty, a default subject will be generated.
-        filter:
-          $ref: '#/components/schemas/SocEmailRequestFilter'
-          description: Filter parameters for the report
-    HourCount:
-      type: object
-      required:
-      - hour
-      - count
-      properties:
-        hour:
+          description: Number of cases with no escalations.
+        total:
           type: integer
-          description: Hour of day in UTC (0–23).
-        count:
+          description: Total case count (escalated_count + not_escalated_count).
+        ai_summary:
+          type: string
+          description: AI-generated natural-language summary of the escalation breakdown. Populated separately; may be absent.
+    CommunicationBySeverity:
+      type: object
+      required:
+      - severity
+      - with_communication
+      - without_communication
+      properties:
+        severity:
           type: integer
-          description: Number of cases created in this hour across all days in the window.
-    UpdateDashboardResponse:
-      type: object
-      required:
-      - dashboard_id
-      - dashboard_name
-      - updated_at
-      properties:
-        dashboard_id:
+        severity_label:
           type: string
-        dashboard_name:
-          type: string
-        description:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
-        print_config:
-          $ref: '#/components/schemas/PrintConfig'
-    BulkCreateDashboardScheduleRequest:
-      type: object
-      required:
-      - schedules
-      properties:
-        schedules:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateDashboardScheduleRequest'
-          minItems: 1
-          maxItems: 50
-    CreateWidgetResponse:
-      type: object
-      required:
-      - widget_id
-      - dashboard_id
-      - widget_name
-      - source_type
-      - render_type
-      - layout
-      - created_at
-      properties:
-        widget_id:
-          type: string
-        dashboard_id:
-          type: string
-        widget_name:
-          type: string
-        source_type:
-          $ref: '#/components/schemas/WidgetSourceType'
-        render_type:
-          type: string
-        layout:
-          $ref: '#/components/schemas/WidgetLayout'
-        playbook_execution_source:
-          $ref: '#/components/schemas/PlaybookExecutionSource'
-        system_widget_source:
-          $ref: '#/components/schemas/SystemWidgetSelection'
-        transformation_code:
-          type: string
-          description: Python code to transform the playbook step output.
-        created_at:
-          type: string
-          format: date-time
-        last_output:
-          description: Latest execution output for system widgets.
-    OperationalGapsWidgets:
-      type: object
-      properties:
-        missing_telemetry_by_alert_type:
-          type: array
-          items:
-            $ref: '#/components/schemas/MissingTelemetryCount'
-          description: Cases with non-empty confidence.missing_information, grouped by alert_type.
-        blocked_by_customer_by_category:
-          type: array
-          items:
-            $ref: '#/components/schemas/BlockedByCategoryCount'
-          description: Cases with status=10 OR actions_required[status=2], grouped by category and severity tier.
+        with_communication:
+          type: integer
+        without_communication:
+          type: integer
     ExecutiveDashboardResponse:
       type: object
       required:
@@ -3746,63 +3602,101 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/ExecutiveDashboardData'
-    QuestionsAnsweredSplit:
+    RemediationWidgets:
+      type: object
+      properties:
+        unresolved_actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionCount'
+          description: Cases ranked by count of actions with status in [0,1,2] (New, Pending, Customer Pending).
+        customer_action_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseActionCount'
+          description: Cases ranked by count of actions with status=2 (Customer Pending).
+    ProviderSummary:
       type: object
       required:
-      - answered
-      - unanswered
-      - total
+      - name
+      - display_name
+      - logo_url
+      - provider_id
       properties:
-        answered:
-          type: integer
-          description: Questions where status is not Available or Data Needed.
-        unanswered:
-          type: integer
-          description: Questions where status is Available or Data Needed.
-        total:
-          type: integer
-    ResponseTimeMetric:
-      type: object
-      required:
-      - avg_seconds
-      - case_count
-      - mean_metrics_intervals
-      - daily_mean_metrics
-      properties:
-        avg_seconds:
-          type: integer
-        case_count:
-          type: integer
-        mean_metrics_intervals:
-          type: object
-          additionalProperties:
-            type: number
-            format: float
-        daily_mean_metrics:
-          type: object
-          additionalProperties:
-            type: number
-            format: float
-    BlockedByCategoryCount:
-      type: object
-      required:
-      - category
-      - total
-      properties:
-        category:
+        name:
           type: string
-        critical_high_count:
+        display_name:
+          type: string
+        logo_url:
+          type: string
+        provider_id:
+          type: string
+    ConsistencyWidgets:
+      type: object
+      properties:
+        outlier_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutlierCase'
+          description: Top slowest investigations by investigation_completed_metric, descending.
+    AdrTriageDailyBreakdown:
+      type: object
+      required:
+      - date
+      properties:
+        date:
+          type: string
+          description: Date in YYYY-MM-DD format.
+        fully_automated:
           type: integer
-          description: Blocked cases with severity in [10, 15] (High, Critical).
-        medium_count:
+        partially_automated:
           type: integer
-          description: Blocked cases with severity=5 (Medium).
-        low_info_count:
+        manual:
           type: integer
-          description: Blocked cases with severity in [0, 1, 2] (Unassigned, Low, Informational).
-        total:
+    DetailedMetrics:
+      type: object
+      required:
+      - provider_metrics_list
+      - global_metrics
+      properties:
+        provider_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderMetrics'
+          description: Provider metrics list
+        alert_type_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeMetrics'
+          description: Alert type metrics list
+        global_metrics:
+          $ref: '#/components/schemas/GlobalMetrics'
+          description: Global metrics
+        daily_metrics_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyMetrics'
+          description: Daily metrics list
+    SocEmailRequestFilter:
+      type: object
+      required:
+      - created_at_from
+      - created_at_to
+      properties:
+        org_id:
+          type: string
+          description: Organization identifier (UUID or org code). If not provided, uses the Organization-ID header value
+        created_at_from:
           type: integer
-          description: Total blocked cases in this category.
+          format: int64
+          description: Unix epoch seconds (start of date range)
+        created_at_to:
+          type: integer
+          format: int64
+          description: Unix epoch seconds (end of date range)
+        metadata:
+          type: object
+          description: Optional metadata for report customization
     UpdateDashboardRequest:
       type: object
       properties:
@@ -3819,6 +3713,177 @@ components:
             $ref: '#/components/schemas/WidgetLayoutUpdate'
         print_config:
           $ref: '#/components/schemas/PrintConfig'
+    ThroughputWidgets:
+      type: object
+      properties:
+        total_cases:
+          type: integer
+          description: Total cases created in the date window.
+        daily_case_volume:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+          description: Case count per day in the window.
+        analyst_performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalystPerformance'
+          description: Per-analyst case volume and avg MTTI (manual cases only).
+        peak_load_by_hour:
+          type: array
+          items:
+            $ref: '#/components/schemas/HourCount'
+          description: Case volume by hour of day (UTC) — peak load signal.
+        adr_triage_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdrTriageCount'
+          description: Distribution of cases by automation tier (adr_triage).
+        status_breakdown:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Case count grouped by status (status_id → count).
+    BulkUpdateDashboardScheduleRequest:
+      type: object
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateDashboardScheduleItem'
+          minItems: 1
+          maxItems: 50
+    WidgetDetail:
+      type: object
+      required:
+      - widget_id
+      - dashboard_id
+      - widget_name
+      - source_type
+      - render_type
+      - layout
+      - created_at
+      - updated_at
+      properties:
+        widget_id:
+          type: string
+        dashboard_id:
+          type: string
+        widget_name:
+          type: string
+        source_type:
+          $ref: '#/components/schemas/WidgetSourceType'
+        render_type:
+          type: string
+        nl_description:
+          type: string
+        layout:
+          $ref: '#/components/schemas/WidgetLayout'
+        playbook_execution_source:
+          $ref: '#/components/schemas/PlaybookExecutionSource'
+        system_widget_source:
+          $ref: '#/components/schemas/SystemWidgetSelection'
+        transformation_code:
+          type: string
+          description: Python code to transform the playbook step output.
+        last_output:
+          description: Latest execution output stored on the widget document.
+        raw_data_preview:
+          description: Raw/unprocessed output from playbook step execution before transformation.
+        execution_data_updated_at:
+          type: integer
+          format: int64
+          description: Unix timestamp (ms) at which the underlying execution data was last updated.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    DetectionWidgets:
+      type: object
+      properties:
+        high_value_detections:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types ranked by malicious case count.
+        false_positive_alert_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types ranked by false positive case count.
+        uninvestigated_alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types with no linked case (linked_case_id null and no non-empty case_id in linked_case_executions).
+        missing_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Alert types where cases have a non-empty confidence.missing_information field, grouped by alert type.
+        top_alert_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTypeCount'
+          description: Top 10 alert types ranked by case count within the requested date range.
+    CategoryCount:
+      type: object
+      required:
+      - category
+      - count
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+    EmergingThreat:
+      type: object
+      required:
+      - category
+      - current_count
+      - prior_count
+      properties:
+        category:
+          type: string
+        current_count:
+          type: integer
+          description: Case count in the current window.
+        prior_count:
+          type: integer
+          description: Case count in the prior equal window.
+        growth_rate:
+          type: number
+          format: float
+          description: Growth as a ratio (current / prior). Null if prior_count is zero.
+    CreateDashboardRequest:
+      type: object
+      required:
+      - dashboard_name
+      properties:
+        dashboard_name:
+          type: string
+        description:
+          type: string
+          description: Optional free-text description of the dashboard.
+        organization_id:
+          type: string
+          description: Target organisation to create the dashboard in. If not provided, defaults to the user's logged in organization.
+        print_config:
+          $ref: '#/components/schemas/PrintConfig'
+    BulkDashboardScheduleResponse:
+      type: object
+      required:
+      - results
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardScheduleResult'
+          description: One result per request item, in the same order as the request. A failure in one item does not affect the others.
     AutomationWidgets:
       type: object
       properties:
@@ -3832,71 +3897,6 @@ components:
           items:
             $ref: '#/components/schemas/AdrTriageDailyBreakdown'
           description: Daily automation tier breakdown for trend chart.
-    SystemWidgetSelection:
-      type: object
-      required:
-      - widget_id
-      - dashboard_source
-      - category
-      - days
-      - data_source_ids
-      properties:
-        widget_id:
-          type: string
-          description: ID of the system widget (e.g., mtta, top_attacking_ips).
-        dashboard_source:
-          type: string
-          description: Source dashboard (case_analytics, soc_performance, security_review).
-        category:
-          type: string
-          description: Category of the widget for organization.
-        days:
-          type: integer
-          description: Time window in days for the widget data (e.g. 7, 30, 90).
-        data_source_ids:
-          type: array
-          items:
-            type: string
-          description: List of data sources (filtered from metrics apis) to include in the widget.
-          minItems: 1
-    ProviderList:
-      type: object
-      required:
-      - provider
-      - alert_count
-      properties:
-        provider:
-          $ref: '#/components/schemas/ProviderSummary'
-        alert_count:
-          type: integer
-          description: Number of alerts
-    PercentileMetric:
-      type: object
-      properties:
-        p50_seconds:
-          type: integer
-          description: 50th percentile (median) value in seconds.
-        p95_seconds:
-          type: integer
-          description: 95th percentile value in seconds.
-        p99_seconds:
-          type: integer
-          description: 99th percentile value in seconds.
-    AdrTriageCount:
-      type: object
-      required:
-      - adr_triage
-      - count
-      properties:
-        adr_triage:
-          type: integer
-          description: 'Automation level: 0=NA, 1=None (manual), 5=Partial, 10=Full (automated).'
-        count:
-          type: integer
-        percentage:
-          type: number
-          format: float
-          description: Percentage of total cases in this tier.
   parameters:
     user-id:
       name: User-ID
@@ -3904,16 +3904,16 @@ components:
       description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
-    x-request-id:
-      name: X-Request-ID
-      in: header
-      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
     organization-id:
       name: Organization-ID
       in: header
       description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
       schema:
         type: string
   securitySchemes:

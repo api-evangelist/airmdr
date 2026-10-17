@@ -53,12 +53,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    TrialFeature:
-      type: string
-      enum:
-      - alert_catalog
-      x-enum-varnames:
-      - TrialFeatureAlertCatalog
     Error:
       type: object
       required:
@@ -67,6 +61,12 @@ components:
         message:
           type: string
           description: user friendly error message
+    TrialFeature:
+      type: string
+      enum:
+      - alert_catalog
+      x-enum-varnames:
+      - TrialFeatureAlertCatalog
     RegisterTrialResponse:
       type: object
       required:

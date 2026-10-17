@@ -478,14 +478,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  parameters:
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
   schemas:
-    RefundInvestigationCreditsRequest:
+    Success:
       type: object
       required:
-      - idempotency_key
+      - message
       properties:
-        idempotency_key:
+        message:
           type: string
+          description: user friendly message
     RefundInvestigationCreditsResponse:
       type: object
       required:
@@ -493,6 +513,41 @@ components:
       properties:
         refunded:
           type: boolean
+    RefundInvestigationCreditsRequest:
+      type: object
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    ChargeInvestigationCreditsRequest:
+      type: object
+      required:
+      - organization_code
+      - alert_id
+      - alert_provider
+      - alert_type
+      - idempotency_key
+      properties:
+        organization_code:
+          type: string
+        alert_id:
+          type: string
+        alert_provider:
+          type: string
+        alert_type:
+          type: string
+        idempotency_key:
+          type: string
+          description: unique per investigation attempt; dedupes retries/redeliveries
     InvestigationQuotaResponse:
       type: object
       required:
@@ -540,14 +595,6 @@ components:
         balance_after:
           type: number
           format: double
-    Error:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly error message
     CaseReindexRequest:
       type: object
       required:
@@ -558,53 +605,6 @@ components:
           items:
             type: string
           description: The list of case uuids to reindex. If this non empty list is provided, only the cases in this list will be reindexed else all cases will be reindexed.
-    ChargeInvestigationCreditsRequest:
-      type: object
-      required:
-      - organization_code
-      - alert_id
-      - alert_provider
-      - alert_type
-      - idempotency_key
-      properties:
-        organization_code:
-          type: string
-        alert_id:
-          type: string
-        alert_provider:
-          type: string
-        alert_type:
-          type: string
-        idempotency_key:
-          type: string
-          description: unique per investigation attempt; dedupes retries/redeliveries
-    Success:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          description: user friendly message
-  parameters:
-    x-request-id:
-      name: X-Request-ID
-      in: header
-      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    user-id:
-      name: User-ID
-      in: header
-      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    organization-id:
-      name: Organization-ID
-      in: header
-      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
   securitySchemes:
     SessionCookie:
       type: apiKey

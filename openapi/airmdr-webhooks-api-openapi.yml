@@ -166,6 +166,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  parameters:
+    x-request-id:
+      name: X-Request-ID
+      in: header
+      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    user-id:
+      name: User-ID
+      in: header
+      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
+    organization-id:
+      name: Organization-ID
+      in: header
+      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
+      schema:
+        type: string
   schemas:
     CreateAlertFromWebhookResponse:
       type: object
@@ -193,25 +212,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Webhook'
-    CreateWebhookRequest:
-      type: object
-      required:
-      - organization_id
-      - name
-      properties:
-        name:
-          type: string
-          description: User-facing label to identify this webhook among others in the org.
-        organization_id:
-          type: string
-        provider_id:
-          type: string
-          description: Optional. When omitted, alert_provider is inferred per alert via the data_extractor skill instead of being fixed on the webhook.
-    AlertContent:
-      type: object
-      additionalProperties: true
-      description: Free-form raw alert payload from the provider. The entire request body is treated as the alert content — there is no wrapper key.
-      x-go-type: json.RawMessage
     Error:
       type: object
       required:
@@ -243,25 +243,25 @@ components:
           format: date-time
         created_by:
           $ref: '#/components/schemas/UserInformation'
-  parameters:
-    x-request-id:
-      name: X-Request-ID
-      in: header
-      description: The ID associated with the request. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    user-id:
-      name: User-ID
-      in: header
-      description: The User ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
-    organization-id:
-      name: Organization-ID
-      in: header
-      description: The Organization ID of the requestor. If requests are made through API Gateway, this header will be pre filled.
-      schema:
-        type: string
+    CreateWebhookRequest:
+      type: object
+      required:
+      - organization_id
+      - name
+      properties:
+        name:
+          type: string
+          description: User-facing label to identify this webhook among others in the org.
+        organization_id:
+          type: string
+        provider_id:
+          type: string
+          description: Optional. When omitted, alert_provider is inferred per alert via the data_extractor skill instead of being fixed on the webhook.
+    AlertContent:
+      type: object
+      additionalProperties: true
+      description: Free-form raw alert payload from the provider. The entire request body is treated as the alert content — there is no wrapper key.
+      x-go-type: json.RawMessage
   securitySchemes:
     SessionCookie:
       type: apiKey

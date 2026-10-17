@@ -286,6 +286,113 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    UserGroup:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/UserGroupListItem'
+      - properties:
+          can_assign_cases:
+            type: boolean
+            description: flag indicating whether cases can be assigned to user group
+          case_categories:
+            type: array
+            description: list of case categorie names which are assigned to user group
+            items:
+              type: string
+          features:
+            type: array
+            description: list of features and the permissions for the same to be added to the user group
+            items:
+              $ref: '#/components/schemas/FeaturePermission'
+    Error:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          description: user friendly error message
+    SortFields:
+      type: object
+      required:
+      - field
+      - sort_order
+      properties:
+        field:
+          type: string
+          description: indicates which field will be used for sorting
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: indicates sort order - asc or desc
+    OrganizationMinimal:
+      type: object
+      required:
+      - organization_id
+      - name
+      - code
+      - sso_enabled
+      properties:
+        organization_id:
+          type: string
+          description: unique id of the organization
+        name:
+          type: string
+          description: name of the organization
+        code:
+          type: string
+          description: code of the organization
+        logo_url:
+          type: string
+          description: url of the organization's logo
+        sso_enabled:
+          type: boolean
+          description: flag indicating whether sso is enabled for the organization
+    CreateUserGroupRequest:
+      type: object
+      required:
+      - name
+      - parent_organization_id
+      properties:
+        name:
+          type: string
+          description: name of the user group
+        description:
+          type: string
+          description: description of the user group
+        parent_organization_id:
+          type: string
+          description: id of the organization where the user group needs to be created
+        user_ids:
+          type: array
+          description: list of id of the users to add to the user group
+          items:
+            type: string
+        accessible_organizations:
+          type: array
+          description: list of organization ids and future child organizations setting the user group will have access to
+          items:
+            $ref: '#/components/schemas/AccessibleOrganizationsRequest'
+        can_assign_cases:
+          type: boolean
+          description: flag indicating whether cases can be assigned to user group
+        case_categories:
+          type: array
+          description: list of case catgeory names which can be assigned to users of the group
+          items:
+            type: string
+        features:
+          type: array
+          description: list of features and the permissions for the same to be added to the user group
+          items:
+            $ref: '#/components/schemas/FeaturePermission'
+    SortOrder:
+      type: integer
+      enum:
+      - 0
+      - 1
+      x-enum-varnames:
+      - Asc
+      - Desc
     UserGroupType:
       type: string
       enum:
@@ -296,19 +403,51 @@ components:
       - UserGroupTypeDefault
       - UserGroupTypeAdmin
       - UserGroupTypeCustom
-    UserMinimal:
+    DeleteUserGroupResponse:
       type: object
       required:
-      - user_id
-      - first_name
-      - last_name
+      - message
       properties:
-        user_id:
+        message:
           type: string
-        first_name:
+    FeaturePermission:
+      type: object
+      required:
+      - feature_id
+      - can_read
+      - can_write
+      properties:
+        feature_id:
           type: string
-        last_name:
+          description: id of the feature
+        can_read:
+          type: boolean
+          default: true
+          description: flag indicating whether the user group can read the feature
+        can_write:
+          type: boolean
+          default: false
+          description: flag indicating whether the user group can write the feature
+    GetUserGroupResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
           type: string
+        data:
+          $ref: '#/components/schemas/UserGroup'
+          description: user group object
+    FilterUserGroupRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/ListUserGroupFilter'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortFields'
     ListUserGroupFilter:
       type: object
       properties:
@@ -354,65 +493,12 @@ components:
           items:
             type: string
           description: List of permissions which user group have access to.
-    AccessibleOrganizationsRequest:
+    403Error:
       type: object
-      required:
-      - organization_id
-      properties:
-        organization_id:
-          type: string
-        select_all_child_orgs:
-          type: boolean
-        include_current_organization:
-          type: boolean
-          description: If false, user group does not include current organization id. The default value is true.
-    FilterUserGroupRequest:
-      type: object
-      properties:
-        filter:
-          $ref: '#/components/schemas/ListUserGroupFilter'
-        sort:
-          type: array
-          items:
-            $ref: '#/components/schemas/SortFields'
-    Error:
-      type: object
-      required:
-      - message
       properties:
         message:
           type: string
-          description: user friendly error message
-    OrganizationMinimalWithUserGroupConfig:
-      type: object
-      required:
-      - organization_id
-      - name
-      - code
-      properties:
-        organization_id:
-          type: string
-          description: unique id of the organization
-        name:
-          type: string
-          description: name of the organization
-        code:
-          type: string
-          description: code of the organization
-        select_all_child_orgs:
-          type: boolean
-          description: flag if the user group needs to be mapped to future child organizations of this organization
-        include_current_organization:
-          type: boolean
-          description: If false, user group does not include current organization id. The default value is true.
-    SortOrder:
-      type: integer
-      enum:
-      - 0
-      - 1
-      x-enum-varnames:
-      - Asc
-      - Desc
+          const: User does not have permission to perform this action
     UserGroupListItem:
       type: object
       required:
@@ -452,18 +538,6 @@ components:
         modified_at:
           type: integer
           format: int64
-    SortFields:
-      type: object
-      required:
-      - field
-      - sort_order
-      properties:
-        field:
-          type: string
-          description: indicates which field will be used for sorting
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: indicates sort order - asc or desc
     UpdateUserGroupRequest:
       type: object
       properties:
@@ -496,53 +570,6 @@ components:
           description: list of features and the permissions for the same to be added to the user group
           items:
             $ref: '#/components/schemas/FeaturePermission'
-    FeaturePermission:
-      type: object
-      required:
-      - feature_id
-      - can_read
-      - can_write
-      properties:
-        feature_id:
-          type: string
-          description: id of the feature
-        can_read:
-          type: boolean
-          default: true
-          description: flag indicating whether the user group can read the feature
-        can_write:
-          type: boolean
-          default: false
-          description: flag indicating whether the user group can write the feature
-    UserGroup:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/UserGroupListItem'
-      - properties:
-          can_assign_cases:
-            type: boolean
-            description: flag indicating whether cases can be assigned to user group
-          case_categories:
-            type: array
-            description: list of case categorie names which are assigned to user group
-            items:
-              type: string
-          features:
-            type: array
-            description: list of features and the permissions for the same to be added to the user group
-            items:
-              $ref: '#/components/schemas/FeaturePermission'
-    UpdateUserGroupResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/UserGroup'
-          description: user group object
     AccessibleOrganizationsFilterRequest:
       type: object
       required:
@@ -550,68 +577,6 @@ components:
       properties:
         organization_id:
           type: string
-    DeleteUserGroupResponse:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-    CreateUserGroupRequest:
-      type: object
-      required:
-      - name
-      - parent_organization_id
-      properties:
-        name:
-          type: string
-          description: name of the user group
-        description:
-          type: string
-          description: description of the user group
-        parent_organization_id:
-          type: string
-          description: id of the organization where the user group needs to be created
-        user_ids:
-          type: array
-          description: list of id of the users to add to the user group
-          items:
-            type: string
-        accessible_organizations:
-          type: array
-          description: list of organization ids and future child organizations setting the user group will have access to
-          items:
-            $ref: '#/components/schemas/AccessibleOrganizationsRequest'
-        can_assign_cases:
-          type: boolean
-          description: flag indicating whether cases can be assigned to user group
-        case_categories:
-          type: array
-          description: list of case catgeory names which can be assigned to users of the group
-          items:
-            type: string
-        features:
-          type: array
-          description: list of features and the permissions for the same to be added to the user group
-          items:
-            $ref: '#/components/schemas/FeaturePermission'
-    403Error:
-      type: object
-      properties:
-        message:
-          type: string
-          const: User does not have permission to perform this action
-    GetUserGroupResponse:
-      type: object
-      required:
-      - message
-      - data
-      properties:
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/UserGroup'
-          description: user group object
     ListUserGroupResponse:
       type: object
       required:
@@ -627,13 +592,12 @@ components:
             $ref: '#/components/schemas/UserGroupListItem'
         total:
           type: integer
-    OrganizationMinimal:
+    OrganizationMinimalWithUserGroupConfig:
       type: object
       required:
       - organization_id
       - name
       - code
-      - sso_enabled
       properties:
         organization_id:
           type: string
@@ -644,12 +608,48 @@ components:
         code:
           type: string
           description: code of the organization
-        logo_url:
-          type: string
-          description: url of the organization's logo
-        sso_enabled:
+        select_all_child_orgs:
           type: boolean
-          description: flag indicating whether sso is enabled for the organization
+          description: flag if the user group needs to be mapped to future child organizations of this organization
+        include_current_organization:
+          type: boolean
+          description: If false, user group does not include current organization id. The default value is true.
+    UpdateUserGroupResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserGroup'
+          description: user group object
+    UserMinimal:
+      type: object
+      required:
+      - user_id
+      - first_name
+      - last_name
+      properties:
+        user_id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    AccessibleOrganizationsRequest:
+      type: object
+      required:
+      - organization_id
+      properties:
+        organization_id:
+          type: string
+        select_all_child_orgs:
+          type: boolean
+        include_current_organization:
+          type: boolean
+          description: If false, user group does not include current organization id. The default value is true.
   securitySchemes:
     SessionCookie:
       type: apiKey
