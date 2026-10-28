@@ -64,5 +64,148 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-AirMDR is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+AirMDR is an AI-native managed detection and response (MDR) provider whose virtual security analyst, Darryl, automates alert triage, investigation and response across endpoint, cloud, SaaS, identity, email and network tools. The platform ingests alerts from 200+ integrations, runs automated or AI-generated investigation playbooks, and produces documented cases; it is sold as a full-service MDR for small security teams, an AI SOC platform for MSSPs and enterprise SOCs, and a free plan with 100 alert investigations. Programmatic access is a REST API on app.airmdr.com (Case Manager and User Management services, documented in Redoc), authenticated with an API token sent as a Session cookie, plus a webhook endpoint for pushing alerts into the platform.
+
+**Areas:** Security · Managed Detection and Response · Security Operations · Alert Triage · Incident Response · AI Agents · SOC Automation · Threat Detection · MCP · A2A
+
+## AirMDR on APIs.io
+
+Everything profiled for AirMDR is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/airmdr/](https://apis.io/providers/airmdr/)** — or go straight to one of the APIs or properties below.
+
+### APIs (23)
+
+- [AirMDR Documentation MCP Server](https://apis.io/apis/airmdr/airmdr-documentation-mcp-server/) — Hosted, unauthenticated Streamable-HTTP MCP server on the AirMDR documentation host (Mintlify-operated) exposing three tools: search the AirMDR…
+- [AirMDR Alert Catalog API](https://apis.io/apis/airmdr/airmdr-alertcatalog-api/) — The AlertCatalog API from AirMDR — 8 operation(s) for alertcatalog.
+- [AirMDR Alerts API](https://apis.io/apis/airmdr/airmdr-alerts-api/) — The Alerts API from AirMDR — 15 operation(s) for alerts.
+- [AirMDR Alert Types API](https://apis.io/apis/airmdr/airmdr-alerttypes-api/) — The AlertTypes API from AirMDR — 3 operation(s) for alerttypes.
+- [AirMDR Case Manager API](https://apis.io/apis/airmdr/airmdr-case-manager-api/) — The Case Manager API from AirMDR — 32 operation(s) for case manager.
+- [AirMDR Case Manager Internal API](https://apis.io/apis/airmdr/airmdr-case-manager-internal-api/) — The Case Manager Internal API from AirMDR — 10 operation(s) for case manager internal.
+- [AirMDR Case Manager V2 API](https://apis.io/apis/airmdr/airmdr-case-manager-v2-api/) — The Case Manager V2 API from AirMDR — 43 operation(s) for case manager v2.
+- [AirMDR Case Decision Automation API](https://apis.io/apis/airmdr/airmdr-casedecisionautomation-api/) — The CaseDecisionAutomation API from AirMDR — 4 operation(s) for casedecisionautomation.
+- [AirMDR Dashboard API](https://apis.io/apis/airmdr/airmdr-dashboard-api/) — The Dashboard API from AirMDR — 20 operation(s) for dashboard.
+- [AirMDR Internal API](https://apis.io/apis/airmdr/airmdr-internal-api/) — The Internal API from AirMDR — 8 operation(s) for internal.
+- [AirMDR Mitre Tactics API](https://apis.io/apis/airmdr/airmdr-mitretactics-api/) — The MitreTactics API from AirMDR — 1 operation(s) for mitretactics.
+- [AirMDR Organization API](https://apis.io/apis/airmdr/airmdr-organization-api/) — Endpoints to manage organizations
+- [AirMDR Password API](https://apis.io/apis/airmdr/airmdr-password-api/) — Endpoints to manage user password
+- [AirMDR Permission API](https://apis.io/apis/airmdr/airmdr-permission-api/) — Endpoints to read system permissions
+- [AirMDR Ping API](https://apis.io/apis/airmdr/airmdr-ping-api/) — The Ping API from AirMDR — 1 operation(s) for ping.
+- [AirMDR Query DSL API](https://apis.io/apis/airmdr/airmdr-query-dsl-api/) — The Query DSL API from AirMDR — 3 operation(s) for query dsl.
+- [AirMDR Security Review API](https://apis.io/apis/airmdr/airmdr-security-review-api/) — The Security Review API from AirMDR — 5 operation(s) for security review.
+- [AirMDR Session API](https://apis.io/apis/airmdr/airmdr-session-api/) — Endpoints to manage sessions
+- [AirMDR Token API](https://apis.io/apis/airmdr/airmdr-token-api/) — Endpoints to manage tokens
+- [AirMDR Trial API](https://apis.io/apis/airmdr/airmdr-trial-api/) — The Trial API from AirMDR — 1 operation(s) for trial.
+- [AirMDR User API](https://apis.io/apis/airmdr/airmdr-user-api/) — Endpoints to manager users
+- [AirMDR User Group API](https://apis.io/apis/airmdr/airmdr-user-group-api/) — Endpoints to manage user groups
+- [AirMDR Webhooks API](https://apis.io/apis/airmdr/airmdr-webhooks-api/) — The Webhooks API from AirMDR — 3 operation(s) for webhooks.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Airmdr Webhooks](https://apis.io/asyncapis/airmdr/airmdr-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [AirMDR documentation MCP](https://apis.io/servers/airmdr/airmdr-documentation-mcp/)
+
+#### Overlays (2)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Airmdr Case Manager Overlay](https://apis.io/overlays/airmdr/airmdr-case-manager-overlay/)
+- [Airmdr User Management Service Overlay](https://apis.io/overlays/airmdr/airmdr-user-management-service-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Airmdr Authentication](https://apis.io/security/airmdr/airmdr-authentication/)
+- [Airmdr Domain Security](https://apis.io/security/airmdr/airmdr-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Airmdr Plans Pricing](https://apis.io/plans/airmdr/airmdr-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Airmdr Rate Limits](https://apis.io/rate-limits/airmdr/airmdr-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://airmdr.com/)
+- [Documentation](https://docs.airmdr.com/essentials/Landingpage)
+- [Getting started](https://docs.airmdr.com/api-reference/apitoken)
+- [API reference](https://docs.airmdr.com/api-reference/apilandingpage)
+- [Pricing](https://airmdr.com/pricing)
+- [Support](https://airmdr.com/contact-us)
+- [Changelog](https://docs.airmdr.com/changelog/changelog)
+- [Blog](https://airmdr.com/blog)
+- [Privacy policy](https://airmdr.com/privacy)
+- [GitHub](https://github.com/AirMDR)
+
+## API Evangelist rating
+
+**Kin Score 55.1** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 81.7 |
+| Contract quality | 52.2 |
+| Contract governance | 4.5 |
+| Operational transparency | 26.3 |
+| Developer ergonomics | 59.5 |
+| Access clarity | 59.2 |
+
+**Agent readiness 45.4** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 20.6** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/airmdr/](https://apis.io/providers/airmdr/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for AirMDR: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/airmdr/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
